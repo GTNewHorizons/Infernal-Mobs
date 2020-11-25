@@ -60,7 +60,7 @@ public class MM_Gravity extends MobModifier
             return;
         }
         
-        long time = System.currentTimeMillis();
+        long time = mob.ticksExisted;
         if (time > nextAbilityUse)
         {
             nextAbilityUse = time+coolDown;
@@ -105,7 +105,7 @@ public class MM_Gravity extends MobModifier
 
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Gravity.class.getSimpleName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000);
+        coolDown = config.get(MM_Gravity.class.getSimpleName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000) / 50;
     }
 
     @Override

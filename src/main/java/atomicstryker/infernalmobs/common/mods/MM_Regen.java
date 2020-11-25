@@ -26,7 +26,7 @@ public class MM_Regen extends MobModifier
     {
         if (mob.getHealth() < getActualMaxHealth(mob))
         {
-            long time = System.currentTimeMillis();
+            long time = mob.ticksExisted;
             if (time > nextAbilityUse)
             {
                 nextAbilityUse = time+coolDown;
@@ -38,7 +38,7 @@ public class MM_Regen extends MobModifier
 
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Regen.class.getSimpleName(), "coolDownMillis", 500L, "Time between ability uses").getInt(500);
+        coolDown = config.get(MM_Regen.class.getSimpleName(), "coolDownMillis", 500L, "Time between ability uses").getInt(500) / 50;
     }
 
     @Override

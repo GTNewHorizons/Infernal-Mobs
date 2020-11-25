@@ -59,7 +59,7 @@ public class MM_Webber extends MobModifier
         int y = MathHelper.floor_double(target.posY);
         int z = MathHelper.floor_double(target.posZ);
         
-        long time = System.currentTimeMillis();
+        long time = mob.ticksExisted;
         if (time > lastAbilityUse+coolDown)
         {
             int offset;
@@ -84,7 +84,7 @@ public class MM_Webber extends MobModifier
     
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Webber.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000);
+        coolDown = config.get(MM_Webber.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
     }
 
     @Override

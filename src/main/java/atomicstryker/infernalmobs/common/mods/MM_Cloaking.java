@@ -52,7 +52,7 @@ public class MM_Cloaking extends MobModifier
 
     private void tryAbility(EntityLivingBase mob)
     {
-        long time = System.currentTimeMillis();
+        long time = mob.ticksExisted;
         if (time > nextAbilityUse)
         {
             nextAbilityUse = time+coolDown;
@@ -63,7 +63,7 @@ public class MM_Cloaking extends MobModifier
     public static void loadConfig(Configuration config)
     {
         potionDuration = config.get(MM_Cloaking.class.getSimpleName(), "cloakingDurationTicks", 200L, "Time mob is cloaked").getInt(200);
-        coolDown = config.get(MM_Cloaking.class.getSimpleName(), "coolDownMillis", 12000L, "Time between ability uses").getInt(12000);
+        coolDown = config.get(MM_Cloaking.class.getSimpleName(), "coolDownMillis", 12000L, "Time between ability uses").getInt(12000) / 50;
     }
 
     @Override

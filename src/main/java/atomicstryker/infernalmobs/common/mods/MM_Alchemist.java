@@ -27,7 +27,7 @@ public class MM_Alchemist extends MobModifier
     @Override
     public boolean onUpdate(EntityLivingBase mob)
     {
-        long time = System.currentTimeMillis();
+        long time = mob.ticksExisted;
         if (time > nextAbilityUse)
         {
             nextAbilityUse = time+coolDown;
@@ -72,7 +72,7 @@ public class MM_Alchemist extends MobModifier
     
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Alchemist.class.getSimpleName(), "coolDownMillis", 6000L, "Time between ability uses").getInt(6000);
+        coolDown = config.get(MM_Alchemist.class.getSimpleName(), "coolDownMillis", 6000L, "Time between ability uses").getInt(6000) / 50;
     }
 
     @Override
