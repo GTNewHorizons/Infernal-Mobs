@@ -59,7 +59,7 @@ public class MM_Blastoff extends MobModifier
             return;
         }
         
-        long time = System.currentTimeMillis();
+        long time = mob.ticksExisted;
         if (time > nextAbilityUse)
         {
             nextAbilityUse = time+coolDown;
@@ -78,7 +78,7 @@ public class MM_Blastoff extends MobModifier
     
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Blastoff.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000);
+        coolDown = config.get(MM_Blastoff.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class MM_Sticky extends MobModifier
             ItemStack weapon = p.inventory.getStackInSlot(p.inventory.currentItem);
             if (weapon != null)
             {
-                long time = System.currentTimeMillis();
+                long time = mob.ticksExisted;
                 if (time > nextAbilityUse
                 && source.getEntity() != null
                 && !(source instanceof EntityDamageSourceIndirect))
@@ -60,7 +60,7 @@ public class MM_Sticky extends MobModifier
 
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Sticky.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000);
+        coolDown = config.get(MM_Sticky.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
     }
 
     private Class<?>[] disallowed = { EntityCreeper.class };

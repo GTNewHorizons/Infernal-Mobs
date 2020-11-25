@@ -26,7 +26,7 @@ public class MM_Sprint extends MobModifier
     {
         if (getMobTarget() != null)
         {
-            long time = System.currentTimeMillis();
+            long time = mob.ticksExisted;
             if (time > nextAbilityUse)
             {
                 nextAbilityUse = time+coolDown;
@@ -102,7 +102,7 @@ public class MM_Sprint extends MobModifier
     
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Sprint.class.getSimpleName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000);
+        coolDown = config.get(MM_Sprint.class.getSimpleName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000) / 50;
     }
 
     @Override

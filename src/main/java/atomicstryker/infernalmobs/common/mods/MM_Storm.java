@@ -43,7 +43,7 @@ public class MM_Storm extends MobModifier
             return;
         }
         
-        long time = System.currentTimeMillis();
+        long time = mob.ticksExisted;
         if (time > nextAbilityUse
         && mob.getDistanceToEntity(target) > MIN_DISTANCE
         && target.worldObj.canBlockSeeTheSky(MathHelper.floor_double(target.posX), MathHelper.floor_double(target.posY), MathHelper.floor_double(target.posZ)))
@@ -55,7 +55,7 @@ public class MM_Storm extends MobModifier
 
     public static void loadConfig(Configuration config)
     {
-        coolDown = config.get(MM_Storm.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000);
+        coolDown = config.get(MM_Storm.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
     }
 
     @Override
