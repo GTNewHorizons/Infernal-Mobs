@@ -1,28 +1,23 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_1UP extends MobModifier
 {
     private static double healAmount;
 
-    private boolean healed;
+    private boolean healed = false;
     
-    public MM_1UP(EntityLivingBase mob)
+    public MM_1UP(@Nullable MobModifier next)
     {
-        this.modName = "1UP";
-        healed = false;
-    }
-    
-    public MM_1UP(EntityLivingBase mob, MobModifier prevMod)
-    {
-        this.modName = "1UP";
-        this.nextMod = prevMod;
-        healed = false;
+        super("1UP", next);
     }
     
     @Override
@@ -35,11 +30,6 @@ public class MM_1UP extends MobModifier
             healed = true;
         }
         return super.onUpdate(mob);
-    }
-    
-    public static void loadConfig(Configuration config)
-    {
-        healAmount = config.get(MM_1UP.class.getSimpleName(), "healAmountMultiplier", 1.0D, "Multiplies the mob maximum health when healing back up, cannot get past maximum mob health").getDouble(1.0D);
     }
 
     @Override
@@ -62,4 +52,20 @@ public class MM_1UP extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "recurring", "undying", "twinlived" };
+
+    public static class Loader extends ModifierLoader<MM_1UP> {
+        public Loader() {
+            super(MM_1UP.class);
+        }
+
+        @Override
+        public MM_1UP make(@Nullable MobModifier next) {
+            return new MM_1UP(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            healAmount = config.get(getModifierClassName(), "healAmountMultiplier", 1.0D, "Multiplies the mob maximum health when healing back up, cannot get past maximum mob health").getDouble(1.0D);
+        }
+    }
 }

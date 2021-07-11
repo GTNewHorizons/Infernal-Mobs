@@ -1,5 +1,7 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -8,22 +10,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Sticky extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
-
-    public MM_Sticky(EntityLivingBase mob)
-    {
-        this.modName = "Sticky";
-    }
     
-    public MM_Sticky(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Sticky(@Nullable MobModifier prevMod)
     {
-        this.modName = "Sticky";
-        this.nextMod = prevMod;
+        super("Sticky", prevMod);
     }
 
     @Override
@@ -58,11 +55,6 @@ public class MM_Sticky extends MobModifier
         return super.onHurt(mob, source, damage);
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Sticky.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
-    }
-
     private Class<?>[] disallowed = { EntityCreeper.class };
     
     @Override
@@ -84,5 +76,20 @@ public class MM_Sticky extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "thieving", "snagging", "quickfingered" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Sticky> {
+        public Loader() {
+            super(MM_Sticky.class);
+        }
+
+        @Override
+        public MM_Sticky make(@Nullable MobModifier next) {
+            return new MM_Sticky(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
+        }
+    }
 }

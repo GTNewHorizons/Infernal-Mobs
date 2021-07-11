@@ -1,49 +1,9 @@
 package atomicstryker.infernalmobs.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.UUID;
-
-import org.apache.logging.log4j.Level;
-
-import atomicstryker.infernalmobs.common.mods.MM_1UP;
-import atomicstryker.infernalmobs.common.mods.MM_Alchemist;
-import atomicstryker.infernalmobs.common.mods.MM_Berserk;
-import atomicstryker.infernalmobs.common.mods.MM_Blastoff;
-import atomicstryker.infernalmobs.common.mods.MM_Bulwark;
-import atomicstryker.infernalmobs.common.mods.MM_Choke;
-import atomicstryker.infernalmobs.common.mods.MM_Cloaking;
-import atomicstryker.infernalmobs.common.mods.MM_Darkness;
-import atomicstryker.infernalmobs.common.mods.MM_Ender;
-import atomicstryker.infernalmobs.common.mods.MM_Exhaust;
-import atomicstryker.infernalmobs.common.mods.MM_Fiery;
-import atomicstryker.infernalmobs.common.mods.MM_Ghastly;
-import atomicstryker.infernalmobs.common.mods.MM_Gravity;
-import atomicstryker.infernalmobs.common.mods.MM_Lifesteal;
-import atomicstryker.infernalmobs.common.mods.MM_Ninja;
-import atomicstryker.infernalmobs.common.mods.MM_Poisonous;
-import atomicstryker.infernalmobs.common.mods.MM_Quicksand;
-import atomicstryker.infernalmobs.common.mods.MM_Regen;
-import atomicstryker.infernalmobs.common.mods.MM_Rust;
-import atomicstryker.infernalmobs.common.mods.MM_Sapper;
-import atomicstryker.infernalmobs.common.mods.MM_Sprint;
-import atomicstryker.infernalmobs.common.mods.MM_Sticky;
-import atomicstryker.infernalmobs.common.mods.MM_Storm;
-import atomicstryker.infernalmobs.common.mods.MM_Vengeance;
-import atomicstryker.infernalmobs.common.mods.MM_Weakness;
-import atomicstryker.infernalmobs.common.mods.MM_Webber;
-import atomicstryker.infernalmobs.common.mods.MM_Wither;
-import atomicstryker.infernalmobs.common.network.AirPacket;
-import atomicstryker.infernalmobs.common.network.HealthPacket;
-import atomicstryker.infernalmobs.common.network.KnockBackPacket;
-import atomicstryker.infernalmobs.common.network.MobModsPacket;
-import atomicstryker.infernalmobs.common.network.NetworkHelper;
-import atomicstryker.infernalmobs.common.network.VelocityPacket;
+import atomicstryker.infernalmobs.common.mods.*;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
+import atomicstryker.infernalmobs.common.network.*;
+import com.google.common.collect.Lists;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -80,6 +40,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
+import org.apache.logging.log4j.Level;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Mod(modid = "InfernalMobs", name = "Infernal Mobs", version = "@VERSION@")
 public class InfernalMobsCore
@@ -119,7 +83,7 @@ public class InfernalMobsCore
         return "InfernalMobsMod";
     }
 
-    private ArrayList<Class<? extends MobModifier>> mobMods;
+    private ArrayList<ModifierLoader<?>> modifierLoaders;
 
     private int eliteRarity;
     private int ultraRarity;
@@ -174,7 +138,7 @@ public class InfernalMobsCore
 
         proxy.load();
 
-        FMLLog.log("InfernalMobs", Level.INFO, String.format("InfernalMobsCore load() completed! Modifiers ready: %s", mobMods.size()));
+        FMLLog.log("InfernalMobs", Level.INFO, String.format("InfernalMobsCore load() completed! Modifiers ready: %s", modifierLoaders.size()));
     }
 
     @EventHandler
@@ -192,53 +156,44 @@ public class InfernalMobsCore
     }
 
     /**
-     * Registers the MobModifier classes for consideration
-     * 
-     * @param config
+     * Registers the MobModifier factories for consideration
      */
     private void loadMods()
     {
-        mobMods = new ArrayList<Class<? extends MobModifier>>();
-
-        mobMods.add(MM_1UP.class);
-        mobMods.add(MM_Alchemist.class);
-        mobMods.add(MM_Berserk.class);
-        mobMods.add(MM_Blastoff.class);
-        mobMods.add(MM_Bulwark.class);
-        mobMods.add(MM_Choke.class);
-        mobMods.add(MM_Cloaking.class);
-        mobMods.add(MM_Darkness.class);
-        mobMods.add(MM_Ender.class);
-        mobMods.add(MM_Exhaust.class);
-        mobMods.add(MM_Fiery.class);
-        mobMods.add(MM_Ghastly.class);
-        mobMods.add(MM_Gravity.class);
-        mobMods.add(MM_Lifesteal.class);
-        mobMods.add(MM_Ninja.class);
-        mobMods.add(MM_Poisonous.class);
-        mobMods.add(MM_Quicksand.class);
-        mobMods.add(MM_Regen.class);
-        mobMods.add(MM_Rust.class);
-        mobMods.add(MM_Sapper.class);
-        mobMods.add(MM_Sprint.class);
-        mobMods.add(MM_Sticky.class);
-        mobMods.add(MM_Storm.class);
-        mobMods.add(MM_Vengeance.class);
-        mobMods.add(MM_Weakness.class);
-        mobMods.add(MM_Webber.class);
-        mobMods.add(MM_Wither.class);
+        modifierLoaders = Lists.newArrayList(
+                new MM_1UP.Loader(),
+                new MM_Alchemist.Loader(),
+                new MM_Berserk.Loader(),
+                new MM_Blastoff.Loader(),
+                new MM_Bulwark.Loader(),
+                new MM_Choke.Loader(),
+                new MM_Cloaking.Loader(),
+                new MM_Darkness.Loader(),
+                new MM_Ender.Loader(),
+                new MM_Exhaust.Loader(),
+                new MM_Fiery.Loader(),
+                new MM_Ghastly.Loader(),
+                new MM_Gravity.Loader(),
+                new MM_Lifesteal.Loader(),
+                new MM_Ninja.Loader(),
+                new MM_Poisonous.Loader(),
+                new MM_Quicksand.Loader(),
+                new MM_Regen.Loader(),
+                new MM_Rust.Loader(),
+                new MM_Sapper.Loader(),
+                new MM_Sprint.Loader(),
+                new MM_Sticky.Loader(),
+                new MM_Storm.Loader(),
+                new MM_Vengeance.Loader(),
+                new MM_Weakness.Loader(),
+                new MM_Webber.Loader(),
+                new MM_Wither.Loader()
+        );
 
         config.load();
-        Iterator<Class<? extends MobModifier>> iter = mobMods.iterator();
-        while (iter.hasNext())
-        {
-            Class<?> c = iter.next();
 
-            if (!config.get(Configuration.CATEGORY_GENERAL, c.getSimpleName() + " enabled", true).getBoolean(true))
-            {
-                iter.remove();
-            }
-        }
+        modifierLoaders.removeIf(loader -> !config.get(Configuration.CATEGORY_GENERAL, loader.getModifierClassName() + " enabled", true).getBoolean(true));
+
         config.save();
     }
 
@@ -306,20 +261,8 @@ public class InfernalMobsCore
                         "List of DimensionIDs where InfernalMobs will NEVER spawn")
                         .getString(), instance.dimensionBlackList);
 
-        // Load config for enabled modifiers
-        Iterator<Class<? extends MobModifier>> iter = mobMods.iterator();
-        while (iter.hasNext())
-        {
-            Class<?> c = iter.next();
-
-            try
-            {
-                c.getMethod("loadConfig", Configuration.class).invoke(null, config);
-            }
-            catch (Exception e)
-            {
-                FMLLog.log("InfernalMobs", Level.WARN, String.format("Failed to load modifier config for %s", c.getSimpleName()));
-            }
+        for (ModifierLoader<?> loader : modifierLoaders) {
+            loader.loadConfig(config);
         }
 
         config.save();
@@ -545,7 +488,7 @@ public class InfernalMobsCore
     MobModifier createMobModifiers(EntityLivingBase entity)
     {
         /* lets just be lazy and scratch mods off a list copy */
-        ArrayList<Class<? extends MobModifier>> possibleMods = (ArrayList<Class<? extends MobModifier>>) mobMods.clone();
+        ArrayList<ModifierLoader<?>> possibleMods = (ArrayList<ModifierLoader<?>>) modifierLoaders.clone();
 
         int minModifiers = minEliteModifiers;
         int maxModifiers = maxEliteModifiers;
@@ -567,32 +510,11 @@ public class InfernalMobsCore
         {
             /* random index of mod list */
             int index = entity.worldObj.rand.nextInt(possibleMods.size());
-            MobModifier nextMod = null;
 
-            /*
-             * instanciate using one of the two constructors, chainlinking
-             * modifiers as we go
-             */
-            try
-            {
-                if (lastMod == null)
-                {
-                    nextMod = possibleMods.get(index).getConstructor(new Class[] { EntityLivingBase.class }).newInstance(entity);
-                }
-                else
-                {
-                    nextMod =
-                            possibleMods.get(index).getConstructor(new Class[] { EntityLivingBase.class, MobModifier.class })
-                                    .newInstance(entity, lastMod);
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            MobModifier nextMod = possibleMods.get(index).make(lastMod);
 
             boolean allowed = true;
-            if (nextMod != null && nextMod.getBlackListMobClasses() != null)
+            if (nextMod.getBlackListMobClasses() != null)
             {
                 for (Class<?> cl : nextMod.getBlackListMobClasses())
                 {
@@ -678,30 +600,12 @@ public class InfernalMobsCore
         {
             String modName = tokens[j];
 
-            MobModifier nextMod = null;
-            for (Class<? extends MobModifier> c : mobMods)
+            MobModifier nextMod;
+            for (ModifierLoader<?> loader : modifierLoaders)
             {
-                /*
-                 * instanciate using one of the two constructors, chainlinking
-                 * modifiers as we go
-                 */
-                try
-                {
-                    if (lastMod == null)
-                    {
-                        nextMod = c.getConstructor(new Class[] { EntityLivingBase.class }).newInstance(entity);
-                    }
-                    else
-                    {
-                        nextMod = c.getConstructor(new Class[] { EntityLivingBase.class, MobModifier.class }).newInstance(entity, lastMod);
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                nextMod = loader.make(lastMod);
 
-                if (nextMod != null && nextMod.modName.equalsIgnoreCase(modName))
+                if (nextMod.modName.equalsIgnoreCase(modName))
                 {
                     /*
                      * Only actually keep the new linked instance if it's what
@@ -921,18 +825,10 @@ public class InfernalMobsCore
                         EntityPlayer player = (EntityPlayer) p;
                         if (player.getUniqueID().equals(id))
 	                    {
-	                        for (Class<? extends MobModifier> c : mobMods)
-	                        {
-	                            try
-	                            {
-	                                MobModifier mod = c.getConstructor(new Class[] {}).newInstance();
-	                                mod.resetModifiedVictim(player);
-	                            }
-	                            catch (Exception e)
-	                            {
-	                                e.printStackTrace();
-	                            }
-	                        }
+                            for (ModifierLoader<?> loader : modifierLoaders) {
+                                MobModifier modifier = loader.make(null);
+                                modifier.resetModifiedVictim(player);
+                            }
 	                    }
                     }
                 }

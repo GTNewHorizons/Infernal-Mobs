@@ -1,27 +1,24 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Ghastly extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
     private final static float MIN_DISTANCE = 3F;
-
-    public MM_Ghastly(EntityLivingBase mob)
-    {
-        this.modName = "Ghastly";
-    }
     
-    public MM_Ghastly(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Ghastly(@Nullable MobModifier next)
     {
-        this.modName = "Ghastly";
-        this.nextMod = prevMod;
+        super("Ghastly", next);
     }
 
     @Override
@@ -61,11 +58,6 @@ public class MM_Ghastly extends MobModifier
         }
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Ghastly.class.getSimpleName(), "coolDownMillis", 6000L, "Time between ability uses").getInt(6000) / 50;
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -79,5 +71,20 @@ public class MM_Ghastly extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "bombing", "fireballsy" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Ghastly> {
+        public Loader() {
+            super(MM_Ghastly.class);
+        }
+
+        @Override
+        public MM_Ghastly make(@Nullable MobModifier next) {
+            return new MM_Ghastly(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 6000L, "Time between ability uses").getInt(6000) / 50;
+        }
+    }
 }

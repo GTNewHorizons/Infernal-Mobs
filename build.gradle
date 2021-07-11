@@ -52,6 +52,11 @@ if( dfile.exists() ) {
 	}
 }
 
+allprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
 dependencies {
 	    compile fileTree(dir: 'libs', include: '*.jar,*.zip')
 

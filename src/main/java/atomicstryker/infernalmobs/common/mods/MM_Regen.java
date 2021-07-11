@@ -1,24 +1,21 @@
 package atomicstryker.infernalmobs.common.mods;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.common.config.Configuration;
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.common.config.Configuration;
+
+import javax.annotation.Nullable;
 
 public class MM_Regen extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
-
-    public MM_Regen(EntityLivingBase mob)
-    {
-        this.modName = "Regen";
-    }
     
-    public MM_Regen(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Regen(@Nullable MobModifier next)
     {
-        this.modName = "Regen";
-        this.nextMod = prevMod;
+        super("Regen", next);
     }
 
     @Override
@@ -36,11 +33,6 @@ public class MM_Regen extends MobModifier
         return super.onUpdate(mob);
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Regen.class.getSimpleName(), "coolDownMillis", 500L, "Time between ability uses").getInt(500) / 50;
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -54,4 +46,20 @@ public class MM_Regen extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "regenerating", "healing", "nighunkillable" };
+
+    public static class Loader extends ModifierLoader<MM_Regen> {
+        public Loader() {
+            super(MM_Regen.class);
+        }
+
+        @Override
+        public MM_Regen make(@Nullable MobModifier next) {
+            return new MM_Regen(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 500L, "Time between ability uses").getInt(500) / 50;
+        }
+    }
 }

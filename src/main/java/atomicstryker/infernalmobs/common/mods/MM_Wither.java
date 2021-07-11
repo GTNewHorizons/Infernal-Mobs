@@ -1,27 +1,24 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Wither extends MobModifier
 {
     private static int potionDuration;
-
-    public MM_Wither(EntityLivingBase mob)
-    {
-        this.modName = "Wither";
-    }
     
-    public MM_Wither(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Wither(@Nullable MobModifier next)
     {
-        this.modName = "Wither";
-        this.nextMod = prevMod;
+        super("Wither", next);
     }
     
     @Override
@@ -51,11 +48,6 @@ public class MM_Wither extends MobModifier
         return super.onAttack(entity, source, damage);
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        potionDuration = config.get(MM_Wither.class.getSimpleName(), "witherDurationTicks", 120L, "Time attacker is withered").getInt(120);
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -69,5 +61,20 @@ public class MM_Wither extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "withering" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Wither> {
+        public Loader() {
+            super(MM_Wither.class);
+        }
+
+        @Override
+        public MM_Wither make(@Nullable MobModifier next) {
+            return new MM_Wither(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            potionDuration = config.get(getModifierClassName(), "witherDurationTicks", 120L, "Time attacker is withered").getInt(120);
+        }
+    }
 }

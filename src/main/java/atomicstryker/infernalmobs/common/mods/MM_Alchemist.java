@@ -1,23 +1,20 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Alchemist extends MobModifier
 {
-    public MM_Alchemist(EntityLivingBase mob)
+    public MM_Alchemist(@Nullable MobModifier next)
     {
-        this.modName = "Alchemist";
-    }
-    
-    public MM_Alchemist(EntityLivingBase mob, MobModifier prevMod)
-    {
-        this.modName = "Alchemist";
-        this.nextMod = prevMod;
+        super("Alchemist", next);
     }
     
     private long nextAbilityUse = 0L;
@@ -69,11 +66,6 @@ public class MM_Alchemist extends MobModifier
             mob.worldObj.spawnEntityInWorld(potion);
         }
     }
-    
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Alchemist.class.getSimpleName(), "coolDownMillis", 6000L, "Time between ability uses").getInt(6000) / 50;
-    }
 
     @Override
     protected String[] getModNameSuffix()
@@ -88,5 +80,20 @@ public class MM_Alchemist extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "witchkin", "brewing", "singed" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Alchemist> {
+        public Loader() {
+            super(MM_Alchemist.class);
+        }
+
+        @Override
+        public MM_Alchemist make(@Nullable MobModifier next) {
+            return new MM_Alchemist(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 6000L, "Time between ability uses").getInt(6000) / 50;
+        }
+    }
 }

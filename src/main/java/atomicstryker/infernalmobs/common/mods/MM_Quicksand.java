@@ -1,23 +1,19 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Quicksand extends MobModifier
 {
-    public MM_Quicksand(EntityLivingBase mob)
+    public MM_Quicksand(@Nullable MobModifier next)
     {
-        this.modName = "Quicksand";
-    }
-    
-    public MM_Quicksand(EntityLivingBase mob, MobModifier prevMod)
-    {
-        this.modName = "Quicksand";
-        this.nextMod = prevMod;
+        super("Quicksand", next);
     }
     
     int ticker = 0;
@@ -37,11 +33,6 @@ public class MM_Quicksand extends MobModifier
         return super.onUpdate(mob);
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        // NOOP by default
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -55,5 +46,16 @@ public class MM_Quicksand extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "slowing", "Quicksand" };
-    
+
+
+    public static class Loader extends ModifierLoader<MM_Quicksand> {
+        public Loader() {
+            super(MM_Quicksand.class);
+        }
+
+        @Override
+        public MM_Quicksand make(@Nullable MobModifier next) {
+            return new MM_Quicksand(next);
+        }
+    }
 }

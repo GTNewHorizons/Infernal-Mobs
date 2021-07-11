@@ -1,5 +1,8 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,8 +10,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Ninja extends MobModifier
 {
@@ -18,15 +21,9 @@ public class MM_Ninja extends MobModifier
     private static float reflectMultiplier;
     private static float maxReflectDamage;
 
-    public MM_Ninja(EntityLivingBase mob)
+    public MM_Ninja(@Nullable MobModifier next)
     {
-        this.modName = "Ninja";
-    }
-    
-    public MM_Ninja(EntityLivingBase mob, MobModifier prevMod)
-    {
-        this.modName = "Ninja";
-        this.nextMod = prevMod;
+        super("Ninja", next);
     }
 
     @Override
@@ -117,13 +114,6 @@ public class MM_Ninja extends MobModifier
         return true;
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Ninja.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
-        reflectMultiplier = (float) config.get(MM_Ninja.class.getSimpleName(), "ninjaReflectMultiplier", 0.75D, "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage").getDouble(0.75D);
-        maxReflectDamage = (float) config.get(MM_Ninja.class.getSimpleName(), "ninjaReflectMaxDamage", 10.0D, "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)").getDouble(10.0D);
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -137,5 +127,22 @@ public class MM_Ninja extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "totallyzen", "innerlypeaceful", "Ronin" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Ninja> {
+        public Loader() {
+            super(MM_Ninja.class);
+        }
+
+        @Override
+        public MM_Ninja make(@Nullable MobModifier next) {
+            return new MM_Ninja(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
+            reflectMultiplier = (float) config.get(getModifierClassName(), "ninjaReflectMultiplier", 0.75D, "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage").getDouble(0.75D);
+            maxReflectDamage = (float) config.get(getModifierClassName(), "ninjaReflectMaxDamage", 10.0D, "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)").getDouble(10.0D);
+        }
+    }
 }

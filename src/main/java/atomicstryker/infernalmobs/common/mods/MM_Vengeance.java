@@ -1,25 +1,22 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Vengeance extends MobModifier
 {
     private static float reflectMultiplier;
     private static float maxReflectDamage;
 
-    public MM_Vengeance(EntityLivingBase mob)
+    public MM_Vengeance(@Nullable MobModifier next)
     {
-        this.modName = "Vengeance";
-    }
-
-    public MM_Vengeance(EntityLivingBase mob, MobModifier prevMod)
-    {
-        this.modName = "Vengeance";
-        this.nextMod = prevMod;
+        super("Vengeance", next);
     }
 
     @Override
@@ -40,13 +37,7 @@ public class MM_Vengeance extends MobModifier
 
         return super.onHurt(mob, source, damage);
     }
-
-    public static void loadConfig(Configuration config)
-    {
-        reflectMultiplier = (float) config.get(MM_Vengeance.class.getSimpleName(), "vengeanceMultiplier", 0.5D, "Multiplies damage received, result is subtracted from attacking entity's health").getDouble(0.5D);
-        maxReflectDamage= (float) config.get(MM_Vengeance.class.getSimpleName(), "vengeanceMaxDamage", 0.0D, "Maximum amount of damage that is reflected (0, or less than zero for unlimited vengeance damage)").getDouble(0.0D);
-    }
-
+    
     @Override
     protected String[] getModNameSuffix()
     {
@@ -63,4 +54,20 @@ public class MM_Vengeance extends MobModifier
 
     private static String[] prefix = { "thorned", "thorny", "spiky" };
 
+    public static class Loader extends ModifierLoader<MM_Vengeance> {
+        public Loader() {
+            super(MM_Vengeance.class);
+        }
+
+        @Override
+        public MM_Vengeance make(@Nullable MobModifier next) {
+            return new MM_Vengeance(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            reflectMultiplier = (float) config.get(getModifierClassName(), "vengeanceMultiplier", 0.5D, "Multiplies damage received, result is subtracted from attacking entity's health").getDouble(0.5D);
+            maxReflectDamage= (float) config.get(getModifierClassName(), "vengeanceMaxDamage", 0.0D, "Maximum amount of damage that is reflected (0, or less than zero for unlimited vengeance damage)").getDouble(0.0D);
+        }
+    }
 }

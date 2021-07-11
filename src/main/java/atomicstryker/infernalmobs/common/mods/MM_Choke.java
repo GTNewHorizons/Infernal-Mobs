@@ -1,33 +1,24 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
-import net.minecraftforge.common.config.Configuration;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
-
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
 
 public class MM_Choke extends MobModifier
 {
     private EntityLivingBase lastTarget;
-    private int lastAir;
-    
-    public MM_Choke(EntityLivingBase mob)
-    {
-        super();
-        this.modName = "Choke";
-        lastTarget = null;
-        lastAir = -999;
-    }
+    private int lastAir = -999;
 
-    public MM_Choke(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Choke(@Nullable MobModifier next)
     {
-        this(mob);
-        this.nextMod = prevMod;
+        super("Choke", next);
     }
     
     @Override
@@ -118,11 +109,6 @@ public class MM_Choke extends MobModifier
         victim.setAir(-999);
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        // NOOP by default
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -139,4 +125,14 @@ public class MM_Choke extends MobModifier
 
     private static String[] prefix = { "Sith Lord", "Dark Lord", "Darth" };
 
+    public static class Loader extends ModifierLoader<MM_Choke> {
+        public Loader() {
+            super(MM_Choke.class);
+        }
+
+        @Override
+        public MM_Choke make(@Nullable MobModifier next) {
+            return new MM_Choke(next);
+        }
+    }
 }

@@ -1,24 +1,21 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Sprint extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
     private boolean sprinting;
-
-    public MM_Sprint(EntityLivingBase mob)
-    {
-        this.modName = "Sprint";
-    }
     
-    public MM_Sprint(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Sprint(@Nullable MobModifier next)
     {
-        this.modName = "Sprint";
-        this.nextMod = prevMod;
+        super("Sprint", next);
     }
 
     @Override
@@ -99,11 +96,6 @@ public class MM_Sprint extends MobModifier
     {
         return Math.sqrt(modMotionX*modMotionX + modMotionZ*modMotionZ);
     }
-    
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Sprint.class.getSimpleName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000) / 50;
-    }
 
     @Override
     protected String[] getModNameSuffix()
@@ -118,5 +110,20 @@ public class MM_Sprint extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "sprinting", "swift", "charging" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Sprint> {
+        public Loader() {
+            super(MM_Sprint.class);
+        }
+
+        @Override
+        public MM_Sprint make(@Nullable MobModifier next) {
+            return new MM_Sprint(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000) / 50;
+        }
+    }
 }

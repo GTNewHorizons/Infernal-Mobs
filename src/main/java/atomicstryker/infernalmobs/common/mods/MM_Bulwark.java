@@ -1,34 +1,26 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Bulwark extends MobModifier
 {
     private static float damageMultiplier;
-
-    public MM_Bulwark(EntityLivingBase mob)
-    {
-        this.modName = "Bulwark";
-    }
     
-    public MM_Bulwark(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Bulwark(@Nullable MobModifier next)
     {
-        this.modName = "Bulwark";
-        this.nextMod = prevMod;
+        super("Bulwark", next);
     }
     
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage)
     {
         return super.onHurt(mob, source, Math.max(damage * damageMultiplier, 1));
-    }
-
-    public static void loadConfig(Configuration config)
-    {
-        damageMultiplier = (float) config.get(MM_Bulwark.class.getSimpleName(), "damageMultiplier", 0.5D, "Damage (taken) multiplier, only makes sense for values < 1.0").getDouble(0.5D);
     }
 
     @Override
@@ -44,5 +36,20 @@ public class MM_Bulwark extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "turtling", "defensive", "armoured" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Bulwark> {
+        public Loader() {
+            super(MM_Bulwark.class);
+        }
+
+        @Override
+        public MM_Bulwark make(@Nullable MobModifier next) {
+            return new MM_Bulwark(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            damageMultiplier = (float) config.get(getModifierClassName(), "damageMultiplier", 0.5D, "Damage (taken) multiplier, only makes sense for values < 1.0").getDouble(0.5D);
+        }
+    }
 }
