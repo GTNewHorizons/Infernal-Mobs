@@ -1,27 +1,24 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Storm extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
     private final static float MIN_DISTANCE = 3F;
-
-    public MM_Storm(EntityLivingBase mob)
-    {
-        this.modName = "Storm";
-    }
     
-    public MM_Storm(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Storm(@Nullable MobModifier next)
     {
-        this.modName = "Storm";
-        this.nextMod = prevMod;
+        super("Storm", next);
     }
 
     @Override
@@ -53,11 +50,6 @@ public class MM_Storm extends MobModifier
         }
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Storm.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -71,5 +63,20 @@ public class MM_Storm extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "striking", "thundering", "electrified" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Storm> {
+        public Loader() {
+            super(MM_Storm.class);
+        }
+
+        @Override
+        public MM_Storm make(@Nullable MobModifier next) {
+            return new MM_Storm(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
+        }
+    }
 }

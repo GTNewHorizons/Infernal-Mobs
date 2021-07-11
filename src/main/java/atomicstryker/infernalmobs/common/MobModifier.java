@@ -1,9 +1,5 @@
 package atomicstryker.infernalmobs.common;
 
-import java.util.ArrayList;
-
-import org.apache.logging.log4j.Level;
-
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,13 +9,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Level;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public abstract class MobModifier
 {    
     /**
      * next MobModifier in a linked chain, on the last one this field is null
      */
+    @Nullable
     protected MobModifier nextMod;
     
     /**
@@ -62,13 +62,14 @@ public abstract class MobModifier
      */
     private String bufferedEntityName;
     
-    public MobModifier()
+    public MobModifier(String name, @Nullable MobModifier next)
     {
-        nextMod = null;
+        nextMod = next;
         healthHacked = false;
         actualHealth = 100;
         actualMaxHealth = -1;
         bufferedSize = 0;
+        modName = name;
     }
     
     /**
@@ -485,13 +486,4 @@ public abstract class MobModifier
     {
         // NOOP by default
     }
-
-    /**
-     * Load modifier-specific configuration
-     */
-    public static void loadConfig(Configuration config)
-    {
-        // NOOP by default
-    }
-
 }

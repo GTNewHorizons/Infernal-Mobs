@@ -1,27 +1,24 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Darkness extends MobModifier
 {
     private static int potionDuration;
-
-    public MM_Darkness(EntityLivingBase mob)
-    {
-        this.modName = "Darkness";
-    }
     
-    public MM_Darkness(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Darkness(@Nullable MobModifier next)
     {
-        this.modName = "Darkness";
-        this.nextMod = prevMod;
+        super("Darkness", next);
     }
     
     @Override
@@ -51,11 +48,6 @@ public class MM_Darkness extends MobModifier
         return super.onAttack(entity, source, damage);
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        potionDuration = config.get(MM_Darkness.class.getSimpleName(), "darknessDurationTicks", 120L, "Time attacker is darkened").getInt(120);
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -69,5 +61,20 @@ public class MM_Darkness extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "dark", "shadowkin", "eclipsed" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Darkness> {
+        public Loader() {
+            super(MM_Darkness.class);
+        }
+
+        @Override
+        public MM_Darkness make(@Nullable MobModifier next) {
+            return new MM_Darkness(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            potionDuration = config.get(getModifierClassName(), "darknessDurationTicks", 120L, "Time attacker is darkened").getInt(120);
+        }
+    }
 }

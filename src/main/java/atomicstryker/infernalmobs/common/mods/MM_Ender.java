@@ -1,5 +1,8 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,8 +10,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Ender extends MobModifier
 {
@@ -18,15 +21,9 @@ public class MM_Ender extends MobModifier
     private static float reflectMultiplier;
     private static float maxReflectDamage;
 
-    public MM_Ender(EntityLivingBase mob)
+    public MM_Ender(@Nullable MobModifier next)
     {
-        this.modName = "Ender";
-    }
-
-    public MM_Ender(EntityLivingBase mob, MobModifier prevMod)
-    {
-        this.modName = "Ender";
-        this.nextMod = prevMod;
+        super("Ender", next);
     }
 
     @Override
@@ -129,13 +126,6 @@ public class MM_Ender extends MobModifier
         return true;
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Ender.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
-        reflectMultiplier = (float) config.get(MM_Ender.class.getSimpleName(), "enderReflectMultiplier", 0.75D, "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage").getDouble(0.75D);
-        maxReflectDamage = (float) config.get(MM_Ender.class.getSimpleName(), "enderReflectMaxDamage", 10.0D, "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)").getDouble(10.0D);
-    }
-
     @Override
     protected String[] getModNameSuffix()
     {
@@ -152,4 +142,21 @@ public class MM_Ender extends MobModifier
 
     private static String[] prefix = { "enderborn", "tricky" };
 
+    public static class Loader extends ModifierLoader<MM_Ender> {
+        public Loader() {
+            super(MM_Ender.class);
+        }
+
+        @Override
+        public MM_Ender make(@Nullable MobModifier next) {
+            return new MM_Ender(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
+            reflectMultiplier = (float) config.get(getModifierClassName(), "enderReflectMultiplier", 0.75D, "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage").getDouble(0.75D);
+            maxReflectDamage = (float) config.get(getModifierClassName(), "enderReflectMaxDamage", 10.0D, "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)").getDouble(10.0D);
+        }
+    }
 }

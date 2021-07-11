@@ -1,10 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="3897871f-bfff-4920-9955-c7947d135474" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/api/ModifierLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/InfernalMobs.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/InfernalMobs.ipr" beforeDir="false" afterPath="$PROJECT_DIR$/InfernalMobs.ipr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/InfernalMobs.iws" beforeDir="false" afterPath="$PROJECT_DIR$/InfernalMobs.iws" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/InfernalMobsCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/InfernalMobsCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/MobModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/MobModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_1UP.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_1UP.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Alchemist.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Alchemist.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Berserk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Berserk.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Blastoff.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Blastoff.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Bulwark.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Bulwark.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Choke.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Choke.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Cloaking.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Cloaking.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Darkness.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Darkness.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Ender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Ender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Exhaust.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Exhaust.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Fiery.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Fiery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Ghastly.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Ghastly.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Gravity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Gravity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Lifesteal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Lifesteal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Ninja.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Ninja.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Poisonous.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Poisonous.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Quicksand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Quicksand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Regen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Regen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Rust.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Rust.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Sapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Sapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Sprint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Sprint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Sticky.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Sticky.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Storm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Storm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Vengeance.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Vengeance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Weakness.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Weakness.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Webber.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Webber.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Wither.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/atomicstryker/infernalmobs/common/mods/MM_Wither.java" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,8 +89,59 @@
     <breakpoint_rules converted="true" />
     <ui_properties converted="true" />
   </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Infernal-Mobs" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Infernal-Mobs" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Infernal-Mobs" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="forgegradle" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ModuleEditorState">
     <option name="LAST_EDITED_MODULE_NAME" />
@@ -69,35 +156,22 @@
       <profile-state />
     </entry>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
   <component name="PropertiesComponent">
-    <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="MemberChooser.copyJavadoc" value="false" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/eclipse" />
   </component>
   <component name="RunManager" selected="Application.Minecraft Client">
-    <configuration default="true" name="&lt;template&gt;" selected="false" type="WebApp">
-      <Host>localhost</Host>
-      <Port>5050</Port>
-    </configuration>
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -105,11 +179,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" name="&lt;template&gt;" selected="false" type="WebApp">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
     <configuration name="Minecraft Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="GradleStart" />
-      <module name="InfernalMobs" />
+      <module name="Infernal-Mobs.main" />
       <option name="VM_PARAMETERS" value="-Xincgc -Xmx1024M -Xms1024M" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/../InfernalMobs\eclipse\assets" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/eclipse" />
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
       <method v="2">
@@ -134,6 +212,38 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Infernal-Mobs [setupDecompWorkspace]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="setupDecompWorkspace" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -157,6 +267,16 @@
         <option name="BuildArtifacts" enabled="false" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.Minecraft Client" />
+      <item itemvalue="Application.Minecraft Server" />
+      <item itemvalue="Gradle.Infernal-Mobs [setupDecompWorkspace]" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.Infernal-Mobs [setupDecompWorkspace]" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -171,18 +291,27 @@
     </task>
     <servers />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />

@@ -1,27 +1,24 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Blastoff extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
-
-    public MM_Blastoff(EntityLivingBase mob)
-    {
-        this.modName = "Blastoff";
-    }
     
-    public MM_Blastoff(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Blastoff(@Nullable MobModifier next)
     {
-        this.modName = "Blastoff";
-        this.nextMod = prevMod;
+        super("Blastoff", next);
     }
 
     @Override
@@ -75,11 +72,6 @@ public class MM_Blastoff extends MobModifier
             }
         }
     }
-    
-    public static void loadConfig(Configuration config)
-    {
-        coolDown = config.get(MM_Blastoff.class.getSimpleName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
-    }
 
     @Override
     public Class<?>[] getModsNotToMixWith()
@@ -101,5 +93,20 @@ public class MM_Blastoff extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "thumping", "trolling", "byebye" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Blastoff> {
+        public Loader() {
+            super(MM_Blastoff.class);
+        }
+
+        @Override
+        public MM_Blastoff make(@Nullable MobModifier next) {
+            return new MM_Blastoff(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses").getInt(15000) / 50;
+        }
+    }
 }

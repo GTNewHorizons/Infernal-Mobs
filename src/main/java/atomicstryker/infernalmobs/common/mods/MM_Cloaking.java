@@ -1,5 +1,7 @@
 package atomicstryker.infernalmobs.common.mods;
 
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,23 +9,18 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.config.Configuration;
-import atomicstryker.infernalmobs.common.MobModifier;
+
+import javax.annotation.Nullable;
 
 public class MM_Cloaking extends MobModifier
 {
     private long nextAbilityUse = 0L;
     private static long coolDown;
     private static int potionDuration;
-
-    public MM_Cloaking(EntityLivingBase mob)
-    {
-        this.modName = "Cloaking";
-    }
     
-    public MM_Cloaking(EntityLivingBase mob, MobModifier prevMod)
+    public MM_Cloaking(@Nullable MobModifier next)
     {
-        this.modName = "Cloaking";
-        this.nextMod = prevMod;
+        super("Cloaking", next);
     }
 
     @Override
@@ -60,12 +57,6 @@ public class MM_Cloaking extends MobModifier
         }
     }
 
-    public static void loadConfig(Configuration config)
-    {
-        potionDuration = config.get(MM_Cloaking.class.getSimpleName(), "cloakingDurationTicks", 200L, "Time mob is cloaked").getInt(200);
-        coolDown = config.get(MM_Cloaking.class.getSimpleName(), "coolDownMillis", 12000L, "Time between ability uses").getInt(12000) / 50;
-    }
-
     @Override
     public Class<?>[] getBlackListMobClasses()
     {
@@ -86,5 +77,21 @@ public class MM_Cloaking extends MobModifier
         return prefix;
     }
     private static String[] prefix = { "stalking", "unseen", "hunting" };
-    
+
+    public static class Loader extends ModifierLoader<MM_Cloaking> {
+        public Loader() {
+            super(MM_Cloaking.class);
+        }
+
+        @Override
+        public MM_Cloaking make(@Nullable MobModifier next) {
+            return new MM_Cloaking(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            potionDuration = config.get(getModifierClassName(), "cloakingDurationTicks", 200L, "Time mob is cloaked").getInt(200);
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 12000L, "Time between ability uses").getInt(12000) / 50;
+        }
+    }
 }
