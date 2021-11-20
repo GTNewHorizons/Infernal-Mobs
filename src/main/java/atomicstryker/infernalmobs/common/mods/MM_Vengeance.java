@@ -24,15 +24,12 @@ public class MM_Vengeance extends MobModifier
     {
         if (source.getEntity() != null && source.getEntity() != mob && !InfernalMobsCore.instance().isInfiniteLoop(mob, source.getEntity()))
         {
-            if (maxReflectDamage <= 0.0f)
+            float reflectedDamage = Math.min(mob.getHealth(), Math.max(damage * reflectMultiplier, 1));
+            if (maxReflectDamage > 0.0f)
             {
-                source.getEntity().attackEntityFrom(DamageSource.causeMobDamage(mob), Math.max(damage * reflectMultiplier, 1));
+                reflectedDamage = Math.min(maxReflectDamage, reflectedDamage);
             }
-            else
-            {
-                source.getEntity().attackEntityFrom(DamageSource.causeMobDamage(mob),
-                        Math.min(maxReflectDamage, Math.max(damage * reflectMultiplier, 1)));
-            }
+            source.getEntity().attackEntityFrom(DamageSource.causeMobDamage(mob), reflectedDamage);
         }
 
         return super.onHurt(mob, source, damage);
