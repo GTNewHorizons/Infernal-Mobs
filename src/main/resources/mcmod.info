@@ -1,10 +1,10 @@
 [
 {
-  "modid": "InfernalMobs",
-  "name": "Infernal Mobs",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Diablo Style random Enchantments on Entities! Harder fights! More XP and enchanted loot!",
-  "mcversion": "${mcversion}",
-  "version": "${version}",
+  "mcversion": "${minecraftVersion}",
+  "version": "${modVersion}",
   "url": "http://www.minecraftforum.net/topic/991952-",
   "authors": [
     "AtomicStryker"
