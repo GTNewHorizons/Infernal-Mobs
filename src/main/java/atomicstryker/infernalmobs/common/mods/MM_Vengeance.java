@@ -29,7 +29,7 @@ public class MM_Vengeance extends MobModifier
             {
                 reflectedDamage = Math.min(maxReflectDamage, reflectedDamage);
             }
-            source.getEntity().attackEntityFrom(DamageSource.causeMobDamage(mob), reflectedDamage);
+            source.getEntity().attackEntityFrom(DamageSource.causeThornsDamage(mob), reflectedDamage);
         }
 
         return super.onHurt(mob, source, damage);
