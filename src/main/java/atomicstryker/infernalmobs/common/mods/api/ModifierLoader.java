@@ -1,11 +1,13 @@
 package atomicstryker.infernalmobs.common.mods.api;
 
-import atomicstryker.infernalmobs.common.MobModifier;
-import net.minecraftforge.common.config.Configuration;
-
 import javax.annotation.Nullable;
 
+import net.minecraftforge.common.config.Configuration;
+
+import atomicstryker.infernalmobs.common.MobModifier;
+
 public abstract class ModifierLoader<T extends MobModifier> {
+
     private final String modifierClassName;
 
     protected ModifierLoader(Class<T> modifierClass) {
@@ -18,7 +20,7 @@ public abstract class ModifierLoader<T extends MobModifier> {
 
     }
 
-    public String getModifierClassName(){
+    public String getModifierClassName() {
         return modifierClassName;
     }
 }

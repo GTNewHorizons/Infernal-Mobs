@@ -1,8 +1,7 @@
 package atomicstryker.infernalmobs.common.mods;
 
-import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
-import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,119 +9,112 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 
-import javax.annotation.Nullable;
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 
-public class MM_Gravity extends MobModifier
-{
+public class MM_Gravity extends MobModifier {
+
     private long nextAbilityUse = 0L;
     private static long coolDown;
     private static double maxDistanceSquared;
-    
-    public MM_Gravity(@Nullable MobModifier next)
-    {
+
+    public MM_Gravity(@Nullable MobModifier next) {
         super("Gravity", next);
     }
 
     @Override
-    public boolean onUpdate(EntityLivingBase mob)
-    {
+    public boolean onUpdate(EntityLivingBase mob) {
         EntityLivingBase target = getMobTarget();
 
-        if (target != null
-        && target instanceof EntityPlayer
-        && !(target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage))
-        {
+        if (target != null && target instanceof EntityPlayer
+                && !(target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage)) {
             tryAbility(mob, target);
         }
-        
+
         return super.onUpdate(mob);
     }
-    
+
     @Override
-    public float onHurt(EntityLivingBase mob, DamageSource source, float damage)
-    {
-        if (source.getEntity() != null
-        && source.getEntity() instanceof EntityLivingBase
-        && !(source.getEntity() instanceof EntityPlayer && ((EntityPlayer) source.getEntity()).capabilities.disableDamage))
-        {
+    public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
+        if (source.getEntity() != null && source.getEntity() instanceof EntityLivingBase
+                && !(source.getEntity() instanceof EntityPlayer
+                        && ((EntityPlayer) source.getEntity()).capabilities.disableDamage)) {
             tryAbility(mob, (EntityLivingBase) source.getEntity());
         }
-        
+
         return super.onHurt(mob, source, damage);
     }
 
-    private void tryAbility(EntityLivingBase mob, EntityLivingBase target)
-    {
-        if (target == null || !mob.canEntityBeSeen(target) || mob.getDistanceSqToEntity(target) >= maxDistanceSquared)
-        {
+    private void tryAbility(EntityLivingBase mob, EntityLivingBase target) {
+        if (target == null || !mob.canEntityBeSeen(target) || mob.getDistanceSqToEntity(target) >= maxDistanceSquared) {
             return;
         }
-        
+
         long time = mob.ticksExisted;
-        if (time > nextAbilityUse)
-        {
-            nextAbilityUse = time+coolDown;
+        if (time > nextAbilityUse) {
+            nextAbilityUse = time + coolDown;
 
             double diffX = target.posX - mob.posX;
             double diffZ;
-            for (diffZ = target.posZ - mob.posZ; diffX * diffX + diffZ * diffZ < 1.0E-4D; diffZ = (Math.random() - Math.random()) * 0.01D)
-            {
+            for (diffZ = target.posZ - mob.posZ; diffX * diffX + diffZ * diffZ
+                    < 1.0E-4D; diffZ = (Math.random() - Math.random()) * 0.01D) {
                 diffX = (Math.random() - Math.random()) * 0.01D;
             }
-            
-            mob.worldObj.playSoundAtEntity(mob, "mob.irongolem.throw", 1.0F, (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
-            
-            if (mob.worldObj.isRemote || !(target instanceof EntityPlayerMP))
-            {
+
+            mob.worldObj.playSoundAtEntity(
+                    mob,
+                    "mob.irongolem.throw",
+                    1.0F,
+                    (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
+
+            if (mob.worldObj.isRemote || !(target instanceof EntityPlayerMP)) {
                 knockBack(target, diffX, diffZ);
-            }
-            else
-            {
-                InfernalMobsCore.instance().sendKnockBackPacket((EntityPlayerMP) target, (float)diffX, (float)diffZ);
+            } else {
+                InfernalMobsCore.instance().sendKnockBackPacket((EntityPlayerMP) target, (float) diffX, (float) diffZ);
             }
         }
     }
-    
-    public static void knockBack(EntityLivingBase target, double x, double z)
-    {
+
+    public static void knockBack(EntityLivingBase target, double x, double z) {
         target.isAirBorne = true;
         float normalizedPower = MathHelper.sqrt_double(x * x + z * z);
         float knockPower = 0.8F;
         target.motionX /= 2.0D;
         target.motionY /= 2.0D;
         target.motionZ /= 2.0D;
-        target.motionX -= x / (double)normalizedPower * (double)knockPower;
-        target.motionY += (double)knockPower;
-        target.motionZ -= z / (double)normalizedPower * (double)knockPower;
+        target.motionX -= x / (double) normalizedPower * (double) knockPower;
+        target.motionY += (double) knockPower;
+        target.motionZ -= z / (double) normalizedPower * (double) knockPower;
 
-        if (target.motionY > 0.4000000059604645D)
-        {
+        if (target.motionY > 0.4000000059604645D) {
             target.motionY = 0.4000000059604645D;
         }
     }
 
     @Override
-    public Class<?>[] getModsNotToMixWith()
-    {
+    public Class<?>[] getModsNotToMixWith() {
         return modBans;
     }
+
     private static Class<?>[] modBans = { MM_Webber.class };
-    
+
     @Override
-    protected String[] getModNameSuffix()
-    {
+    protected String[] getModNameSuffix() {
         return suffix;
     }
+
     private static String[] suffix = { "ofRepulsion", "theFlipper" };
-    
+
     @Override
-    protected String[] getModNamePrefix()
-    {
+    protected String[] getModNamePrefix() {
         return prefix;
     }
+
     private static String[] prefix = { "repulsing", "sproing" };
 
     public static class Loader extends ModifierLoader<MM_Gravity> {
+
         public Loader() {
             super(MM_Gravity.class);
         }
@@ -134,8 +126,10 @@ public class MM_Gravity extends MobModifier
 
         @Override
         public void loadConfig(Configuration config) {
-            coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses").getInt(5000) / 50;
-            double maxDistance = config.get(getModifierClassName(), "maxDistance", 40, "Range of ability.").getDouble(40);
+            coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses")
+                    .getInt(5000) / 50;
+            double maxDistance = config.get(getModifierClassName(), "maxDistance", 40, "Range of ability.")
+                    .getDouble(40);
             maxDistanceSquared = maxDistance * maxDistance;
         }
     }

@@ -4,24 +4,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
+
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 import atomicstryker.infernalmobs.common.MobModifier;
 import atomicstryker.infernalmobs.common.network.NetworkHelper.IPacket;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 
-public class HealthPacket implements IPacket
-{
-    
+public class HealthPacket implements IPacket {
+
     private String stringData;
     private int entID;
     private float health;
     private float maxhealth;
-    
+
     public HealthPacket() {}
-    
-    public HealthPacket(String u, int i, float f1, float f2)
-    {
+
+    public HealthPacket(String u, int i, float f1, float f2) {
         stringData = u;
         entID = i;
         health = f1;
@@ -29,8 +28,7 @@ public class HealthPacket implements IPacket
     }
 
     @Override
-    public void writeBytes(ChannelHandlerContext ctx, ByteBuf bytes)
-    {
+    public void writeBytes(ChannelHandlerContext ctx, ByteBuf bytes) {
         bytes.writeShort(stringData.length());
         for (char c : stringData.toCharArray()) bytes.writeChar(c);
         bytes.writeInt(entID);
@@ -39,8 +37,7 @@ public class HealthPacket implements IPacket
     }
 
     @Override
-    public void readBytes(ChannelHandlerContext ctx, ByteBuf bytes)
-    {
+    public void readBytes(ChannelHandlerContext ctx, ByteBuf bytes) {
         short len = bytes.readShort();
         char[] chars = new char[len];
         for (int i = 0; i < len; i++) chars[i] = bytes.readChar();
@@ -48,27 +45,22 @@ public class HealthPacket implements IPacket
         entID = bytes.readInt();
         health = bytes.readFloat();
         maxhealth = bytes.readFloat();
-        
+
         // client always sends packets with health = maxhealth = 0
-        if (maxhealth > 0)
-        {
+        if (maxhealth > 0) {
             InfernalMobsCore.proxy.onHealthPacketForClient(stringData, entID, health, maxhealth);
-        }
-        else
-        {
+        } else {
             EntityPlayerMP p = MinecraftServer.getServer().getConfigurationManager().func_152612_a(stringData);
-            if (p != null)
-            {
+            if (p != null) {
                 Entity ent = p.worldObj.getEntityByID(entID);
-                if (ent != null && ent instanceof EntityLivingBase)
-                {
+                if (ent != null && ent instanceof EntityLivingBase) {
                     EntityLivingBase e = (EntityLivingBase) ent;
                     MobModifier mod = InfernalMobsCore.getMobModifiers(e);
-                    if (mod != null)
-                    {
+                    if (mod != null) {
                         health = e.getHealth();
                         maxhealth = e.getMaxHealth();
-                        InfernalMobsCore.instance().networkHelper.sendPacketToPlayer(new HealthPacket(stringData, entID, health, maxhealth), p);
+                        InfernalMobsCore.instance().networkHelper
+                                .sendPacketToPlayer(new HealthPacket(stringData, entID, health, maxhealth), p);
                     }
                 }
             }
