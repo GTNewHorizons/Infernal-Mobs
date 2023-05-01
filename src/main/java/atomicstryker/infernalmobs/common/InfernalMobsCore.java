@@ -27,12 +27,11 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import org.apache.logging.log4j.Level;
 
+import com.google.common.collect.Lists;
+
 import atomicstryker.infernalmobs.common.mods.*;
 import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
 import atomicstryker.infernalmobs.common.network.*;
-
-import com.google.common.collect.Lists;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
