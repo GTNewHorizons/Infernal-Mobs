@@ -12,7 +12,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -420,8 +419,8 @@ public class InfernalMobsCore {
         }
     }
 
-    private boolean isClassAllowed(EntityLivingBase entity) {
-        if (entity instanceof EntityMob || (entity instanceof IMob)) {
+    public boolean isClassAllowed(EntityLivingBase entity) {
+        if ((entity instanceof IMob)) {
             if (entity instanceof IEntityOwnable) {
                 return false;
             }
@@ -462,7 +461,7 @@ public class InfernalMobsCore {
         return result;
     }
 
-    private boolean checkEntityClassForced(EntityLivingBase entity) {
+    public boolean checkEntityClassForced(EntityLivingBase entity) {
         String entName = useSimpleEntityClassNames ? entity.getClass().getSimpleName() : getEntityNameSafe(entity);
         if (classesForcedMap.containsKey(entName)) {
             return classesForcedMap.get(entName);
@@ -837,4 +836,83 @@ public class InfernalMobsCore {
         return modifiedPlayerTimes;
     }
 
+    public ArrayList<Integer> getDimensionBlackList() {
+        return dimensionBlackList;
+    }
+
+    public ArrayList<ItemStack> getDropIdListElite() {
+        return dropIdListElite;
+    }
+
+    public ArrayList<ItemStack> getDropIdListUltra() {
+        return dropIdListUltra;
+    }
+
+    public ArrayList<ItemStack> getDropIdListInfernal() {
+        return dropIdListInfernal;
+    }
+
+    public HashMap<String, Boolean> getClassesAllowedMap() {
+        return classesAllowedMap;
+    }
+
+    public HashMap<String, Boolean> getClassesForcedMap() {
+        return classesForcedMap;
+    }
+
+    public HashMap<String, Float> getClassesHealthMap() {
+        return classesHealthMap;
+    }
+
+    public boolean isUseSimpleEntityClassNames() {
+        return useSimpleEntityClassNames;
+    }
+
+    public boolean isDisableHealthBar() {
+        return disableHealthBar;
+    }
+
+    public double getModHealthFactor() {
+        return modHealthFactor;
+    }
+
+    public ArrayList<ModifierLoader<?>> getModifierLoaders() {
+        return modifierLoaders;
+    }
+
+    public int getEliteRarity() {
+        return eliteRarity;
+    }
+
+    public int getUltraRarity() {
+        return ultraRarity;
+    }
+
+    public int getInfernoRarity() {
+        return infernoRarity;
+    }
+
+    public int getMinEliteModifiers() {
+        return minEliteModifiers;
+    }
+
+    public int getMaxEliteModifiers() {
+        return maxEliteModifiers;
+    }
+
+    public int getMinUltraModifiers() {
+        return minUltraModifiers;
+    }
+
+    public int getMaxUltraModifiers() {
+        return maxUltraModifiers;
+    }
+
+    public int getMinInfernoModifiers() {
+        return minInfernoModifiers;
+    }
+
+    public int getMaxInfernoModifiers() {
+        return maxInfernoModifiers;
+    }
 }
