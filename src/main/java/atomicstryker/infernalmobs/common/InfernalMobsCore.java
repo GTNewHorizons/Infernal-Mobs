@@ -12,7 +12,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -420,8 +419,8 @@ public class InfernalMobsCore {
         }
     }
 
-    private boolean isClassAllowed(EntityLivingBase entity) {
-        if (entity instanceof EntityMob || (entity instanceof IMob)) {
+    public boolean isClassAllowed(EntityLivingBase entity) {
+        if ((entity instanceof IMob)) {
             if (entity instanceof IEntityOwnable) {
                 return false;
             }
@@ -462,7 +461,7 @@ public class InfernalMobsCore {
         return result;
     }
 
-    private boolean checkEntityClassForced(EntityLivingBase entity) {
+    public boolean checkEntityClassForced(EntityLivingBase entity) {
         String entName = useSimpleEntityClassNames ? entity.getClass().getSimpleName() : getEntityNameSafe(entity);
         if (classesForcedMap.containsKey(entName)) {
             return classesForcedMap.get(entName);
