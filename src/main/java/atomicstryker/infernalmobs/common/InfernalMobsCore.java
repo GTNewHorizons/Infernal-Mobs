@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
+import atomicstryker.infernalmobs.Tags;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -89,7 +90,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.GameData;
 
-@Mod(modid = "InfernalMobs", name = "Infernal Mobs", version = "GRADLETOKEN_VERSION")
+@Mod(modid = "InfernalMobs", name = "Infernal Mobs", version = Tags.VERSION)
 public class InfernalMobsCore {
 
     private final long existCheckDelay = 5000L;
