@@ -10,6 +10,8 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Rust extends MobModifier {
 
+    private static final String[] suffix = { "ofDecay", "theEquipmentHaunter" };
+    private static final String[] prefix = { "rusting", "decaying" };
     private static int itemDamage;
 
     public MM_Rust(@Nullable MobModifier next) {
@@ -43,14 +45,10 @@ public class MM_Rust extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofDecay", "theEquipmentHaunter" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "rusting", "decaying" };
 
     public static class Loader extends ModifierLoader<MM_Rust> {
 

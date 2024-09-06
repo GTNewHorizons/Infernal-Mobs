@@ -13,11 +13,14 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Sticky extends MobModifier {
 
-    private long nextAbilityUse = 0L;
+    private static final String[] suffix = { "ofSnagging", "theQuickFingered", "ofPettyTheft", "yoink" };
+    private static final String[] prefix = { "thieving", "snagging", "quickfingered" };
     private static long coolDown;
+    private final Class<?>[] disallowed = { EntityCreeper.class };
+    private long nextAbilityUse = 0L;
 
-    public MM_Sticky(@Nullable MobModifier prevMod) {
-        super("Sticky", prevMod);
+    public MM_Sticky(@Nullable MobModifier next) {
+        super("Sticky", next);
     }
 
     @Override
@@ -50,8 +53,6 @@ public class MM_Sticky extends MobModifier {
         return super.onHurt(mob, source, damage);
     }
 
-    private final Class<?>[] disallowed = { EntityCreeper.class };
-
     @Override
     public Class<?>[] getBlackListMobClasses() {
         return disallowed;
@@ -62,14 +63,10 @@ public class MM_Sticky extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofSnagging", "theQuickFingered", "ofPettyTheft", "yoink" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "thieving", "snagging", "quickfingered" };
 
     public static class Loader extends ModifierLoader<MM_Sticky> {
 

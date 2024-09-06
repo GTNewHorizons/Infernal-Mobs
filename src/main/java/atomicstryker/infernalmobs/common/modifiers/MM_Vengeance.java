@@ -10,6 +10,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Vengeance extends MobModifier {
 
+    private static final String[] suffix = { "ofRetribution", "theThorned", "ofStrikingBack" };
+    private static final String[] prefix = { "thorned", "thorny", "spiky" };
     private static float reflectMultiplier;
     private static float maxReflectDamage;
 
@@ -36,14 +38,10 @@ public class MM_Vengeance extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofRetribution", "theThorned", "ofStrikingBack" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "thorned", "thorny", "spiky" };
 
     public static class Loader extends ModifierLoader<MM_Vengeance> {
 

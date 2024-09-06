@@ -7,9 +7,13 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Sprint extends MobModifier {
 
-    private long nextAbilityUse = 0L;
+    private static final String[] suffix = { "ofBolting", "theSwiftOne", "ofbeinginyourFace" };
+    private static final String[] prefix = { "sprinting", "swift", "charging" };
     private static long coolDown;
+    private long nextAbilityUse = 0L;
     private boolean sprinting;
+    private double modMotionX;
+    private double modMotionZ;
 
     public MM_Sprint(@Nullable MobModifier next) {
         super("Sprint", next);
@@ -31,9 +35,6 @@ public class MM_Sprint extends MobModifier {
 
         return super.onUpdate(mob);
     }
-
-    private double modMotionX;
-    private double modMotionZ;
 
     private void doSprint(EntityLivingBase mob) {
         float rotationMovement = (float) ((Math.atan2(mob.motionX, mob.motionZ) * 180D) / 3.1415D);
@@ -85,14 +86,10 @@ public class MM_Sprint extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofBolting", "theSwiftOne", "ofbeinginyourFace" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "sprinting", "swift", "charging" };
 
     public static class Loader extends ModifierLoader<MM_Sprint> {
 

@@ -12,9 +12,12 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Cloaking extends MobModifier {
 
-    private long nextAbilityUse = 0L;
+    private static final Class<?>[] disallowed = { EntitySpider.class };
+    private static final String[] suffix = { "ofStalking", "theUnseen", "thePredator" };
+    private static final String[] prefix = { "stalking", "unseen", "hunting" };
     private static long coolDown;
     private static int potionDuration;
+    private long nextAbilityUse = 0L;
 
     public MM_Cloaking(@Nullable MobModifier next) {
         super("Cloaking", next);
@@ -51,21 +54,15 @@ public class MM_Cloaking extends MobModifier {
         return disallowed;
     }
 
-    private static final Class<?>[] disallowed = { EntitySpider.class };
-
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofStalking", "theUnseen", "thePredator" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "stalking", "unseen", "hunting" };
 
     public static class Loader extends ModifierLoader<MM_Cloaking> {
 

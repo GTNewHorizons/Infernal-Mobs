@@ -11,6 +11,9 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Lifesteal extends MobModifier {
 
+    private static final Class<?>[] disallowed = { EntityCreeper.class };
+    private static final String[] suffix = { "theVampire", "ofTransfusion", "theBloodsucker" };
+    private static final String[] prefix = { "vampiric", "transfusing", "bloodsucking" };
     private static float lifestealMultiplier;
 
     public MM_Lifesteal(@Nullable MobModifier next) {
@@ -32,21 +35,15 @@ public class MM_Lifesteal extends MobModifier {
         return disallowed;
     }
 
-    private static final Class<?>[] disallowed = { EntityCreeper.class };
-
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static final String[] suffix = { "theVampire", "ofTransfusion", "theBloodsucker" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "vampiric", "transfusing", "bloodsucking" };
 
     public static class Loader extends ModifierLoader<MM_Lifesteal> {
 

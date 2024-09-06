@@ -9,9 +9,11 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Ghastly extends MobModifier {
 
-    private long nextAbilityUse = 0L;
-    private static long coolDown;
     private final static float MIN_DISTANCE = 3F;
+    private static final String[] suffix = { "OMFGFIREBALLS", "theBomber", "ofBallsofFire" };
+    private static final String[] prefix = { "bombing", "fireballsy" };
+    private static long coolDown;
+    private long nextAbilityUse = 0L;
 
     public MM_Ghastly(@Nullable MobModifier next) {
         super("Ghastly", next);
@@ -55,14 +57,10 @@ public class MM_Ghastly extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "OMFGFIREBALLS", "theBomber", "ofBallsofFire" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "bombing", "fireballsy" };
 
     public static class Loader extends ModifierLoader<MM_Ghastly> {
 

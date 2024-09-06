@@ -9,6 +9,9 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Berserk extends MobModifier {
 
+    private static final Class<?>[] disallowed = { EntityCreeper.class };
+    private static final String[] suffix = { "ofRecklessness", "theRaging", "ofSmashing" };
+    private static final String[] prefix = { "reckless", "raging", "smashing" };
     private static float damageMultiplier;
     private static float maxBerserkDamage;
 
@@ -31,21 +34,15 @@ public class MM_Berserk extends MobModifier {
         return disallowed;
     }
 
-    private static final Class<?>[] disallowed = { EntityCreeper.class };
-
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofRecklessness", "theRaging", "ofSmashing" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "reckless", "raging", "smashing" };
 
     public static class Loader extends ModifierLoader<MM_Berserk> {
 

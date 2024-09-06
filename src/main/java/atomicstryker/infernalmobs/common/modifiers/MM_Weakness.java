@@ -12,6 +12,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Weakness extends MobModifier {
 
+    private static final String[] suffix = { "ofApathy", "theDeceiver" };
+    private static final String[] prefix = { "apathetic", "deceiving" };
     private static int potionDuration;
 
     public MM_Weakness(@Nullable MobModifier next) {
@@ -43,14 +45,10 @@ public class MM_Weakness extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofApathy", "theDeceiver" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "apathetic", "deceiving" };
 
     public static class Loader extends ModifierLoader<MM_Weakness> {
 

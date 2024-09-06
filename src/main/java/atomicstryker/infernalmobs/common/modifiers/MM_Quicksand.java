@@ -10,11 +10,13 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Quicksand extends MobModifier {
 
+    private static final String[] suffix = { "ofYouCantRun", "theSlowingB" };
+    private static final String[] prefix = { "slowing", "Quicksand" };
+    int ticker = 0;
+
     public MM_Quicksand(@Nullable MobModifier next) {
         super("Quicksand", next);
     }
-
-    int ticker = 0;
 
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
@@ -33,14 +35,10 @@ public class MM_Quicksand extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofYouCantRun", "theSlowingB" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "slowing", "Quicksand" };
 
     public static class Loader extends ModifierLoader<MM_Quicksand> {
 

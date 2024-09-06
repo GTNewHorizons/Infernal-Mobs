@@ -9,6 +9,8 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Fiery extends MobModifier {
 
+    private static final String[] suffix = { "ofConflagration", "thePhoenix", "ofCrispyness" };
+    private static final String[] prefix = { "burning", "toasting" };
     private static int fireDuration;
 
     public MM_Fiery(@Nullable MobModifier next) {
@@ -41,14 +43,10 @@ public class MM_Fiery extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofConflagration", "thePhoenix", "ofCrispyness" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "burning", "toasting" };
 
     public static class Loader extends ModifierLoader<MM_Fiery> {
 

@@ -8,6 +8,8 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Bulwark extends MobModifier {
 
+    private static final String[] suffix = { "ofTurtling", "theDefender", "ofeffingArmor" };
+    private static final String[] prefix = { "turtling", "defensive", "armoured" };
     private static float damageMultiplier;
 
     public MM_Bulwark(@Nullable MobModifier next) {
@@ -24,14 +26,10 @@ public class MM_Bulwark extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofTurtling", "theDefender", "ofeffingArmor" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "turtling", "defensive", "armoured" };
 
     public static class Loader extends ModifierLoader<MM_Bulwark> {
 

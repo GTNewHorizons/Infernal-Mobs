@@ -14,11 +14,12 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Ender extends MobModifier {
 
-    private long nextAbilityUse = 0L;
-
+    private static final String[] suffix = { "theEnderborn", "theTrickster" };
+    private static final String[] prefix = { "enderborn", "tricky" };
     private static long coolDown;
     private static float reflectMultiplier;
     private static float maxReflectDamage;
+    private long nextAbilityUse = 0L;
 
     public MM_Ender(@Nullable MobModifier next) {
         super("Ender", next);
@@ -124,14 +125,10 @@ public class MM_Ender extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "theEnderborn", "theTrickster" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "enderborn", "tricky" };
 
     public static class Loader extends ModifierLoader<MM_Ender> {
 

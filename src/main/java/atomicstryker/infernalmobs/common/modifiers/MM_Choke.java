@@ -13,6 +13,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Choke extends MobModifier {
 
+    private static final String[] suffix = { "ofBreathlessness", "theAnaerobic", "ofDeprivation" };
+    private static final String[] prefix = { "Sith Lord", "Dark Lord", "Darth" };
     private EntityLivingBase lastTarget;
     private int lastAir = -999;
 
@@ -95,14 +97,10 @@ public class MM_Choke extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofBreathlessness", "theAnaerobic", "ofDeprivation" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "Sith Lord", "Dark Lord", "Darth" };
 
     public static class Loader extends ModifierLoader<MM_Choke> {
 

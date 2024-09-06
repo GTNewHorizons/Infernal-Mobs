@@ -11,8 +11,11 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Webber extends MobModifier {
 
-    private long lastAbilityUse = 0L;
+    private static final Class<?>[] modBans = { MM_Gravity.class, MM_Blastoff.class };
+    private static final String[] suffix = { "ofTraps", "theMutated", "theSpider" };
+    private static final String[] prefix = { "ensnaring", "webbing" };
     private static long coolDown;
+    private long lastAbilityUse = 0L;
 
     public MM_Webber(@Nullable MobModifier next) {
         super("Webber", next);
@@ -72,21 +75,15 @@ public class MM_Webber extends MobModifier {
         return modBans;
     }
 
-    private static final Class<?>[] modBans = { MM_Gravity.class, MM_Blastoff.class };
-
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofTraps", "theMutated", "theSpider" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "ensnaring", "webbing" };
 
     public static class Loader extends ModifierLoader<MM_Webber> {
 

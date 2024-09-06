@@ -12,6 +12,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Sapper extends MobModifier {
 
+    private static final String[] suffix = { "ofHunger", "thePaleRider" };
+    private static final String[] prefix = { "hungering", "starving" };
     private static int potionDuration;
 
     public MM_Sapper(@Nullable MobModifier next) {
@@ -46,14 +48,10 @@ public class MM_Sapper extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofHunger", "thePaleRider" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "hungering", "starving" };
 
     public static class Loader extends ModifierLoader<MM_Sapper> {
 

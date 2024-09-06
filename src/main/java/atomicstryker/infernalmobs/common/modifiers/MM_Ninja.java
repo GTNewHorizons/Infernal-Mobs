@@ -14,11 +14,12 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Ninja extends MobModifier {
 
-    private long nextAbilityUse = 0L;
-
+    private static final String[] suffix = { "theZenMaster", "ofEquilibrium", "ofInnerPeace" };
+    private static final String[] prefix = { "totallyzen", "innerlypeaceful", "Ronin" };
     private static long coolDown;
     private static float reflectMultiplier;
     private static float maxReflectDamage;
+    private long nextAbilityUse = 0L;
 
     public MM_Ninja(@Nullable MobModifier next) {
         super("Ninja", next);
@@ -115,14 +116,10 @@ public class MM_Ninja extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "theZenMaster", "ofEquilibrium", "ofInnerPeace" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "totallyzen", "innerlypeaceful", "Ronin" };
 
     public static class Loader extends ModifierLoader<MM_Ninja> {
 

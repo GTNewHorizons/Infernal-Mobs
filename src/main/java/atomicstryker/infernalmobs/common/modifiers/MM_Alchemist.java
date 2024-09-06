@@ -10,13 +10,15 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Alchemist extends MobModifier {
 
+    private static final float MIN_DISTANCE = 2F;
+    private static final String[] suffix = { "theWitchkin", "theBrewmaster", "theSinged" };
+    private static final String[] prefix = { "witchkin", "brewing", "singed" };
+    private static long coolDown;
+    private long nextAbilityUse = 0L;
+
     public MM_Alchemist(@Nullable MobModifier next) {
         super("Alchemist", next);
     }
-
-    private long nextAbilityUse = 0L;
-    private static long coolDown;
-    private final static float MIN_DISTANCE = 2F;
 
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
@@ -60,14 +62,10 @@ public class MM_Alchemist extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "theWitchkin", "theBrewmaster", "theSinged" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "witchkin", "brewing", "singed" };
 
     public static class Loader extends ModifierLoader<MM_Alchemist> {
 

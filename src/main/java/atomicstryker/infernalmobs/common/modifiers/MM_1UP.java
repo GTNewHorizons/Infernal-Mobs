@@ -10,8 +10,10 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_1UP extends MobModifier {
 
+    private static final Class<?>[] disallowed = { EntityCreeper.class };
+    private static final String[] suffix = { "ofRecurrence", "theUndying", "oftwinLives" };
+    private static final String[] prefix = { "recurring", "undying", "twinlived" };
     private static double healAmount;
-
     private boolean healed = false;
 
     public MM_1UP(@Nullable MobModifier next) {
@@ -33,21 +35,15 @@ public class MM_1UP extends MobModifier {
         return disallowed;
     }
 
-    private static final Class<?>[] disallowed = { EntityCreeper.class };
-
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofRecurrence", "theUndying", "oftwinLives" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "recurring", "undying", "twinlived" };
 
     public static class Loader extends ModifierLoader<MM_1UP> {
 

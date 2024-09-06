@@ -37,7 +37,6 @@ public class EntityEventHandler {
     /**
      * Links the Forge Event Handler to the registered Entity MobModifier Events (if present) Also keeps track of the
      * anti mobfarm mechanic if enabled
-     *
      */
     public EntityEventHandler() {
         Configuration config = InfernalMobsCore.instance().config;
@@ -68,7 +67,7 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent event) {
         if (event.entity instanceof EntityLivingBase) {
-            String savedMods = event.entity.getEntityData().getString(InfernalMobsCore.instance().getNBTTag());
+            String savedMods = event.entity.getEntityData().getString(InfernalMobsCore.getNBTTag());
             if (!savedMods.isEmpty()) {
                 InfernalMobsCore.instance().addEntityModifiersByString((EntityLivingBase) event.entity, savedMods);
             } else {
@@ -216,18 +215,6 @@ public class EntityEventHandler {
         }
     }
 
-    public static class MobFarmDetectedEvent extends ChunkEvent {
-
-        public final long triggeringInterval;
-        public final float triggeringDamage;
-
-        public MobFarmDetectedEvent(Chunk chunk, long ti, float td) {
-            super(chunk);
-            triggeringInterval = ti;
-            triggeringDamage = td;
-        }
-    }
-
     @SubscribeEvent
     public void onEntityLivingDrops(LivingDropsEvent event) {
         if (!event.entity.worldObj.isRemote) {
@@ -242,6 +229,18 @@ public class EntityEventHandler {
                         event.specialDropValue);
                 InfernalMobsCore.removeEntFromElites(event.entityLiving);
             }
+        }
+    }
+
+    public static class MobFarmDetectedEvent extends ChunkEvent {
+
+        public final long triggeringInterval;
+        public final float triggeringDamage;
+
+        public MobFarmDetectedEvent(Chunk chunk, long ti, float td) {
+            super(chunk);
+            triggeringInterval = ti;
+            triggeringDamage = td;
         }
     }
 }

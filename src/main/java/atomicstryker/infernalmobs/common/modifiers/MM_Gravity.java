@@ -13,9 +13,12 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Gravity extends MobModifier {
 
-    private long nextAbilityUse = 0L;
+    private static final Class<?>[] modBans = { MM_Webber.class };
+    private static final String[] suffix = { "ofRepulsion", "theFlipper" };
+    private static final String[] prefix = { "repulsing", "sproing" };
     private static long coolDown;
     private static double maxDistanceSquared;
+    private long nextAbilityUse = 0L;
 
     public MM_Gravity(@Nullable MobModifier next) {
         super("Gravity", next);
@@ -94,21 +97,15 @@ public class MM_Gravity extends MobModifier {
         return modBans;
     }
 
-    private static final Class<?>[] modBans = { MM_Webber.class };
-
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofRepulsion", "theFlipper" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "repulsing", "sproing" };
 
     public static class Loader extends ModifierLoader<MM_Gravity> {
 

@@ -121,7 +121,7 @@ public class InfernalMobsCore {
         return instance;
     }
 
-    public String getNBTTag() {
+    public static String getNBTTag() {
         return "InfernalMobsMod";
     }
 

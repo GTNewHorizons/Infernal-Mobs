@@ -13,6 +13,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Wither extends MobModifier {
 
+    private static final String[] suffix = { "ofDarkSkulls", "Doomskull" };
+    private static final String[] prefix = { "withering" };
     private static int potionDuration;
 
     public MM_Wither(@Nullable MobModifier next) {
@@ -46,14 +48,10 @@ public class MM_Wither extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofDarkSkulls", "Doomskull" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "withering" };
 
     public static class Loader extends ModifierLoader<MM_Wither> {
 

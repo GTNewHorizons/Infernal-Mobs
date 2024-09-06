@@ -13,6 +13,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Poisonous extends MobModifier {
 
+    private static final String[] suffix = { "ofVenom", "thedeadlyChalice" };
+    private static final String[] prefix = { "poisonous", "stinging", "despoiling" };
     private static int potionDuration;
 
     public MM_Poisonous(@Nullable MobModifier next) {
@@ -48,14 +50,10 @@ public class MM_Poisonous extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofVenom", "thedeadlyChalice" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "poisonous", "stinging", "despoiling" };
 
     public static class Loader extends ModifierLoader<MM_Poisonous> {
 

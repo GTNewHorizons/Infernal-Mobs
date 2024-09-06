@@ -8,6 +8,9 @@ import net.minecraft.util.DamageSource;
 
 public class MM_Exhaust extends MobModifier {
 
+    private static final String[] suffix = { "ofFatigue", "theDrainer" };
+    private static final String[] prefix = { "exhausting", "draining" };
+
     public MM_Exhaust(@Nullable MobModifier next) {
         super("Exhaust", next);
     }
@@ -35,14 +38,10 @@ public class MM_Exhaust extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofFatigue", "theDrainer" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "exhausting", "draining" };
 
     public static class Loader extends ModifierLoader<MM_Exhaust> {
 

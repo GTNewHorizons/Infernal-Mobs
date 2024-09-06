@@ -18,13 +18,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
- * 
  * Helper class to wrap the new 1.7 Netty channels and packets into something resembling the older packet system. Create
  * one instance of this for a Mod, then use the helper methods to send Packets. Packet Handling is done inside the
  * packet classes themselves.
- * 
- * @author AtomicStryker
  *
+ * @author AtomicStryker
  */
 public class NetworkHelper {
 
@@ -41,7 +39,7 @@ public class NetworkHelper {
     /**
      * Creates an instance of the NetworkHelper with included channels for client and server communication.
      * Automatically registers the necessary channels and discriminators for the supplied Packet classes.
-     * 
+     *
      * @param channelName          channel name to use, anything but already taken designations goes
      * @param handledPacketClasses provide the IPacket classes you want to use for communication here
      */
@@ -57,34 +55,7 @@ public class NetworkHelper {
     }
 
     /**
-     * Packets only need to implement this and offer a constructor with no args, unless you don't have constructors with
-     * >0 args. The class MUST also be statically accessible, else you will suffer an InstantiationException! Note
-     * Packets don't distinguish between being sent from client to server or the other way around, so be careful using
-     * them bidirectional or avoid doing that altogether.
-     */
-    public interface IPacket {
-
-        /**
-         * Executed upon sending a Packet away. Put your arbitrary data into the ByteBuffer, and retrieve it on the
-         * receiving side when readBytes is executed.
-         * 
-         * @param ctx   channel context
-         * @param bytes data being sent
-         */
-        void writeBytes(ChannelHandlerContext ctx, ByteBuf bytes);
-
-        /**
-         * Executed upon arrival of a Packet at a recipient. Byte order matches writeBytes exactly.
-         * 
-         * @param ctx   channel context, you can send answers through here directly
-         * @param bytes data being received
-         */
-        void readBytes(ChannelHandlerContext ctx, ByteBuf bytes);
-    }
-
-    /**
      * Sends the supplied Packet from a client to the server
-     *
      */
     public void sendPacketToServer(IPacket packet) {
         checkClassAndSync(packet.getClass());
@@ -96,7 +67,6 @@ public class NetworkHelper {
 
     /**
      * Sends the supplied Packet from the server to the chosen Player
-     *
      */
     public void sendPacketToPlayer(IPacket packet, EntityPlayerMP player) {
         checkClassAndSync(packet.getClass());
@@ -108,7 +78,6 @@ public class NetworkHelper {
 
     /**
      * Sends a packet from the server to all currently connected players
-     *
      */
     public void sendPacketToAllPlayers(IPacket packet) {
         checkClassAndSync(packet.getClass());
@@ -119,7 +88,6 @@ public class NetworkHelper {
 
     /**
      * Sends a packet from the server to all players in a dimension around a location
-     *
      */
     public void sendPacketToAllAroundPoint(IPacket packet, TargetPoint tp) {
         checkClassAndSync(packet.getClass());
@@ -132,7 +100,6 @@ public class NetworkHelper {
 
     /**
      * Sends a packet from the server to all players in a dimension
-     *
      */
     public void sendPacketToAllInDimension(IPacket packet, int dimension) {
         checkClassAndSync(packet.getClass());
@@ -156,6 +123,32 @@ public class NetworkHelper {
             Thread.yield();
         }
         isCurrentlySendingSemaphor = true;
+    }
+
+    /**
+     * Packets only need to implement this and offer a constructor with no args, unless you don't have constructors with
+     * >0 args. The class MUST also be statically accessible, else you will suffer an InstantiationException! Note
+     * Packets don't distinguish between being sent from client to server or the other way around, so be careful using
+     * them bidirectional or avoid doing that altogether.
+     */
+    public interface IPacket {
+
+        /**
+         * Executed upon sending a Packet away. Put your arbitrary data into the ByteBuffer, and retrieve it on the
+         * receiving side when readBytes is executed.
+         *
+         * @param ctx   channel context
+         * @param bytes data being sent
+         */
+        void writeBytes(ChannelHandlerContext ctx, ByteBuf bytes);
+
+        /**
+         * Executed upon arrival of a Packet at a recipient. Byte order matches writeBytes exactly.
+         *
+         * @param ctx   channel context, you can send answers through here directly
+         * @param bytes data being received
+         */
+        void readBytes(ChannelHandlerContext ctx, ByteBuf bytes);
     }
 
     /**

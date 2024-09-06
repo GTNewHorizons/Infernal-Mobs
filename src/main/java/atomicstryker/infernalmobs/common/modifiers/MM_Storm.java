@@ -10,9 +10,11 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Storm extends MobModifier {
 
-    private long nextAbilityUse = 0L;
-    private static long coolDown;
     private final static float MIN_DISTANCE = 3F;
+    private static final String[] suffix = { "ofLightning", "theRaiden" };
+    private static final String[] prefix = { "striking", "thundering", "electrified" };
+    private static long coolDown;
+    private long nextAbilityUse = 0L;
 
     public MM_Storm(@Nullable MobModifier next) {
         super("Storm", next);
@@ -49,14 +51,10 @@ public class MM_Storm extends MobModifier {
         return suffix;
     }
 
-    private static final String[] suffix = { "ofLightning", "theRaiden" };
-
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
-
-    private static final String[] prefix = { "striking", "thundering", "electrified" };
 
     public static class Loader extends ModifierLoader<MM_Storm> {
 

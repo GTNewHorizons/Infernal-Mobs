@@ -38,7 +38,7 @@ public class SaveEventHandler {
             for (int j = 0; j < chunk.entityLists[i].size(); j++) {
                 newEnt = (Entity) chunk.entityLists[i].get(j);
                 if (newEnt instanceof EntityLivingBase) {
-                    String savedMods = newEnt.getEntityData().getString(InfernalMobsCore.instance().getNBTTag());
+                    String savedMods = newEnt.getEntityData().getString(InfernalMobsCore.getNBTTag());
                     if (!savedMods.isEmpty()) {
                         InfernalMobsCore.instance().addEntityModifiersByString((EntityLivingBase) newEnt, savedMods);
                     }

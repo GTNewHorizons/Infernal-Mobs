@@ -129,10 +129,9 @@ public abstract class MobModifier {
 
     /**
      * Called when local Spawn Processing is completed or when a client remote-attached Modifiers to a local Entity
-     *
      */
     public void onSpawningComplete(EntityLivingBase entity) {
-        String oldTag = entity.getEntityData().getString(InfernalMobsCore.instance().getNBTTag());
+        String oldTag = entity.getEntityData().getString(InfernalMobsCore.getNBTTag());
         if (!oldTag.isEmpty() && !oldTag.equals(getLinkedModNameUntranslated())) {
             FMLLog.log(
                     "InfernalMobs",
@@ -142,12 +141,12 @@ public abstract class MobModifier {
                             oldTag,
                             getLinkedModNameUntranslated()));
         }
-        entity.getEntityData().setString(InfernalMobsCore.instance().getNBTTag(), getLinkedModNameUntranslated());
+        entity.getEntityData().setString(InfernalMobsCore.getNBTTag(), getLinkedModNameUntranslated());
     }
 
     /**
      * Passes the death event to the modifier list
-     * 
+     *
      * @return true if death should be aborted
      */
     public boolean onDeath() {
@@ -171,7 +170,7 @@ public abstract class MobModifier {
 
     /**
      * passes the setAttackTarget event to the modifier list
-     * 
+     *
      * @param target being passed from the event
      */
     public void onSetAttackTarget(EntityLivingBase target) {
@@ -183,7 +182,7 @@ public abstract class MobModifier {
 
     /**
      * Modified Mob attacks something
-     * 
+     *
      * @param entity Entity being attacked
      * @param source DamageSource instance doing the attacking
      * @param amount unmitigated damage value
@@ -199,7 +198,7 @@ public abstract class MobModifier {
 
     /**
      * Modified Mob is being hurt
-     * 
+     *
      * @param source Damagesource doing the hurting
      * @param amount unmitigated damage value
      * @return damage to be applied after we processed the value
@@ -264,7 +263,6 @@ public abstract class MobModifier {
     /**
      * clientside helper method. Due to the health not being networked, we keep track of it internally, here. Also, this
      * is a good spot for the more-than-allowed health hack.
-     *
      */
     public float getActualHealth(EntityLivingBase mob) {
         if (!mob.worldObj.isRemote) {
@@ -306,7 +304,6 @@ public abstract class MobModifier {
 
     /**
      * clientside receiving end of health packets sent from the InfernalMobs server instance
-     *
      */
     public void setActualHealth(float health, float maxHealth) {
         actualHealth = health;
@@ -370,7 +367,7 @@ public abstract class MobModifier {
 
     /**
      * Creates the Entity name the Infernal Mobs GUI displays, and buffers it
-     * 
+     *
      * @param target Entity to create the Name from
      * @return Entity display name such as 'Rare Zombie'
      */
