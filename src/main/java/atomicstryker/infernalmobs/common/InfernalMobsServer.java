@@ -4,6 +4,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.entity.EntityLivingBase;
 
+import atomicstryker.infernalmobs.common.modifiers.MobModifier;
+
 public class InfernalMobsServer implements ISidedProxy {
 
     private final ConcurrentHashMap<EntityLivingBase, MobModifier> rareMobsServer;

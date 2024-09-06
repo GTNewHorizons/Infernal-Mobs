@@ -9,7 +9,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.modifiers.MobModifier;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class RendererBossGlow {

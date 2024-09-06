@@ -25,10 +25,10 @@ import org.lwjgl.opengl.GL11;
 
 import atomicstryker.infernalmobs.common.ISidedProxy;
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
-import atomicstryker.infernalmobs.common.mods.MM_Gravity;
-import atomicstryker.infernalmobs.common.network.HealthPacket;
-import atomicstryker.infernalmobs.common.network.MobModsPacket;
+import atomicstryker.infernalmobs.common.modifiers.MM_Gravity;
+import atomicstryker.infernalmobs.common.modifiers.MobModifier;
+import atomicstryker.infernalmobs.common.network.packets.HealthPacket;
+import atomicstryker.infernalmobs.common.network.packets.MobModsPacket;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

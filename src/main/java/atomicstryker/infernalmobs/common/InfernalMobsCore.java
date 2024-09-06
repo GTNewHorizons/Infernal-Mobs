@@ -34,40 +34,45 @@ import org.apache.logging.log4j.Level;
 
 import com.google.common.collect.Lists;
 
-import atomicstryker.infernalmobs.common.mods.MM_1UP;
-import atomicstryker.infernalmobs.common.mods.MM_Alchemist;
-import atomicstryker.infernalmobs.common.mods.MM_Berserk;
-import atomicstryker.infernalmobs.common.mods.MM_Blastoff;
-import atomicstryker.infernalmobs.common.mods.MM_Bulwark;
-import atomicstryker.infernalmobs.common.mods.MM_Choke;
-import atomicstryker.infernalmobs.common.mods.MM_Cloaking;
-import atomicstryker.infernalmobs.common.mods.MM_Darkness;
-import atomicstryker.infernalmobs.common.mods.MM_Ender;
-import atomicstryker.infernalmobs.common.mods.MM_Exhaust;
-import atomicstryker.infernalmobs.common.mods.MM_Fiery;
-import atomicstryker.infernalmobs.common.mods.MM_Ghastly;
-import atomicstryker.infernalmobs.common.mods.MM_Gravity;
-import atomicstryker.infernalmobs.common.mods.MM_Lifesteal;
-import atomicstryker.infernalmobs.common.mods.MM_Ninja;
-import atomicstryker.infernalmobs.common.mods.MM_Poisonous;
-import atomicstryker.infernalmobs.common.mods.MM_Quicksand;
-import atomicstryker.infernalmobs.common.mods.MM_Regen;
-import atomicstryker.infernalmobs.common.mods.MM_Rust;
-import atomicstryker.infernalmobs.common.mods.MM_Sapper;
-import atomicstryker.infernalmobs.common.mods.MM_Sprint;
-import atomicstryker.infernalmobs.common.mods.MM_Sticky;
-import atomicstryker.infernalmobs.common.mods.MM_Storm;
-import atomicstryker.infernalmobs.common.mods.MM_Vengeance;
-import atomicstryker.infernalmobs.common.mods.MM_Weakness;
-import atomicstryker.infernalmobs.common.mods.MM_Webber;
-import atomicstryker.infernalmobs.common.mods.MM_Wither;
-import atomicstryker.infernalmobs.common.mods.api.ModifierLoader;
-import atomicstryker.infernalmobs.common.network.AirPacket;
-import atomicstryker.infernalmobs.common.network.HealthPacket;
-import atomicstryker.infernalmobs.common.network.KnockBackPacket;
-import atomicstryker.infernalmobs.common.network.MobModsPacket;
+import atomicstryker.infernalmobs.common.commands.InfernalCommandFindEntityClass;
+import atomicstryker.infernalmobs.common.commands.InfernalCommandSpawnInfernal;
+import atomicstryker.infernalmobs.common.events.EntityEventHandler;
+import atomicstryker.infernalmobs.common.events.SaveEventHandler;
+import atomicstryker.infernalmobs.common.modifiers.MM_1UP;
+import atomicstryker.infernalmobs.common.modifiers.MM_Alchemist;
+import atomicstryker.infernalmobs.common.modifiers.MM_Berserk;
+import atomicstryker.infernalmobs.common.modifiers.MM_Blastoff;
+import atomicstryker.infernalmobs.common.modifiers.MM_Bulwark;
+import atomicstryker.infernalmobs.common.modifiers.MM_Choke;
+import atomicstryker.infernalmobs.common.modifiers.MM_Cloaking;
+import atomicstryker.infernalmobs.common.modifiers.MM_Darkness;
+import atomicstryker.infernalmobs.common.modifiers.MM_Ender;
+import atomicstryker.infernalmobs.common.modifiers.MM_Exhaust;
+import atomicstryker.infernalmobs.common.modifiers.MM_Fiery;
+import atomicstryker.infernalmobs.common.modifiers.MM_Ghastly;
+import atomicstryker.infernalmobs.common.modifiers.MM_Gravity;
+import atomicstryker.infernalmobs.common.modifiers.MM_Lifesteal;
+import atomicstryker.infernalmobs.common.modifiers.MM_Ninja;
+import atomicstryker.infernalmobs.common.modifiers.MM_Poisonous;
+import atomicstryker.infernalmobs.common.modifiers.MM_Quicksand;
+import atomicstryker.infernalmobs.common.modifiers.MM_Regen;
+import atomicstryker.infernalmobs.common.modifiers.MM_Rust;
+import atomicstryker.infernalmobs.common.modifiers.MM_Sapper;
+import atomicstryker.infernalmobs.common.modifiers.MM_Sprint;
+import atomicstryker.infernalmobs.common.modifiers.MM_Sticky;
+import atomicstryker.infernalmobs.common.modifiers.MM_Storm;
+import atomicstryker.infernalmobs.common.modifiers.MM_Vengeance;
+import atomicstryker.infernalmobs.common.modifiers.MM_Weakness;
+import atomicstryker.infernalmobs.common.modifiers.MM_Webber;
+import atomicstryker.infernalmobs.common.modifiers.MM_Wither;
+import atomicstryker.infernalmobs.common.modifiers.MobModifier;
+import atomicstryker.infernalmobs.common.modifiers.ModifierLoader;
 import atomicstryker.infernalmobs.common.network.NetworkHelper;
-import atomicstryker.infernalmobs.common.network.VelocityPacket;
+import atomicstryker.infernalmobs.common.network.packets.AirPacket;
+import atomicstryker.infernalmobs.common.network.packets.HealthPacket;
+import atomicstryker.infernalmobs.common.network.packets.KnockBackPacket;
+import atomicstryker.infernalmobs.common.network.packets.MobModsPacket;
+import atomicstryker.infernalmobs.common.network.packets.VelocityPacket;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -541,7 +546,7 @@ public class InfernalMobsCore {
      * @return null or the first linked MobModifier instance for the Entity
      */
     @SuppressWarnings("unchecked")
-    MobModifier createMobModifiers(EntityLivingBase entity) {
+    public MobModifier createMobModifiers(EntityLivingBase entity) {
         /* lets just be lazy and scratch mods off a list copy */
         ArrayList<ModifierLoader<?>> possibleMods = (ArrayList<ModifierLoader<?>>) modifierLoaders.clone();
 
@@ -621,7 +626,7 @@ public class InfernalMobsCore {
      */
     public void addEntityModifiersByString(EntityLivingBase entity, String savedMods) {
         if (!getIsRareEntity(entity)) {
-            MobModifier mod = stringToMobModifiers(entity, savedMods);
+            MobModifier mod = stringToMobModifiers(savedMods);
             if (mod != null) {
                 addEntityModifiers(entity, mod, true);
             } else {
@@ -633,7 +638,7 @@ public class InfernalMobsCore {
         }
     }
 
-    private MobModifier stringToMobModifiers(EntityLivingBase entity, String buffer) {
+    private MobModifier stringToMobModifiers(String buffer) {
         MobModifier lastMod = null;
 
         String[] tokens = buffer.split("\\s");
@@ -644,7 +649,7 @@ public class InfernalMobsCore {
             for (ModifierLoader<?> loader : modifierLoaders) {
                 nextMod = loader.make(lastMod);
 
-                if (nextMod.modName.equalsIgnoreCase(modName)) {
+                if (nextMod.getModName().equalsIgnoreCase(modName)) {
                     /*
                      * Only actually keep the new linked instance if it's what we wanted
                      */
