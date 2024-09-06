@@ -59,7 +59,7 @@ public class EntityEventHandler {
                 "mobFarmDamageThreshold",
                 150D,
                 "Damage in chunk per interval that triggers anti farm effects").getDouble(150D);
-        config.save();
+        if (config.hasChanged()) config.save();
 
         damageMap = new HashMap<>();
         nextMapEvaluation = System.currentTimeMillis();

@@ -243,7 +243,7 @@ public class InfernalMobsCore {
                 loader -> !config.get(Configuration.CATEGORY_GENERAL, loader.getModifierClassName() + " enabled", true)
                         .getBoolean(true));
 
-        config.save();
+        if (config.hasChanged()) config.save();
     }
 
     /**
@@ -361,7 +361,7 @@ public class InfernalMobsCore {
             loader.loadConfig(config);
         }
 
-        config.save();
+        if (config.hasChanged()) config.save();
     }
 
     private void parseIDsForList(String dimensionIDs, ArrayList<Integer> list) {
@@ -493,7 +493,7 @@ public class InfernalMobsCore {
 
         config.load();
         boolean result = config.get("permittedentities", entName, true).getBoolean(true);
-        config.save();
+        if (config.hasChanged()) config.save();
         classesAllowedMap.put(entName, result);
 
         return result;
@@ -507,7 +507,7 @@ public class InfernalMobsCore {
 
         config.load();
         boolean result = config.get("entitiesalwaysinfernal", entName, false).getBoolean(false);
-        config.save();
+        if (config.hasChanged()) config.save();
         classesForcedMap.put(entName, result);
 
         return result;
@@ -522,7 +522,7 @@ public class InfernalMobsCore {
         config.load();
         float result = (float) config.get("entitybasehealth", entName, entity.getMaxHealth())
                 .getDouble(entity.getMaxHealth());
-        config.save();
+        if (config.hasChanged()) config.save();
         classesHealthMap.put(entName, result);
 
         return result;
