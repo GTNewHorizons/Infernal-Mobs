@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.BossStatus;
@@ -109,8 +108,7 @@ public class InfernalMobsClient implements ISidedProxy {
                 EntityLivingBase target = (EntityLivingBase) ent;
                 String buffer = mod.getEntityDisplayName(target);
 
-                ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-                int screenwidth = resolution.getScaledWidth();
+                int screenwidth = event.resolution.getScaledWidth();
                 FontRenderer fontR = mc.fontRenderer;
 
                 GuiIngame gui = mc.ingameGUI;
@@ -269,16 +267,12 @@ public class InfernalMobsClient implements ISidedProxy {
 
         if (event.type == RenderGameOverlayEvent.ElementType.AIR) {
             if (!mc.thePlayer.isInsideOfMaterial(Material.water) && airOverrideValue != -999) {
-                final ScaledResolution res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
                 GL11.glEnable(GL11.GL_BLEND);
-
                 int right_height = 39;
-
-                final int left = res.getScaledWidth() / 2 + 91;
-                final int top = res.getScaledHeight() - right_height;
+                final int left = event.resolution.getScaledWidth() / 2 + 91;
+                final int top = event.resolution.getScaledHeight() - right_height;
                 final int full = MathHelper.ceiling_double_int((double) (airOverrideValue - 2) * 10.0D / 300.0D);
                 final int partial = MathHelper.ceiling_double_int((double) airOverrideValue * 10.0D / 300.0D) - full;
-
                 for (int i = 0; i < full + partial; ++i) {
                     mc.ingameGUI.drawTexturedModalRect(left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
                 }
