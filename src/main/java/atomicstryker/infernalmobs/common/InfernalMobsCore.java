@@ -329,7 +329,7 @@ public class InfernalMobsCore {
                         "iron_shovel,iron_pickaxe,iron_axe,iron_sword,iron_hoe,chainmail_helmet,chainmail_chestplate,chainmail_leggings,chainmail_boots,iron_helmet,iron_chestplate,iron_leggings,iron_boots,cookie-0-6",
                         "List of equally likely to drop Items for Elites, seperated by commas, syntax: ID-meta-stackSize-stackSizeRandomizer, everything but ID is optional, see changelog")
                         .getString(),
-                instance.dropIdListElite);
+                this.dropIdListElite);
 
         parseItemsForList(
                 config.get(
@@ -338,7 +338,7 @@ public class InfernalMobsCore {
                         "bow,iron_hoe,chainmail_helmet,chainmail_chestplate,chainmail_leggings,chainmail_boots,iron_helmet,iron_chestplate,iron_leggings,iron_boots,golden_helmet,golden_chestplate,golden_leggings,golden_boots,golden_apple,blaze_powder-0-3,enchanted_book",
                         "List of equally likely to drop Items for Ultras, seperated by commas, syntax: ID-meta-stackSize-stackSizeRandomizer, everything but ID is optional, see changelog")
                         .getString(),
-                instance.dropIdListUltra);
+                this.dropIdListUltra);
 
         parseItemsForList(
                 config.get(
@@ -347,7 +347,7 @@ public class InfernalMobsCore {
                         "diamond-0-3,diamond_sword,diamond_shovel,diamond_pickaxe,diamond_axe,diamond_hoe,chainmail_helmet,chainmail_chestplate,chainmail_leggings,chainmail_boots,diamond_helmet,diamond_chestplate,diamond_leggings,diamond_boots,ender_pearl,enchanted_book",
                         "List of equally likely to drop Items for Infernals, seperated by commas, syntax: ID-meta-stackSize-stackSizeRandomizer, everything but ID is optional, see changelog")
                         .getString(),
-                instance.dropIdListInfernal);
+                this.dropIdListInfernal);
 
         parseIDsForList(
                 config.get(
@@ -355,7 +355,7 @@ public class InfernalMobsCore {
                         "dimensionIDBlackList",
                         "",
                         "List of DimensionIDs where InfernalMobs will NEVER spawn").getString(),
-                instance.dimensionBlackList);
+                this.dimensionBlackList);
 
         for (ModifierLoader<?> loader : modifierLoaders) {
             loader.loadConfig(config);
@@ -433,8 +433,8 @@ public class InfernalMobsCore {
     public void processEntitySpawn(EntityLivingBase entity) {
         if (!entity.worldObj.isRemote) {
             if (!getIsRareEntity(entity)) {
-                if (isClassAllowed(entity) && (instance.checkEntityClassForced(entity)
-                        || entity.worldObj.rand.nextInt(eliteRarity) == 0)) {
+                if (isClassAllowed(entity)
+                        && (checkEntityClassForced(entity) || entity.worldObj.rand.nextInt(eliteRarity) == 0)) {
                     try {
                         Integer tEntityDim = entity.dimension;
 
@@ -443,7 +443,7 @@ public class InfernalMobsCore {
                             // System.out.println("InfernalMobsCore skipped spawning InfernalMob due blacklisted
                             // Dimension");
                         } else {
-                            MobModifier mod = instance.createMobModifiers(entity);
+                            MobModifier mod = createMobModifiers(entity);
                             if (mod != null) {
                                 addEntityModifiers(entity, mod, false);
                                 // System.out.println("InfernalMobsCore modded mob: "+entity+", id
@@ -464,7 +464,7 @@ public class InfernalMobsCore {
             if (entity instanceof IEntityOwnable) {
                 return false;
             }
-            return instance.checkEntityClassAllowed(entity);
+            return checkEntityClassAllowed(entity);
         }
         return false;
     }
@@ -536,7 +536,7 @@ public class InfernalMobsCore {
      */
     public void setEntityHealthPastMax(EntityLivingBase entity, float amount) {
         entity.setHealth(amount);
-        instance.sendHealthPacket(entity, amount);
+        this.sendHealthPacket(entity, amount);
     }
 
     /**
@@ -755,8 +755,8 @@ public class InfernalMobsCore {
      * @return ItemStack instance to drop to the World
      */
     private ItemStack getRandomItem(EntityLivingBase mob, int prefix) {
-        ArrayList<ItemStack> list = (prefix == 0) ? instance.dropIdListElite
-                : (prefix == 1) ? instance.dropIdListUltra : instance.dropIdListInfernal;
+        ArrayList<ItemStack> list = (prefix == 0) ? dropIdListElite
+                : (prefix == 1) ? dropIdListUltra : dropIdListInfernal;
         return !list.isEmpty() ? list.get(mob.worldObj.rand.nextInt(list.size())).copy() : null;
     }
 
