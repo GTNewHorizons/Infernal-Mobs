@@ -30,27 +30,27 @@ public class InfernalCommandFindEntityClass extends CommandBase {
         if (args.length == 0) {
             throw new WrongUsageException("Invalid Usage of FindEntityClass command", (Object) args);
         } else {
-            String classname = args[0];
+            StringBuilder classname = new StringBuilder(args[0]);
             for (int i = 1; i < args.length; i++) {
-                classname = classname + " " + args[i];
+                classname.append(" ").append(args[i]);
             }
 
-            String result = "Found Entity classes: ";
+            StringBuilder result = new StringBuilder("Found Entity classes: ");
             final Collection<String> classes = EntityList.classToStringMapping.values();
             boolean found = false;
             for (String entclass : classes) {
-                if (entclass.toLowerCase().contains(classname.toLowerCase())) {
+                if (entclass.toLowerCase().contains(classname.toString().toLowerCase())) {
                     if (!found) {
-                        result += entclass;
+                        result.append(entclass);
                         found = true;
                     } else {
-                        result += (", " + entclass);
+                        result.append(", ").append(entclass);
                     }
                 }
             }
 
             if (!found) {
-                result += "Nothing found.";
+                result.append("Nothing found.");
             }
 
             FMLCommonHandler.instance().getFMLLogger().log(Level.INFO, sender.getCommandSenderName() + ": " + result);

@@ -48,14 +48,14 @@ public class MM_Darkness extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofDarkness", "theShadow", "theEclipse" };
+    private static final String[] suffix = { "ofDarkness", "theShadow", "theEclipse" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "dark", "shadowkin", "eclipsed" };
+    private static final String[] prefix = { "dark", "shadowkin", "eclipsed" };
 
     public static class Loader extends ModifierLoader<MM_Darkness> {
 

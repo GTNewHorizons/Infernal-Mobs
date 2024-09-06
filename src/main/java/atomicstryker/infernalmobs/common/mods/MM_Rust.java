@@ -34,7 +34,7 @@ public class MM_Rust extends MobModifier {
 
     @Override
     public float onAttack(EntityLivingBase entity, DamageSource source, float damage) {
-        if (entity != null && entity instanceof EntityPlayer) {
+        if (entity instanceof EntityPlayer) {
             ((EntityPlayer) entity).inventory.damageArmor(damage * 3);
         }
 
@@ -46,14 +46,14 @@ public class MM_Rust extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofDecay", "theEquipmentHaunter" };
+    private static final String[] suffix = { "ofDecay", "theEquipmentHaunter" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "rusting", "decaying" };
+    private static final String[] prefix = { "rusting", "decaying" };
 
     public static class Loader extends ModifierLoader<MM_Rust> {
 

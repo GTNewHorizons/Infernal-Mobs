@@ -54,21 +54,21 @@ public class MM_Cloaking extends MobModifier {
         return disallowed;
     }
 
-    private static Class<?>[] disallowed = { EntitySpider.class };
+    private static final Class<?>[] disallowed = { EntitySpider.class };
 
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static String[] suffix = { "ofStalking", "theUnseen", "thePredator" };
+    private static final String[] suffix = { "ofStalking", "theUnseen", "thePredator" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "stalking", "unseen", "hunting" };
+    private static final String[] prefix = { "stalking", "unseen", "hunting" };
 
     public static class Loader extends ModifierLoader<MM_Cloaking> {
 

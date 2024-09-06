@@ -27,8 +27,7 @@ public class MM_Gravity extends MobModifier {
     public boolean onUpdate(EntityLivingBase mob) {
         EntityLivingBase target = getMobTarget();
 
-        if (target != null && target instanceof EntityPlayer
-                && !(target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage)) {
+        if (target instanceof EntityPlayer && !((EntityPlayer) target).capabilities.disableDamage) {
             tryAbility(mob, target);
         }
 
@@ -84,7 +83,7 @@ public class MM_Gravity extends MobModifier {
         target.motionY /= 2.0D;
         target.motionZ /= 2.0D;
         target.motionX -= x / (double) normalizedPower * (double) knockPower;
-        target.motionY += (double) knockPower;
+        target.motionY += knockPower;
         target.motionZ -= z / (double) normalizedPower * (double) knockPower;
 
         if (target.motionY > 0.4000000059604645D) {
@@ -97,21 +96,21 @@ public class MM_Gravity extends MobModifier {
         return modBans;
     }
 
-    private static Class<?>[] modBans = { MM_Webber.class };
+    private static final Class<?>[] modBans = { MM_Webber.class };
 
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static String[] suffix = { "ofRepulsion", "theFlipper" };
+    private static final String[] suffix = { "ofRepulsion", "theFlipper" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "repulsing", "sproing" };
+    private static final String[] prefix = { "repulsing", "sproing" };
 
     public static class Loader extends ModifierLoader<MM_Gravity> {
 

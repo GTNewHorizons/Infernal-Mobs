@@ -88,14 +88,14 @@ public class MM_Sprint extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofBolting", "theSwiftOne", "ofbeinginyourFace" };
+    private static final String[] suffix = { "ofBolting", "theSwiftOne", "ofbeinginyourFace" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "sprinting", "swift", "charging" };
+    private static final String[] prefix = { "sprinting", "swift", "charging" };
 
     public static class Loader extends ModifierLoader<MM_Sprint> {
 

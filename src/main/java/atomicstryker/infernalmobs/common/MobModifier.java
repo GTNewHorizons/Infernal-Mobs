@@ -23,12 +23,12 @@ public abstract class MobModifier {
      * next MobModifier in a linked chain, on the last one this field is null
      */
     @Nullable
-    protected MobModifier nextMod;
+    protected final MobModifier nextMod;
 
     /**
      * name of this particular MobModifier instance
      */
-    protected String modName;
+    protected final String modName;
 
     /**
      * keeps track of our past-max-bounds health patch
@@ -128,8 +128,7 @@ public abstract class MobModifier {
 
     /**
      * Called when local Spawn Processing is completed or when a client remote-attached Modifiers to a local Entity
-     * 
-     * @param entity
+     *
      */
     public void onSpawningComplete(EntityLivingBase entity) {
         String oldTag = entity.getEntityData().getString(InfernalMobsCore.instance().getNBTTag());
@@ -200,7 +199,6 @@ public abstract class MobModifier {
     /**
      * Modified Mob is being hurt
      * 
-     * @param mob
      * @param source Damagesource doing the hurting
      * @param amount unmitigated damage value
      * @return damage to be applied after we processed the value
@@ -265,8 +263,7 @@ public abstract class MobModifier {
     /**
      * clientside helper method. Due to the health not being networked, we keep track of it internally, here. Also, this
      * is a good spot for the more-than-allowed health hack.
-     * 
-     * @param mob
+     *
      */
     public float getActualHealth(EntityLivingBase mob) {
         if (!mob.worldObj.isRemote) {
@@ -296,7 +293,6 @@ public abstract class MobModifier {
     }
 
     /**
-     * @param mob
      * @return buffered modified max health
      */
     public float getActualMaxHealth(EntityLivingBase mob) {
@@ -309,8 +305,7 @@ public abstract class MobModifier {
 
     /**
      * clientside receiving end of health packets sent from the InfernalMobs server instance
-     * 
-     * @param packetReadout
+     *
      */
     public void setActualHealth(float health, float maxHealth) {
         actualHealth = health;

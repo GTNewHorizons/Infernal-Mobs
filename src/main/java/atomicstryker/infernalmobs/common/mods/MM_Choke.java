@@ -80,7 +80,7 @@ public class MM_Choke extends MobModifier {
         if (lastTarget instanceof EntityPlayerMP) {
             InfernalMobsCore.instance().sendAirPacket((EntityPlayerMP) lastTarget, lastAir);
 
-            UUID id = ((EntityPlayerMP) lastTarget).getUniqueID();
+            UUID id = lastTarget.getUniqueID();
             if (id != null) {
                 InfernalMobsCore.instance().getModifiedPlayerTimes().put(id, System.currentTimeMillis());
             }
@@ -97,14 +97,14 @@ public class MM_Choke extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofBreathlessness", "theAnaerobic", "ofDeprivation" };
+    private static final String[] suffix = { "ofBreathlessness", "theAnaerobic", "ofDeprivation" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "Sith Lord", "Dark Lord", "Darth" };
+    private static final String[] prefix = { "Sith Lord", "Dark Lord", "Darth" };
 
     public static class Loader extends ModifierLoader<MM_Choke> {
 

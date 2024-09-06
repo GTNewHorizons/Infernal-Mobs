@@ -33,8 +33,7 @@ public class MM_Sticky extends MobModifier {
             ItemStack weapon = p.inventory.getStackInSlot(p.inventory.currentItem);
             if (weapon != null) {
                 long time = mob.ticksExisted;
-                if (time > nextAbilityUse && source.getEntity() != null
-                        && !(source instanceof EntityDamageSourceIndirect)) {
+                if (time > nextAbilityUse && source.getEntity() != null) {
                     nextAbilityUse = time + coolDown;
                     EntityItem drop = p.dropPlayerItemWithRandomChoice(
                             p.inventory.decrStackSize(p.inventory.currentItem, 1),
@@ -54,7 +53,7 @@ public class MM_Sticky extends MobModifier {
         return super.onHurt(mob, source, damage);
     }
 
-    private Class<?>[] disallowed = { EntityCreeper.class };
+    private final Class<?>[] disallowed = { EntityCreeper.class };
 
     @Override
     public Class<?>[] getBlackListMobClasses() {
@@ -66,14 +65,14 @@ public class MM_Sticky extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofSnagging", "theQuickFingered", "ofPettyTheft", "yoink" };
+    private static final String[] suffix = { "ofSnagging", "theQuickFingered", "ofPettyTheft", "yoink" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "thieving", "snagging", "quickfingered" };
+    private static final String[] prefix = { "thieving", "snagging", "quickfingered" };
 
     public static class Loader extends ModifierLoader<MM_Sticky> {
 

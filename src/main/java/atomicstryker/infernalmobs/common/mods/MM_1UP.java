@@ -35,21 +35,21 @@ public class MM_1UP extends MobModifier {
         return disallowed;
     }
 
-    private static Class<?>[] disallowed = { EntityCreeper.class };
+    private static final Class<?>[] disallowed = { EntityCreeper.class };
 
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static String[] suffix = { "ofRecurrence", "theUndying", "oftwinLives" };
+    private static final String[] suffix = { "ofRecurrence", "theUndying", "oftwinLives" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "recurring", "undying", "twinlived" };
+    private static final String[] prefix = { "recurring", "undying", "twinlived" };
 
     public static class Loader extends ModifierLoader<MM_1UP> {
 

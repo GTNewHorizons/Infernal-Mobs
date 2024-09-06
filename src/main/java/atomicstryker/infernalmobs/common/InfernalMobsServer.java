@@ -6,10 +6,10 @@ import net.minecraft.entity.EntityLivingBase;
 
 public class InfernalMobsServer implements ISidedProxy {
 
-    private ConcurrentHashMap<EntityLivingBase, MobModifier> rareMobsServer;
+    private final ConcurrentHashMap<EntityLivingBase, MobModifier> rareMobsServer;
 
     public InfernalMobsServer() {
-        rareMobsServer = new ConcurrentHashMap<EntityLivingBase, MobModifier>();
+        rareMobsServer = new ConcurrentHashMap<>();
     }
 
     @Override

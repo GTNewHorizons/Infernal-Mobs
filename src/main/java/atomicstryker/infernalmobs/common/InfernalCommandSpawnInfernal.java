@@ -31,12 +31,12 @@ public class InfernalCommandSpawnInfernal extends CommandBase {
             throw new WrongUsageException("Invalid Usage of SpawnInfernal command, too few arguments", (Object) args);
         } else {
             try {
-                final int x = (args[0].equals("~")) ? sender.getPlayerCoordinates().posX : Integer.valueOf(args[0]);
-                final int y = (args[1].equals("~")) ? sender.getPlayerCoordinates().posY : Integer.valueOf(args[1]);
-                final int z = (args[2].equals("~")) ? sender.getPlayerCoordinates().posZ : Integer.valueOf(args[2]);
-                String modifier = args[4];
+                final int x = (args[0].equals("~")) ? sender.getPlayerCoordinates().posX : Integer.parseInt(args[0]);
+                final int y = (args[1].equals("~")) ? sender.getPlayerCoordinates().posY : Integer.parseInt(args[1]);
+                final int z = (args[2].equals("~")) ? sender.getPlayerCoordinates().posZ : Integer.parseInt(args[2]);
+                StringBuilder modifier = new StringBuilder(args[4]);
                 for (int i = 5; i < args.length; i++) {
-                    modifier = modifier + " " + args[i];
+                    modifier.append(" ").append(args[i]);
                 }
 
                 final Class<? extends EntityLivingBase> entClass = (Class<? extends EntityLivingBase>) EntityList.stringToClassMapping
@@ -47,11 +47,11 @@ public class InfernalCommandSpawnInfernal extends CommandBase {
                     sender.getEntityWorld().spawnEntityInWorld(mob);
 
                     InfernalMobsCore.proxy.getRareMobs().remove(mob);
-                    if (modifier.equals("~")) {
+                    if (modifier.toString().equals("~")) {
                         MobModifier mod = InfernalMobsCore.instance().createMobModifiers(mob);
                         InfernalMobsCore.instance().addEntityModifiers(mob, mod, true);
                     } else {
-                        InfernalMobsCore.instance().addEntityModifiersByString(mob, modifier);
+                        InfernalMobsCore.instance().addEntityModifiersByString(mob, modifier.toString());
                     }
                     MobModifier mod = InfernalMobsCore.getMobModifiers(mob);
                     if (mod != null) {

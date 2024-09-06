@@ -34,21 +34,21 @@ public class MM_Berserk extends MobModifier {
         return disallowed;
     }
 
-    private static Class<?>[] disallowed = { EntityCreeper.class };
+    private static final Class<?>[] disallowed = { EntityCreeper.class };
 
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static String[] suffix = { "ofRecklessness", "theRaging", "ofSmashing" };
+    private static final String[] suffix = { "ofRecklessness", "theRaging", "ofSmashing" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "reckless", "raging", "smashing" };
+    private static final String[] prefix = { "reckless", "raging", "smashing" };
 
     public static class Loader extends ModifierLoader<MM_Berserk> {
 

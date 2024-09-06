@@ -1,8 +1,5 @@
 package atomicstryker.infernalmobs.common;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.chunk.Chunk;
@@ -41,7 +38,7 @@ public class SaveEventHandler {
                 newEnt = (Entity) chunk.entityLists[i].get(j);
                 if (newEnt instanceof EntityLivingBase) {
                     String savedMods = newEnt.getEntityData().getString(InfernalMobsCore.instance().getNBTTag());
-                    if (!savedMods.equals("")) {
+                    if (!savedMods.isEmpty()) {
                         InfernalMobsCore.instance().addEntityModifiersByString((EntityLivingBase) newEnt, savedMods);
                     }
                 }
@@ -51,14 +48,6 @@ public class SaveEventHandler {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        Iterator<Entry<EntityLivingBase, MobModifier>> iterator = InfernalMobsCore.proxy.getRareMobs().entrySet()
-                .iterator();
-        while (iterator.hasNext()) {
-            Entry<EntityLivingBase, MobModifier> entry = iterator.next();
-
-            if (entry.getKey().worldObj == event.world) {
-                iterator.remove();
-            }
-        }
+        InfernalMobsCore.proxy.getRareMobs().entrySet().removeIf(entry -> entry.getKey().worldObj == event.world);
     }
 }

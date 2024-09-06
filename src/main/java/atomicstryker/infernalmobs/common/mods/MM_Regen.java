@@ -35,14 +35,14 @@ public class MM_Regen extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofWTFIMBA", "theCancerous", "ofFirstAid" };
+    private static final String[] suffix = { "ofWTFIMBA", "theCancerous", "ofFirstAid" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "regenerating", "healing", "nighunkillable" };
+    private static final String[] prefix = { "regenerating", "healing", "nighunkillable" };
 
     public static class Loader extends ModifierLoader<MM_Regen> {
 

@@ -63,14 +63,14 @@ public class MM_Alchemist extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "theWitchkin", "theBrewmaster", "theSinged" };
+    private static final String[] suffix = { "theWitchkin", "theBrewmaster", "theSinged" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "witchkin", "brewing", "singed" };
+    private static final String[] prefix = { "witchkin", "brewing", "singed" };
 
     public static class Loader extends ModifierLoader<MM_Alchemist> {
 

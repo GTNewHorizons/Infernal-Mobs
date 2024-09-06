@@ -48,14 +48,14 @@ public class MM_Sapper extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofHunger", "thePaleRider" };
+    private static final String[] suffix = { "ofHunger", "thePaleRider" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "hungering", "starving" };
+    private static final String[] prefix = { "hungering", "starving" };
 
     public static class Loader extends ModifierLoader<MM_Sapper> {
 

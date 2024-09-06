@@ -34,21 +34,21 @@ public class MM_Lifesteal extends MobModifier {
         return disallowed;
     }
 
-    private static Class<?>[] disallowed = { EntityCreeper.class };
+    private static final Class<?>[] disallowed = { EntityCreeper.class };
 
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static String[] suffix = { "theVampire", "ofTransfusion", "theBloodsucker" };
+    private static final String[] suffix = { "theVampire", "ofTransfusion", "theBloodsucker" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "vampiric", "transfusing", "bloodsucking" };
+    private static final String[] prefix = { "vampiric", "transfusing", "bloodsucking" };
 
     public static class Loader extends ModifierLoader<MM_Lifesteal> {
 

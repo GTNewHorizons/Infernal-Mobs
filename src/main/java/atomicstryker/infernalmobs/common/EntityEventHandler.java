@@ -35,8 +35,7 @@ public class EntityEventHandler {
     /**
      * Links the Forge Event Handler to the registered Entity MobModifier Events (if present) Also keeps track of the
      * anti mobfarm mechanic if enabled
-     * 
-     * @param antiMobfarming enables or disables
+     *
      */
     public EntityEventHandler() {
         Configuration config = InfernalMobsCore.instance().config;
@@ -52,7 +51,7 @@ public class EntityEventHandler {
                 "AntiMobFarmCheckInterval",
                 30,
                 "time in seconds between mob check intervals. Higher values cost more performance, but might be more accurate.")
-                .getInt() * 1000l;
+                .getInt() * 1000L;
         mobFarmDamageTrigger = (float) config.get(
                 Configuration.CATEGORY_GENERAL,
                 "mobFarmDamageThreshold",
@@ -60,7 +59,7 @@ public class EntityEventHandler {
                 "Damage in chunk per interval that triggers anti farm effects").getDouble(150D);
         config.save();
 
-        damageMap = new HashMap<ChunkCoordIntPair, Float>();
+        damageMap = new HashMap<>();
         nextMapEvaluation = System.currentTimeMillis();
     }
 
@@ -68,7 +67,7 @@ public class EntityEventHandler {
     public void onEntityJoinedWorld(EntityJoinWorldEvent event) {
         if (event.entity instanceof EntityLivingBase) {
             String savedMods = event.entity.getEntityData().getString(InfernalMobsCore.instance().getNBTTag());
-            if (!savedMods.equals("")) {
+            if (!savedMods.isEmpty()) {
                 InfernalMobsCore.instance().addEntityModifiersByString((EntityLivingBase) event.entity, savedMods);
             } else {
                 InfernalMobsCore.instance().processEntitySpawn((EntityLivingBase) event.entity);

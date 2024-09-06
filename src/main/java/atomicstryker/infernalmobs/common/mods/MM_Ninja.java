@@ -117,14 +117,14 @@ public class MM_Ninja extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "theZenMaster", "ofEquilibrium", "ofInnerPeace" };
+    private static final String[] suffix = { "theZenMaster", "ofEquilibrium", "ofInnerPeace" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "totallyzen", "innerlypeaceful", "Ronin" };
+    private static final String[] prefix = { "totallyzen", "innerlypeaceful", "Ronin" };
 
     public static class Loader extends ModifierLoader<MM_Ninja> {
 

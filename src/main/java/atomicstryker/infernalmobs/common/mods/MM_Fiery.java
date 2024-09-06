@@ -23,7 +23,7 @@ public class MM_Fiery extends MobModifier {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityLivingBase)
                 && !(source instanceof EntityDamageSourceIndirect)
                 && !source.isProjectile()) {
-            ((EntityLivingBase) source.getEntity()).setFire(fireDuration);
+            source.getEntity().setFire(fireDuration);
         }
 
         mob.extinguish();
@@ -44,14 +44,14 @@ public class MM_Fiery extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofConflagration", "thePhoenix", "ofCrispyness" };
+    private static final String[] suffix = { "ofConflagration", "thePhoenix", "ofCrispyness" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "burning", "toasting" };
+    private static final String[] prefix = { "burning", "toasting" };
 
     public static class Loader extends ModifierLoader<MM_Fiery> {
 

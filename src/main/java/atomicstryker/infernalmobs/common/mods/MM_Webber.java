@@ -75,21 +75,21 @@ public class MM_Webber extends MobModifier {
         return modBans;
     }
 
-    private static Class<?>[] modBans = { MM_Gravity.class, MM_Blastoff.class };
+    private static final Class<?>[] modBans = { MM_Gravity.class, MM_Blastoff.class };
 
     @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
 
-    private static String[] suffix = { "ofTraps", "theMutated", "theSpider" };
+    private static final String[] suffix = { "ofTraps", "theMutated", "theSpider" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "ensnaring", "webbing" };
+    private static final String[] prefix = { "ensnaring", "webbing" };
 
     public static class Loader extends ModifierLoader<MM_Webber> {
 

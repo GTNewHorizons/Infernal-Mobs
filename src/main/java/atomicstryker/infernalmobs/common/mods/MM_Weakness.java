@@ -45,14 +45,14 @@ public class MM_Weakness extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofApathy", "theDeceiver" };
+    private static final String[] suffix = { "ofApathy", "theDeceiver" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "apathetic", "deceiving" };
+    private static final String[] prefix = { "apathetic", "deceiving" };
 
     public static class Loader extends ModifierLoader<MM_Weakness> {
 

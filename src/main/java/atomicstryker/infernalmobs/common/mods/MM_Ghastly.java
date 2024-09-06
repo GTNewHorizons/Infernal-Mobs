@@ -3,7 +3,6 @@ package atomicstryker.infernalmobs.common.mods;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.config.Configuration;
@@ -43,8 +42,7 @@ public class MM_Ghastly extends MobModifier {
             double diffZ = target.posZ - mob.posZ;
             mob.renderYawOffset = mob.rotationYaw = -((float) Math.atan2(diffX, diffZ)) * 180.0F / (float) Math.PI;
 
-            mob.worldObj
-                    .playAuxSFXAtEntity((EntityPlayer) null, 1008, (int) mob.posX, (int) mob.posY, (int) mob.posZ, 0);
+            mob.worldObj.playAuxSFXAtEntity(null, 1008, (int) mob.posX, (int) mob.posY, (int) mob.posZ, 0);
             EntityLargeFireball entFB = new EntityLargeFireball(mob.worldObj, mob, diffX, diffY, diffZ);
             double spawnOffset = 2.0D;
             Vec3 mobLook = mob.getLook(1.0F);
@@ -60,14 +58,14 @@ public class MM_Ghastly extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "OMFGFIREBALLS", "theBomber", "ofBallsofFire" };
+    private static final String[] suffix = { "OMFGFIREBALLS", "theBomber", "ofBallsofFire" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "bombing", "fireballsy" };
+    private static final String[] prefix = { "bombing", "fireballsy" };
 
     public static class Loader extends ModifierLoader<MM_Ghastly> {
 

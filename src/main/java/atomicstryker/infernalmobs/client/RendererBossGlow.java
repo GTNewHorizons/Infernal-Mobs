@@ -18,9 +18,9 @@ public class RendererBossGlow {
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (System.currentTimeMillis() > lastRender + 10L) {
-            lastRender = System.currentTimeMillis();
-
+        final long time = System.currentTimeMillis();
+        if (time > lastRender + 10L) {
+            lastRender = time;
             renderBossGlow(event.partialTicks);
         }
     }

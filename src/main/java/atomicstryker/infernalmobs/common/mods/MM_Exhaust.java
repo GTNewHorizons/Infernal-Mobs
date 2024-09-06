@@ -26,7 +26,7 @@ public class MM_Exhaust extends MobModifier {
 
     @Override
     public float onAttack(EntityLivingBase entity, DamageSource source, float damage) {
-        if (entity != null && entity instanceof EntityPlayer) {
+        if (entity instanceof EntityPlayer) {
             ((EntityPlayer) entity).addExhaustion(1F);
         }
 
@@ -38,14 +38,14 @@ public class MM_Exhaust extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "ofFatigue", "theDrainer" };
+    private static final String[] suffix = { "ofFatigue", "theDrainer" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "exhausting", "draining" };
+    private static final String[] prefix = { "exhausting", "draining" };
 
     public static class Loader extends ModifierLoader<MM_Exhaust> {
 

@@ -112,8 +112,7 @@ public class MM_Ender extends MobModifier {
                 double var26 = oldY + (mob.posY - oldY) * var19 + mob.worldObj.rand.nextDouble() * (double) mob.height;
                 double var28 = oldZ + (mob.posZ - oldZ) * var19
                         + (mob.worldObj.rand.nextDouble() - 0.5D) * (double) mob.width * 2.0D;
-                mob.worldObj
-                        .spawnParticle("portal", var24, var26, var28, (double) var21, (double) var22, (double) var23);
+                mob.worldObj.spawnParticle("portal", var24, var26, var28, var21, var22, var23);
             }
 
             mob.worldObj.playSoundEffect(oldX, oldY, oldZ, "mob.endermen.portal", 1.0F, 1.0F);
@@ -127,14 +126,14 @@ public class MM_Ender extends MobModifier {
         return suffix;
     }
 
-    private static String[] suffix = { "theEnderborn", "theTrickster" };
+    private static final String[] suffix = { "theEnderborn", "theTrickster" };
 
     @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
 
-    private static String[] prefix = { "enderborn", "tricky" };
+    private static final String[] prefix = { "enderborn", "tricky" };
 
     public static class Loader extends ModifierLoader<MM_Ender> {
 

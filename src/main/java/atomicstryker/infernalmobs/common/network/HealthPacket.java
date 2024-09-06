@@ -53,7 +53,7 @@ public class HealthPacket implements IPacket {
             EntityPlayerMP p = MinecraftServer.getServer().getConfigurationManager().func_152612_a(stringData);
             if (p != null) {
                 Entity ent = p.worldObj.getEntityByID(entID);
-                if (ent != null && ent instanceof EntityLivingBase) {
+                if (ent instanceof EntityLivingBase) {
                     EntityLivingBase e = (EntityLivingBase) ent;
                     MobModifier mod = InfernalMobsCore.getMobModifiers(e);
                     if (mod != null) {

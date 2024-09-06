@@ -35,7 +35,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class InfernalMobsClient implements ISidedProxy {
 
-    private final double NAME_VISION_DISTANCE = 32D;
+    private static final double NAME_VISION_DISTANCE = 32D;
     private Minecraft mc;
     private long nextPacketTime;
     private ConcurrentHashMap<EntityLivingBase, MobModifier> rareMobsClient;
@@ -54,7 +54,7 @@ public class InfernalMobsClient implements ISidedProxy {
     @Override
     public void load() {
         nextPacketTime = 0;
-        rareMobsClient = new ConcurrentHashMap<EntityLivingBase, MobModifier>();
+        rareMobsClient = new ConcurrentHashMap<>();
 
         MinecraftForge.EVENT_BUS.register(new RendererBossGlow());
         MinecraftForge.EVENT_BUS.register(this);
@@ -77,7 +77,7 @@ public class InfernalMobsClient implements ISidedProxy {
         if (System.currentTimeMillis() > nextPacketTime) {
             InfernalMobsCore.instance().networkHelper.sendPacketToServer(
                     new HealthPacket(mc.thePlayer.getGameProfile().getName(), ent.getEntityId(), 0f, 0f));
-            nextPacketTime = System.currentTimeMillis() + 100l;
+            nextPacketTime = System.currentTimeMillis() + 100L;
         }
     }
 
@@ -97,7 +97,7 @@ public class InfernalMobsClient implements ISidedProxy {
             retained = true;
         }
 
-        if (ent != null && ent instanceof EntityLivingBase) {
+        if (ent instanceof EntityLivingBase) {
             MobModifier mod = InfernalMobsCore.getMobModifiers((EntityLivingBase) ent);
             if (mod != null) {
                 askServerHealth(ent);
@@ -117,7 +117,7 @@ public class InfernalMobsClient implements ISidedProxy {
                 short lifeBarLength = 182;
                 int x = screenwidth / 2 - lifeBarLength / 2;
 
-                int lifeBarLeft = (int) ((float) mod.getActualHealth(target) / (float) mod.getActualMaxHealth(target)
+                int lifeBarLeft = (int) (mod.getActualHealth(target) / mod.getActualMaxHealth(target)
                         * (float) (lifeBarLength + 1));
                 byte y = 12;
                 gui.drawTexturedModalRect(x, y, 0, 74, lifeBarLength, 5);
@@ -151,7 +151,7 @@ public class InfernalMobsClient implements ISidedProxy {
 
                 if (!retained) {
                     retainedTarget = target;
-                    healthBarRetainTime = System.currentTimeMillis() + 3000l;
+                    healthBarRetainTime = System.currentTimeMillis() + 3000L;
                 }
 
             }
@@ -188,12 +188,12 @@ public class InfernalMobsClient implements ISidedProxy {
                                         viewEntityLookVec.xCoord * reachDistance,
                                         viewEntityLookVec.yCoord * reachDistance,
                                         viewEntityLookVec.zCoord * reachDistance)
-                                .expand((double) expandBBvalue, (double) expandBBvalue, (double) expandBBvalue))) {
+                                .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
                     iterEnt = (Entity) obj;
                     if (iterEnt.canBeCollidedWith()) {
                         float entBorderSize = iterEnt.getCollisionBorderSize();
                         AxisAlignedBB entHitBox = iterEnt.boundingBox
-                                .expand((double) entBorderSize, (double) entBorderSize, (double) entBorderSize);
+                                .expand(entBorderSize, entBorderSize, entBorderSize);
                         MovingObjectPosition interceptObjectPosition = entHitBox
                                 .calculateIntercept(viewEntPositionVec, actualReachVector);
 
@@ -230,7 +230,7 @@ public class InfernalMobsClient implements ISidedProxy {
     @Override
     public void onHealthPacketForClient(String stringData, int entID, float health, float maxhealth) {
         Entity ent = FMLClientHandler.instance().getClient().theWorld.getEntityByID(entID);
-        if (ent != null && ent instanceof EntityLivingBase) {
+        if (ent instanceof EntityLivingBase) {
             MobModifier mod = InfernalMobsCore.getMobModifiers((EntityLivingBase) ent);
             if (mod != null) {
                 // System.out.printf("health packet [%f of %f] for %s\n", health, maxhealth, ent);
