@@ -138,7 +138,7 @@ public class InfernalMobsCore {
     private int maxUltraModifiers;
     private int minInfernoModifiers;
     private int maxInfernoModifiers;
-    public Configuration config;
+    public Configuration config; // TODO load the config only once...
 
     @SidedProxy(
             clientSide = "atomicstryker.infernalmobs.client.InfernalMobsClient",
