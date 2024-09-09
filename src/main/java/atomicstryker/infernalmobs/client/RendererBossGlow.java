@@ -42,7 +42,8 @@ public class RendererBossGlow {
 
         Map<EntityLivingBase, MobModifier> mobsmap = InfernalMobsCore.proxy.getRareMobs();
         for (EntityLivingBase ent : mobsmap.keySet()) {
-            if (ent.isInRangeToRenderDist(curPos.distanceTo(ent.getPosition(1.0f)))
+            if (viewEnt.worldObj.provider.dimensionId == ent.worldObj.provider.dimensionId
+                    && ent.isInRangeToRenderDist(curPos.distanceTo(ent.getPosition(1.0f)))
                     && (ent.ignoreFrustumCheck || f.isBoundingBoxInFrustum(ent.boundingBox))
                     && ent.isEntityAlive()) {
                 mc.renderGlobal.spawnParticle(
