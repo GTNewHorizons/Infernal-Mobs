@@ -38,9 +38,11 @@ public class SaveEventHandler {
             for (int j = 0; j < chunk.entityLists[i].size(); j++) {
                 newEnt = (Entity) chunk.entityLists[i].get(j);
                 if (newEnt instanceof EntityLivingBase) {
-                    String savedMods = newEnt.getEntityData().getString(InfernalMobsCore.getNBTTag());
+                    String savedMods = newEnt.getEntityData()
+                        .getString(InfernalMobsCore.getNBTTag());
                     if (!savedMods.isEmpty()) {
-                        InfernalMobsCore.instance().addEntityModifiersByString((EntityLivingBase) newEnt, savedMods);
+                        InfernalMobsCore.instance()
+                            .addEntityModifiersByString((EntityLivingBase) newEnt, savedMods);
                     }
                 }
             }
@@ -49,6 +51,8 @@ public class SaveEventHandler {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        InfernalMobsCore.proxy.getRareMobs().entrySet().removeIf(entry -> entry.getKey().worldObj == event.world);
+        InfernalMobsCore.proxy.getRareMobs()
+            .entrySet()
+            .removeIf(entry -> entry.getKey().worldObj == event.world);
     }
 }

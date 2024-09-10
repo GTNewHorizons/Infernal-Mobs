@@ -46,8 +46,11 @@ public class InfernalMobsClient implements ISidedProxy {
 
     @Override
     public void preInit() {
-        FMLCommonHandler.instance().bus().register(this);
-        mc = FMLClientHandler.instance().getClient();
+        FMLCommonHandler.instance()
+            .bus()
+            .register(this);
+        mc = FMLClientHandler.instance()
+            .getClient();
     }
 
     @Override
@@ -65,26 +68,35 @@ public class InfernalMobsClient implements ISidedProxy {
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent event) {
         if (event.world.isRemote && mc.thePlayer != null
-                && (event.entity instanceof EntityMob
-                        || (event.entity instanceof EntityLivingBase && event.entity instanceof IMob))) {
+            && (event.entity instanceof EntityMob
+                || (event.entity instanceof EntityLivingBase && event.entity instanceof IMob))) {
             InfernalMobsCore.instance().networkHelper.sendPacketToServer(
-                    new MobModsPacket(mc.thePlayer.getGameProfile().getName(), event.entity.getEntityId(), (byte) 0));
+                new MobModsPacket(
+                    mc.thePlayer.getGameProfile()
+                        .getName(),
+                    event.entity.getEntityId(),
+                    (byte) 0));
         }
     }
 
     private void askServerHealth(Entity ent) {
         if (System.currentTimeMillis() > nextPacketTime) {
             InfernalMobsCore.instance().networkHelper.sendPacketToServer(
-                    new HealthPacket(mc.thePlayer.getGameProfile().getName(), ent.getEntityId(), 0f, 0f));
+                new HealthPacket(
+                    mc.thePlayer.getGameProfile()
+                        .getName(),
+                    ent.getEntityId(),
+                    0f,
+                    0f));
             nextPacketTime = System.currentTimeMillis() + 100L;
         }
     }
 
     @SubscribeEvent
     public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
-        if (InfernalMobsCore.instance().getIsHealthBarDisabled()
-                || event.type != RenderGameOverlayEvent.ElementType.BOSSHEALTH
-                || (BossStatus.bossName != null && BossStatus.statusBarTime > 0)) {
+        if (InfernalMobsCore.instance()
+            .getIsHealthBarDisabled() || event.type != RenderGameOverlayEvent.ElementType.BOSSHEALTH
+            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0)) {
             return;
         }
 
@@ -102,7 +114,8 @@ public class InfernalMobsClient implements ISidedProxy {
                 askServerHealth(ent);
 
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                this.mc.getTextureManager().bindTexture(Gui.icons);
+                this.mc.getTextureManager()
+                    .bindTexture(Gui.icons);
                 GL11.glDisable(GL11.GL_BLEND);
 
                 EntityLivingBase target = (EntityLivingBase) ent;
@@ -116,7 +129,7 @@ public class InfernalMobsClient implements ISidedProxy {
                 int x = screenwidth / 2 - lifeBarLength / 2;
 
                 int lifeBarLeft = (int) (mod.getActualHealth(target) / mod.getActualMaxHealth(target)
-                        * (float) (lifeBarLength + 1));
+                    * (float) (lifeBarLength + 1));
                 byte y = 12;
                 gui.drawTexturedModalRect(x, y, 0, 74, lifeBarLength, 5);
                 gui.drawTexturedModalRect(x, y, 0, 74, lifeBarLength, 5);
@@ -126,26 +139,24 @@ public class InfernalMobsClient implements ISidedProxy {
                 }
 
                 int yCoord = 10;
-                fontR.drawStringWithShadow(
-                        buffer,
-                        screenwidth / 2 - fontR.getStringWidth(buffer) / 2,
-                        yCoord,
-                        0x2F96EB);
+                fontR
+                    .drawStringWithShadow(buffer, screenwidth / 2 - fontR.getStringWidth(buffer) / 2, yCoord, 0x2F96EB);
 
                 String[] display = mod.getDisplayNames();
                 int i = 0;
                 while (i < display.length && display[i] != null) {
                     yCoord += 10;
                     fontR.drawStringWithShadow(
-                            display[i],
-                            screenwidth / 2 - fontR.getStringWidth(display[i]) / 2,
-                            yCoord,
-                            0xffffff);
+                        display[i],
+                        screenwidth / 2 - fontR.getStringWidth(display[i]) / 2,
+                        yCoord,
+                        0xffffff);
                     i++;
                 }
 
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                this.mc.getTextureManager().bindTexture(Gui.icons);
+                this.mc.getTextureManager()
+                    .bindTexture(Gui.icons);
 
                 if (!retained) {
                     retainedTarget = target;
@@ -172,28 +183,28 @@ public class InfernalMobsClient implements ISidedProxy {
 
                 final Vec3 viewEntityLookVec = mc.renderViewEntity.getLook(renderTick);
                 final Vec3 actualReachVector = viewEntPositionVec.addVector(
-                        viewEntityLookVec.xCoord * reachDistance,
-                        viewEntityLookVec.yCoord * reachDistance,
-                        viewEntityLookVec.zCoord * reachDistance);
+                    viewEntityLookVec.xCoord * reachDistance,
+                    viewEntityLookVec.yCoord * reachDistance,
+                    viewEntityLookVec.zCoord * reachDistance);
                 float expandBBvalue = 1.0F;
                 double lowestDistance = reachDist2;
                 Entity iterEnt;
                 Entity pointedEntity = null;
                 for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(
-                        mc.renderViewEntity,
-                        mc.renderViewEntity.boundingBox
-                                .addCoord(
-                                        viewEntityLookVec.xCoord * reachDistance,
-                                        viewEntityLookVec.yCoord * reachDistance,
-                                        viewEntityLookVec.zCoord * reachDistance)
-                                .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
+                    mc.renderViewEntity,
+                    mc.renderViewEntity.boundingBox
+                        .addCoord(
+                            viewEntityLookVec.xCoord * reachDistance,
+                            viewEntityLookVec.yCoord * reachDistance,
+                            viewEntityLookVec.zCoord * reachDistance)
+                        .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
                     iterEnt = (Entity) obj;
                     if (iterEnt.canBeCollidedWith()) {
                         float entBorderSize = iterEnt.getCollisionBorderSize();
                         AxisAlignedBB entHitBox = iterEnt.boundingBox
-                                .expand(entBorderSize, entBorderSize, entBorderSize);
+                            .expand(entBorderSize, entBorderSize, entBorderSize);
                         MovingObjectPosition interceptObjectPosition = entHitBox
-                                .calculateIntercept(viewEntPositionVec, actualReachVector);
+                            .calculateIntercept(viewEntPositionVec, actualReachVector);
 
                         if (entHitBox.isVecInside(viewEntPositionVec)) {
                             if (0.0D < lowestDistance || lowestDistance == 0.0D) {
@@ -227,7 +238,8 @@ public class InfernalMobsClient implements ISidedProxy {
 
     @Override
     public void onHealthPacketForClient(String stringData, int entID, float health, float maxhealth) {
-        Entity ent = FMLClientHandler.instance().getClient().theWorld.getEntityByID(entID);
+        Entity ent = FMLClientHandler.instance()
+            .getClient().theWorld.getEntityByID(entID);
         if (ent instanceof EntityLivingBase) {
             MobModifier mod = InfernalMobsCore.getMobModifiers((EntityLivingBase) ent);
             if (mod != null) {
@@ -239,18 +251,27 @@ public class InfernalMobsClient implements ISidedProxy {
 
     @Override
     public void onKnockBackPacket(float xv, float zv) {
-        MM_Gravity.knockBack(FMLClientHandler.instance().getClient().thePlayer, xv, zv);
+        MM_Gravity.knockBack(
+            FMLClientHandler.instance()
+                .getClient().thePlayer,
+            xv,
+            zv);
     }
 
     @Override
     public void onMobModsPacketToClient(String stringData, int entID) {
         InfernalMobsCore.instance()
-                .addRemoteEntityModifiers(FMLClientHandler.instance().getClient().theWorld, entID, stringData);
+            .addRemoteEntityModifiers(
+                FMLClientHandler.instance()
+                    .getClient().theWorld,
+                entID,
+                stringData);
     }
 
     @Override
     public void onVelocityPacket(float xv, float yv, float zv) {
-        FMLClientHandler.instance().getClient().thePlayer.addVelocity(xv, yv, zv);
+        FMLClientHandler.instance()
+            .getClient().thePlayer.addVelocity(xv, yv, zv);
     }
 
     @Override

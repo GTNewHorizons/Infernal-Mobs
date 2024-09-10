@@ -47,7 +47,9 @@ public class MobModsPacket implements IPacket {
             InfernalMobsCore.proxy.onMobModsPacketToClient(stringData, entID);
         } else {
             // else we are on serverside
-            EntityPlayerMP p = MinecraftServer.getServer().getConfigurationManager().func_152612_a(stringData);
+            EntityPlayerMP p = MinecraftServer.getServer()
+                .getConfigurationManager()
+                .func_152612_a(stringData);
             if (p != null) {
                 Entity ent = p.worldObj.getEntityByID(entID);
                 if (ent instanceof EntityLivingBase) {
@@ -56,8 +58,9 @@ public class MobModsPacket implements IPacket {
                     if (mod != null) {
                         stringData = mod.getLinkedModNameUntranslated();
                         InfernalMobsCore.instance().networkHelper
-                                .sendPacketToPlayer(new MobModsPacket(stringData, entID, (byte) 1), p);
-                        InfernalMobsCore.instance().sendHealthPacket(e, mod.getActualHealth(e));
+                            .sendPacketToPlayer(new MobModsPacket(stringData, entID, (byte) 1), p);
+                        InfernalMobsCore.instance()
+                            .sendHealthPacket(e, mod.getActualHealth(e));
                     }
                 }
             }

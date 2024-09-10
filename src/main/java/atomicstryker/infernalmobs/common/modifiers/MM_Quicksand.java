@@ -20,9 +20,8 @@ public class MM_Quicksand extends MobModifier {
 
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
-        if (getMobTarget() != null && InfernalMobsCore.instance().getIsEntityAllowedTarget(getMobTarget())
-                && mob.canEntityBeSeen(getMobTarget())
-                && ++ticker >= 80) {
+        if (getMobTarget() != null && InfernalMobsCore.instance()
+            .getIsEntityAllowedTarget(getMobTarget()) && mob.canEntityBeSeen(getMobTarget()) && ++ticker >= 80) {
             ticker = 0;
             getMobTarget().addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 0));
         }

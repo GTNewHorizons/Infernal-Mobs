@@ -24,7 +24,8 @@ public class MM_Lifesteal extends MobModifier {
     public float onAttack(EntityLivingBase entity, DamageSource source, float damage) {
         EntityLivingBase mob = (EntityLivingBase) source.getEntity();
         if (entity != null && mob.getHealth() < getActualMaxHealth(mob)) {
-            InfernalMobsCore.instance().setEntityHealthPastMax(mob, mob.getHealth() + (damage * lifestealMultiplier));
+            InfernalMobsCore.instance()
+                .setEntityHealthPastMax(mob, mob.getHealth() + (damage * lifestealMultiplier));
         }
 
         return super.onAttack(entity, source, damage);
@@ -58,11 +59,13 @@ public class MM_Lifesteal extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
-            lifestealMultiplier = (float) config.get(
+            lifestealMultiplier = (float) config
+                .get(
                     getModifierClassName(),
                     "lifestealMultiplier",
                     1.0D,
-                    "Multiplies damage dealt, result is added to mob health").getDouble(1.0D);
+                    "Multiplies damage dealt, result is added to mob health")
+                .getDouble(1.0D);
         }
     }
 }

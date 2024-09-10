@@ -50,7 +50,9 @@ public class HealthPacket implements IPacket {
         if (maxhealth > 0) {
             InfernalMobsCore.proxy.onHealthPacketForClient(stringData, entID, health, maxhealth);
         } else {
-            EntityPlayerMP p = MinecraftServer.getServer().getConfigurationManager().func_152612_a(stringData);
+            EntityPlayerMP p = MinecraftServer.getServer()
+                .getConfigurationManager()
+                .func_152612_a(stringData);
             if (p != null) {
                 Entity ent = p.worldObj.getEntityByID(entID);
                 if (ent instanceof EntityLivingBase) {
@@ -60,7 +62,7 @@ public class HealthPacket implements IPacket {
                         health = e.getHealth();
                         maxhealth = e.getMaxHealth();
                         InfernalMobsCore.instance().networkHelper
-                                .sendPacketToPlayer(new HealthPacket(stringData, entID, health, maxhealth), p);
+                            .sendPacketToPlayer(new HealthPacket(stringData, entID, health, maxhealth), p);
                     }
                 }
             }

@@ -44,11 +44,13 @@ public class MM_Bulwark extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
-            damageMultiplier = (float) config.get(
+            damageMultiplier = (float) config
+                .get(
                     getModifierClassName(),
                     "damageMultiplier",
                     0.5D,
-                    "Damage (taken) multiplier, only makes sense for values < 1.0").getDouble(0.5D);
+                    "Damage (taken) multiplier, only makes sense for values < 1.0")
+                .getDouble(0.5D);
         }
     }
 }

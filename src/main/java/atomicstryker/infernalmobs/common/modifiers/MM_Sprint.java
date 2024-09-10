@@ -105,7 +105,7 @@ public class MM_Sprint extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses")
-                    .getInt(5000) / 50;
+                .getInt(5000) / 50;
         }
     }
 }

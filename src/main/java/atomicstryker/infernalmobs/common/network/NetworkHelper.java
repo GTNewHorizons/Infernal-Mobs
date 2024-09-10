@@ -46,7 +46,7 @@ public class NetworkHelper {
     @SafeVarargs
     public NetworkHelper(String channelName, Class<? extends IPacket>... handledPacketClasses) {
         EnumMap<Side, FMLEmbeddedChannel> channelPair = NetworkRegistry.INSTANCE
-                .newChannel(channelName, new ChannelCodec(handledPacketClasses), new ChannelHandler());
+            .newChannel(channelName, new ChannelCodec(handledPacketClasses), new ChannelHandler());
         clientOutboundChannel = channelPair.get(Side.CLIENT);
         serverOutboundChannel = channelPair.get(Side.SERVER);
 
@@ -60,7 +60,7 @@ public class NetworkHelper {
     public void sendPacketToServer(IPacket packet) {
         checkClassAndSync(packet.getClass());
         clientOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET)
-                .set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+            .set(FMLOutboundHandler.OutboundTarget.TOSERVER);
         clientOutboundChannel.writeOutbound(packet);
         isCurrentlySendingSemaphor = false;
     }
@@ -70,8 +70,10 @@ public class NetworkHelper {
      */
     public void sendPacketToPlayer(IPacket packet, EntityPlayerMP player) {
         checkClassAndSync(packet.getClass());
-        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET)
+            .set(FMLOutboundHandler.OutboundTarget.PLAYER);
+        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS)
+            .set(player);
         serverOutboundChannel.writeOutbound(packet);
         isCurrentlySendingSemaphor = false;
     }
@@ -81,7 +83,8 @@ public class NetworkHelper {
      */
     public void sendPacketToAllPlayers(IPacket packet) {
         checkClassAndSync(packet.getClass());
-        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET)
+            .set(FMLOutboundHandler.OutboundTarget.ALL);
         serverOutboundChannel.writeOutbound(packet);
         isCurrentlySendingSemaphor = false;
     }
@@ -92,8 +95,9 @@ public class NetworkHelper {
     public void sendPacketToAllAroundPoint(IPacket packet, TargetPoint tp) {
         checkClassAndSync(packet.getClass());
         serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET)
-                .set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
-        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(tp);
+            .set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
+        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS)
+            .set(tp);
         serverOutboundChannel.writeOutbound(packet);
         isCurrentlySendingSemaphor = false;
     }
@@ -104,8 +108,9 @@ public class NetworkHelper {
     public void sendPacketToAllInDimension(IPacket packet, int dimension) {
         checkClassAndSync(packet.getClass());
         serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET)
-                .set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
+            .set(FMLOutboundHandler.OutboundTarget.DIMENSION);
+        serverOutboundChannel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS)
+            .set(dimension);
         serverOutboundChannel.writeOutbound(packet);
         isCurrentlySendingSemaphor = false;
     }

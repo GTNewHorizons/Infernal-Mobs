@@ -36,13 +36,13 @@ public class MM_Storm extends MobModifier {
 
         long time = mob.ticksExisted;
         if (time > nextAbilityUse && mob.getDistanceToEntity(target) > MIN_DISTANCE
-                && target.worldObj.canBlockSeeTheSky(
-                        MathHelper.floor_double(target.posX),
-                        MathHelper.floor_double(target.posY),
-                        MathHelper.floor_double(target.posZ))) {
+            && target.worldObj.canBlockSeeTheSky(
+                MathHelper.floor_double(target.posX),
+                MathHelper.floor_double(target.posY),
+                MathHelper.floor_double(target.posZ))) {
             nextAbilityUse = time + coolDown;
             mob.worldObj
-                    .addWeatherEffect(new EntityLightningBolt(mob.worldObj, target.posX, target.posY - 1, target.posZ));
+                .addWeatherEffect(new EntityLightningBolt(mob.worldObj, target.posX, target.posY - 1, target.posZ));
         }
     }
 
@@ -70,7 +70,7 @@ public class MM_Storm extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                    .getInt(15000) / 50;
+                .getInt(15000) / 50;
         }
     }
 }

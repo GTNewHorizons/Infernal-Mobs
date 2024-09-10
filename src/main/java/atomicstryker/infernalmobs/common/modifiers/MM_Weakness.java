@@ -23,9 +23,10 @@ public class MM_Weakness extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityLivingBase)
-                && InfernalMobsCore.instance().getIsEntityAllowedTarget(source.getEntity())) {
+            && InfernalMobsCore.instance()
+                .getIsEntityAllowedTarget(source.getEntity())) {
             ((EntityLivingBase) source.getEntity())
-                    .addPotionEffect(new PotionEffect(Potion.weakness.id, potionDuration, 0));
+                .addPotionEffect(new PotionEffect(Potion.weakness.id, potionDuration, 0));
         }
 
         return super.onHurt(mob, source, damage);
@@ -33,7 +34,8 @@ public class MM_Weakness extends MobModifier {
 
     @Override
     public float onAttack(EntityLivingBase entity, DamageSource source, float damage) {
-        if (entity != null && InfernalMobsCore.instance().getIsEntityAllowedTarget(entity)) {
+        if (entity != null && InfernalMobsCore.instance()
+            .getIsEntityAllowedTarget(entity)) {
             entity.addPotionEffect(new PotionEffect(Potion.weakness.id, potionDuration, 0));
         }
 
@@ -64,8 +66,8 @@ public class MM_Weakness extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             potionDuration = config
-                    .get(getModifierClassName(), "weaknessDurationTicks", 120L, "Time attacker is weakened")
-                    .getInt(120);
+                .get(getModifierClassName(), "weaknessDurationTicks", 120L, "Time attacker is weakened")
+                .getInt(120);
         }
     }
 }

@@ -41,7 +41,7 @@ public class MM_Webber extends MobModifier {
 
     private void tryAbility(EntityLivingBase mob, EntityLivingBase target) {
         if (target == null || !mob.canEntityBeSeen(target)
-                || (target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage)) {
+            || (target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage)) {
             return;
         }
 
@@ -63,10 +63,10 @@ public class MM_Webber extends MobModifier {
             lastAbilityUse = time;
             target.worldObj.setBlock(x, y + offset, z, Blocks.web, 0, 3);
             mob.worldObj.playSoundAtEntity(
-                    mob,
-                    "mob.spider.say",
-                    1.0F,
-                    (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
+                mob,
+                "mob.spider.say",
+                1.0F,
+                (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
         }
     }
 
@@ -99,7 +99,7 @@ public class MM_Webber extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                    .getInt(15000) / 50;
+                .getInt(15000) / 50;
         }
     }
 }

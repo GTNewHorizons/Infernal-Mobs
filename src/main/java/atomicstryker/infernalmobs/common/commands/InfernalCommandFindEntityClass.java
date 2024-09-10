@@ -32,19 +32,24 @@ public class InfernalCommandFindEntityClass extends CommandBase {
         } else {
             StringBuilder classname = new StringBuilder(args[0]);
             for (int i = 1; i < args.length; i++) {
-                classname.append(" ").append(args[i]);
+                classname.append(" ")
+                    .append(args[i]);
             }
 
             StringBuilder result = new StringBuilder("Found Entity classes: ");
             final Collection<String> classes = EntityList.classToStringMapping.values();
             boolean found = false;
             for (String entclass : classes) {
-                if (entclass.toLowerCase().contains(classname.toString().toLowerCase())) {
+                if (entclass.toLowerCase()
+                    .contains(
+                        classname.toString()
+                            .toLowerCase())) {
                     if (!found) {
                         result.append(entclass);
                         found = true;
                     } else {
-                        result.append(", ").append(entclass);
+                        result.append(", ")
+                            .append(entclass);
                     }
                 }
             }
@@ -53,7 +58,9 @@ public class InfernalCommandFindEntityClass extends CommandBase {
                 result.append("Nothing found.");
             }
 
-            FMLCommonHandler.instance().getFMLLogger().log(Level.INFO, sender.getCommandSenderName() + ": " + result);
+            FMLCommonHandler.instance()
+                .getFMLLogger()
+                .log(Level.INFO, sender.getCommandSenderName() + ": " + result);
         }
     }
 
@@ -65,7 +72,8 @@ public class InfernalCommandFindEntityClass extends CommandBase {
     @Override
     public int compareTo(Object o) {
         if (o instanceof ICommand) {
-            return ((ICommand) o).getCommandName().compareTo(getCommandName());
+            return ((ICommand) o).getCommandName()
+                .compareTo(getCommandName());
         }
         return 0;
     }

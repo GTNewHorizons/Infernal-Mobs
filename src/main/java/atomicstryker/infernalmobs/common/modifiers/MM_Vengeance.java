@@ -22,12 +22,14 @@ public class MM_Vengeance extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && source.getEntity() != mob
-                && !InfernalMobsCore.instance().isInfiniteLoop(mob, source.getEntity())) {
+            && !InfernalMobsCore.instance()
+                .isInfiniteLoop(mob, source.getEntity())) {
             float reflectedDamage = Math.max(Math.min(damage, mob.getHealth()) * reflectMultiplier, 1);
             if (maxReflectDamage > 0.0f) {
                 reflectedDamage = Math.min(maxReflectDamage, reflectedDamage);
             }
-            source.getEntity().attackEntityFrom(DamageSource.causeThornsDamage(mob), reflectedDamage);
+            source.getEntity()
+                .attackEntityFrom(DamageSource.causeThornsDamage(mob), reflectedDamage);
         }
 
         return super.onHurt(mob, source, damage);
@@ -57,18 +59,19 @@ public class MM_Vengeance extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             reflectMultiplier = (float) config
-                    .get(
-                            getModifierClassName(),
-                            "vengeanceMultiplier",
-                            0.5D,
-                            "Multiplies damage received, result is subtracted from attacking entity's health")
-                    .getDouble(0.5D);
-            maxReflectDamage = (float) config.get(
+                .get(
+                    getModifierClassName(),
+                    "vengeanceMultiplier",
+                    0.5D,
+                    "Multiplies damage received, result is subtracted from attacking entity's health")
+                .getDouble(0.5D);
+            maxReflectDamage = (float) config
+                .get(
                     getModifierClassName(),
                     "vengeanceMaxDamage",
                     0.0D,
                     "Maximum amount of damage that is reflected (0, or less than zero for unlimited vengeance damage)")
-                    .getDouble(0.0D);
+                .getDouble(0.0D);
         }
     }
 }

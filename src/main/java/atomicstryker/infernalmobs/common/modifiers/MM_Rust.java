@@ -21,10 +21,11 @@ public class MM_Rust extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityPlayer)
-                && !(source instanceof EntityDamageSourceIndirect)) {
+            && !(source instanceof EntityDamageSourceIndirect)) {
             EntityPlayer p = (EntityPlayer) source.getEntity();
             if (p.inventory.getCurrentItem() != null) {
-                p.inventory.getCurrentItem().damageItem(itemDamage, (EntityLivingBase) source.getEntity());
+                p.inventory.getCurrentItem()
+                    .damageItem(itemDamage, (EntityLivingBase) source.getEntity());
             }
         }
 
@@ -64,8 +65,8 @@ public class MM_Rust extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             itemDamage = config
-                    .get(getModifierClassName(), "itemDamage", 4, "Damage dealt to Item in hand of attacking entity")
-                    .getInt(4);
+                .get(getModifierClassName(), "itemDamage", 4, "Damage dealt to Item in hand of attacking entity")
+                .getInt(4);
         }
     }
 }

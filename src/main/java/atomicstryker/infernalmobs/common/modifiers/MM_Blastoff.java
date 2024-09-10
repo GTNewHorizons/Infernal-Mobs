@@ -36,8 +36,8 @@ public class MM_Blastoff extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && source.getEntity() instanceof EntityLivingBase
-                && !(source.getEntity() instanceof EntityPlayer
-                        && ((EntityPlayer) source.getEntity()).capabilities.disableDamage)) {
+            && !(source.getEntity() instanceof EntityPlayer
+                && ((EntityPlayer) source.getEntity()).capabilities.disableDamage)) {
             tryAbility(mob, (EntityLivingBase) source.getEntity());
         }
 
@@ -53,15 +53,16 @@ public class MM_Blastoff extends MobModifier {
         if (time > nextAbilityUse) {
             nextAbilityUse = time + coolDown;
             mob.worldObj.playSoundAtEntity(
-                    mob,
-                    "mob.slime.attack",
-                    1.0F,
-                    (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
+                mob,
+                "mob.slime.attack",
+                1.0F,
+                (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
 
             if (target.worldObj.isRemote || !(target instanceof EntityPlayerMP)) {
                 target.addVelocity(0, 1.1D, 0);
             } else {
-                InfernalMobsCore.instance().sendVelocityPacket((EntityPlayerMP) target, 0f, 1.1f, 0f);
+                InfernalMobsCore.instance()
+                    .sendVelocityPacket((EntityPlayerMP) target, 0f, 1.1f, 0f);
             }
         }
     }
@@ -95,7 +96,7 @@ public class MM_Blastoff extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                    .getInt(15000) / 50;
+                .getInt(15000) / 50;
         }
     }
 }

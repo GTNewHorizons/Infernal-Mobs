@@ -47,10 +47,11 @@ public class MM_Alchemist extends MobModifier {
                 potion.setPotionDamage(32698);
             } else if (target.getHealth() >= 8 && !target.isPotionActive(Potion.poison)) {
                 potion.setPotionDamage(32660);
-            } else
-                if (distance <= 3.0F && !target.isPotionActive(Potion.weakness) && mob.getRNG().nextFloat() < 0.25F) {
-                    potion.setPotionDamage(32696);
-                }
+            } else if (distance <= 3.0F && !target.isPotionActive(Potion.weakness)
+                && mob.getRNG()
+                    .nextFloat() < 0.25F) {
+                        potion.setPotionDamage(32696);
+                    }
 
             potion.setThrowableHeading(diffX, diffY + (double) (distance * 0.2F), diffZ, 0.75F, 8.0F);
             mob.worldObj.spawnEntityInWorld(potion);
@@ -81,7 +82,7 @@ public class MM_Alchemist extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 6000L, "Time between ability uses")
-                    .getInt(6000) / 50;
+                .getInt(6000) / 50;
         }
     }
 }

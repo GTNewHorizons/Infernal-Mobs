@@ -29,11 +29,13 @@ public class MM_Ninja extends MobModifier {
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         long time = mob.ticksExisted;
         if (time > nextAbilityUse && source.getEntity() != null
-                && source.getEntity() != mob
-                && !InfernalMobsCore.instance().isInfiniteLoop(mob, source.getEntity())
-                && teleportToEntity(mob, source.getEntity())) {
+            && source.getEntity() != mob
+            && !InfernalMobsCore.instance()
+                .isInfiniteLoop(mob, source.getEntity())
+            && teleportToEntity(mob, source.getEntity())) {
             nextAbilityUse = time + coolDown;
-            source.getEntity().attackEntityFrom(
+            source.getEntity()
+                .attackEntityFrom(
                     DamageSource.causeMobDamage(mob),
                     Math.min(maxReflectDamage, damage * reflectMultiplier));
             return super.onHurt(mob, source, 0);
@@ -44,11 +46,9 @@ public class MM_Ninja extends MobModifier {
 
     private boolean teleportToEntity(EntityLivingBase mob, Entity par1Entity) {
         Vec3 vector = Vec3.createVectorHelper(
-                mob.posX - par1Entity.posX,
-                mob.boundingBox.minY + (double) (mob.height / 2.0F)
-                        - par1Entity.posY
-                        + (double) par1Entity.getEyeHeight(),
-                mob.posZ - par1Entity.posZ);
+            mob.posX - par1Entity.posX,
+            mob.boundingBox.minY + (double) (mob.height / 2.0F) - par1Entity.posY + (double) par1Entity.getEyeHeight(),
+            mob.posZ - par1Entity.posZ);
         vector = vector.normalize();
         double telDist = 8.0D;
         double destX = mob.posX + (mob.worldObj.rand.nextDouble() - 0.5D) * 4.0D - vector.xCoord * telDist;
@@ -74,7 +74,8 @@ public class MM_Ninja extends MobModifier {
             boolean hitGround = false;
             while (!hitGround && y < 96 && y > 0) {
                 blockID = mob.worldObj.getBlock(x, y - 1, z);
-                if (blockID.getMaterial().blocksMovement()) {
+                if (blockID.getMaterial()
+                    .blocksMovement()) {
                     hitGround = true;
                 } else {
                     --mob.posY;
@@ -85,9 +86,9 @@ public class MM_Ninja extends MobModifier {
             if (hitGround) {
                 mob.setPosition(mob.posX, mob.posY, mob.posZ);
 
-                if (mob.worldObj.getCollidingBoundingBoxes(mob, mob.boundingBox).isEmpty()
-                        && !mob.worldObj.isAnyLiquid(mob.boundingBox)
-                        && !mob.worldObj.checkBlockCollision(mob.boundingBox)) {
+                if (mob.worldObj.getCollidingBoundingBoxes(mob, mob.boundingBox)
+                    .isEmpty() && !mob.worldObj.isAnyLiquid(mob.boundingBox)
+                    && !mob.worldObj.checkBlockCollision(mob.boundingBox)) {
                     success = true;
                 }
             } else {
@@ -99,12 +100,12 @@ public class MM_Ninja extends MobModifier {
                 return false;
             } else {
                 mob.worldObj.playSoundEffect(
-                        oldX,
-                        oldY,
-                        oldZ,
-                        "random.explode",
-                        2.0F,
-                        (1.0F + (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+                    oldX,
+                    oldY,
+                    oldZ,
+                    "random.explode",
+                    2.0F,
+                    (1.0F + (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
                 mob.worldObj.spawnParticle("hugeexplosion", oldX, oldY, oldZ, 0D, 0D, 0D);
             }
         }
@@ -135,19 +136,19 @@ public class MM_Ninja extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                    .getInt(15000) / 50;
+                .getInt(15000) / 50;
             reflectMultiplier = (float) config.get(
-                    getModifierClassName(),
-                    "ninjaReflectMultiplier",
-                    0.75D,
-                    "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage")
-                    .getDouble(0.75D);
+                getModifierClassName(),
+                "ninjaReflectMultiplier",
+                0.75D,
+                "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage")
+                .getDouble(0.75D);
             maxReflectDamage = (float) config.get(
-                    getModifierClassName(),
-                    "ninjaReflectMaxDamage",
-                    10.0D,
-                    "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)")
-                    .getDouble(10.0D);
+                getModifierClassName(),
+                "ninjaReflectMaxDamage",
+                10.0D,
+                "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)")
+                .getDouble(10.0D);
         }
     }
 }

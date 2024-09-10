@@ -78,11 +78,14 @@ public class MM_Choke extends MobModifier {
     private void updateAir() {
         lastTarget.setAir(lastAir);
         if (lastTarget instanceof EntityPlayerMP) {
-            InfernalMobsCore.instance().sendAirPacket((EntityPlayerMP) lastTarget, lastAir);
+            InfernalMobsCore.instance()
+                .sendAirPacket((EntityPlayerMP) lastTarget, lastAir);
 
             UUID id = lastTarget.getUniqueID();
             if (id != null) {
-                InfernalMobsCore.instance().getModifiedPlayerTimes().put(id, System.currentTimeMillis());
+                InfernalMobsCore.instance()
+                    .getModifiedPlayerTimes()
+                    .put(id, System.currentTimeMillis());
             }
         }
     }

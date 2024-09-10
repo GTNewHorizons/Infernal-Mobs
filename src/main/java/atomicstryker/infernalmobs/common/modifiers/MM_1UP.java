@@ -23,7 +23,8 @@ public class MM_1UP extends MobModifier {
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
         if (!healed && mob.getHealth() < (getActualMaxHealth(mob) * 0.25)) {
-            InfernalMobsCore.instance().setEntityHealthPastMax(mob, getActualMaxHealth(mob) * (float) healAmount);
+            InfernalMobsCore.instance()
+                .setEntityHealthPastMax(mob, getActualMaxHealth(mob) * (float) healAmount);
             mob.worldObj.playSoundAtEntity(mob, "random.levelup", 1.0F, 1.0F);
             healed = true;
         }
@@ -58,12 +59,13 @@ public class MM_1UP extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
-            healAmount = config.get(
+            healAmount = config
+                .get(
                     getModifierClassName(),
                     "healAmountMultiplier",
                     1.0D,
                     "Multiplies the mob maximum health when healing back up, cannot get past maximum mob health")
-                    .getDouble(1.0D);
+                .getDouble(1.0D);
         }
     }
 }

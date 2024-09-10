@@ -38,8 +38,8 @@ public class MM_Gravity extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && source.getEntity() instanceof EntityLivingBase
-                && !(source.getEntity() instanceof EntityPlayer
-                        && ((EntityPlayer) source.getEntity()).capabilities.disableDamage)) {
+            && !(source.getEntity() instanceof EntityPlayer
+                && ((EntityPlayer) source.getEntity()).capabilities.disableDamage)) {
             tryAbility(mob, (EntityLivingBase) source.getEntity());
         }
 
@@ -58,20 +58,21 @@ public class MM_Gravity extends MobModifier {
             double diffX = target.posX - mob.posX;
             double diffZ;
             for (diffZ = target.posZ - mob.posZ; diffX * diffX + diffZ * diffZ
-                    < 1.0E-4D; diffZ = (Math.random() - Math.random()) * 0.01D) {
+                < 1.0E-4D; diffZ = (Math.random() - Math.random()) * 0.01D) {
                 diffX = (Math.random() - Math.random()) * 0.01D;
             }
 
             mob.worldObj.playSoundAtEntity(
-                    mob,
-                    "mob.irongolem.throw",
-                    1.0F,
-                    (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
+                mob,
+                "mob.irongolem.throw",
+                1.0F,
+                (mob.worldObj.rand.nextFloat() - mob.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
 
             if (mob.worldObj.isRemote || !(target instanceof EntityPlayerMP)) {
                 knockBack(target, diffX, diffZ);
             } else {
-                InfernalMobsCore.instance().sendKnockBackPacket((EntityPlayerMP) target, (float) diffX, (float) diffZ);
+                InfernalMobsCore.instance()
+                    .sendKnockBackPacket((EntityPlayerMP) target, (float) diffX, (float) diffZ);
             }
         }
     }
@@ -121,9 +122,9 @@ public class MM_Gravity extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses")
-                    .getInt(5000) / 50;
+                .getInt(5000) / 50;
             double maxDistance = config.get(getModifierClassName(), "maxDistance", 40, "Range of ability.")
-                    .getDouble(40);
+                .getDouble(40);
             maxDistanceSquared = maxDistance * maxDistance;
         }
     }

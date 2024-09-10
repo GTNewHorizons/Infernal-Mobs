@@ -80,7 +80,7 @@ public abstract class MobModifier {
      */
     public String getLinkedModName() {
         return (StatCollector.translateToLocal("translation.infernalmobs:mod." + modName) + " "
-                + ((nextMod != null) ? nextMod.getLinkedModName() : ""));
+            + ((nextMod != null) ? nextMod.getLinkedModName() : ""));
     }
 
     /**
@@ -131,17 +131,19 @@ public abstract class MobModifier {
      * Called when local Spawn Processing is completed or when a client remote-attached Modifiers to a local Entity
      */
     public void onSpawningComplete(EntityLivingBase entity) {
-        String oldTag = entity.getEntityData().getString(InfernalMobsCore.getNBTTag());
+        String oldTag = entity.getEntityData()
+            .getString(InfernalMobsCore.getNBTTag());
         if (!oldTag.isEmpty() && !oldTag.equals(getLinkedModNameUntranslated())) {
             FMLLog.log(
-                    "InfernalMobs",
-                    Level.DEBUG,
-                    String.format(
-                            "Infernal Mobs tag mismatch!! Was [%s], now trying to set [%s] \n",
-                            oldTag,
-                            getLinkedModNameUntranslated()));
+                "InfernalMobs",
+                Level.DEBUG,
+                String.format(
+                    "Infernal Mobs tag mismatch!! Was [%s], now trying to set [%s] \n",
+                    oldTag,
+                    getLinkedModNameUntranslated()));
         }
-        entity.getEntityData().setString(InfernalMobsCore.getNBTTag(), getLinkedModNameUntranslated());
+        entity.getEntityData()
+            .setString(InfernalMobsCore.getNBTTag(), getLinkedModNameUntranslated());
     }
 
     /**
@@ -163,9 +165,10 @@ public abstract class MobModifier {
      * Passes the loot drop event to the modifier list
      */
     public void onDropItems(EntityLivingBase moddedMob, DamageSource killSource, ArrayList<EntityItem> drops,
-            int lootingLevel, boolean recentlyHit, int specialDropValue) {
+        int lootingLevel, boolean recentlyHit, int specialDropValue) {
         if (recentlyHit) {
-            InfernalMobsCore.instance().dropLootForEnt(moddedMob, this);
+            InfernalMobsCore.instance()
+                .dropLootForEnt(moddedMob, this);
         }
     }
 
@@ -210,7 +213,8 @@ public abstract class MobModifier {
             amount = nextMod.onHurt(mob, source, amount);
         } else if (source.getEntity() != null) {
             if (source.getEntity().worldObj.isRemote && source.getEntity() instanceof EntityPlayer) {
-                InfernalMobsCore.instance().sendHealthRequestPacket(mob);
+                InfernalMobsCore.instance()
+                    .sendHealthRequestPacket(mob);
             }
         }
 
@@ -254,8 +258,8 @@ public abstract class MobModifier {
 
             if (attackTarget != null) {
                 if (attackTarget.isDead || attackTarget.getDistanceToEntity(mob) > 15f
-                        || (attackTarget instanceof EntityPlayer
-                                && ((EntityPlayer) attackTarget).capabilities.disableDamage)) {
+                    || (attackTarget instanceof EntityPlayer
+                        && ((EntityPlayer) attackTarget).capabilities.disableDamage)) {
                     attackTarget = null;
                 }
             }
@@ -290,7 +294,8 @@ public abstract class MobModifier {
         if (!healthHacked) {
             actualMaxHealth = getActualMaxHealth(mob);
             actualHealth = actualMaxHealth;
-            InfernalMobsCore.instance().setEntityHealthPastMax(mob, actualHealth);
+            InfernalMobsCore.instance()
+                .setEntityHealthPastMax(mob, actualHealth);
             healthHacked = true;
         }
     }
@@ -300,8 +305,10 @@ public abstract class MobModifier {
      */
     public float getActualMaxHealth(EntityLivingBase mob) {
         if (actualMaxHealth < 0) {
-            actualMaxHealth = (float) (InfernalMobsCore.instance().getMobClassMaxHealth(mob) * getModSize()
-                    * InfernalMobsCore.instance().getMobModHealthFactor());
+            actualMaxHealth = (float) (InfernalMobsCore.instance()
+                .getMobClassMaxHealth(mob) * getModSize()
+                * InfernalMobsCore.instance()
+                    .getMobModHealthFactor());
         }
         return actualMaxHealth;
     }
@@ -394,7 +401,8 @@ public abstract class MobModifier {
 
             int size = getModSize();
 
-            int randomMod = target.getRNG().nextInt(getModSize());
+            int randomMod = target.getRNG()
+                .nextInt(getModSize());
             MobModifier mod = this;
             while (randomMod > 0) {
                 mod = mod.nextMod;
@@ -403,17 +411,17 @@ public abstract class MobModifier {
 
             String modprefix = "";
             if (mod.getModNamePrefix() != null) {
-                modprefix = mod.getModNamePrefix()[target.getRNG().nextInt(mod.getModNamePrefix().length)];
+                modprefix = mod.getModNamePrefix()[target.getRNG()
+                    .nextInt(mod.getModNamePrefix().length)];
                 modprefix = StatCollector.translateToLocal("translation.infernalmobs:prefix." + modprefix);
             }
 
             String prefix = size <= 5
-                    ? EnumChatFormatting.AQUA + StatCollector.translateToLocal("translation.infernalmobs:rareClass")
-                    : size <= 10
-                            ? EnumChatFormatting.YELLOW
-                                    + StatCollector.translateToLocal("translation.infernalmobs:ultraClass")
-                            : EnumChatFormatting.GOLD
-                                    + StatCollector.translateToLocal("translation.infernalmobs:infernalClass");
+                ? EnumChatFormatting.AQUA + StatCollector.translateToLocal("translation.infernalmobs:rareClass")
+                : size <= 10
+                    ? EnumChatFormatting.YELLOW + StatCollector.translateToLocal("translation.infernalmobs:ultraClass")
+                    : EnumChatFormatting.GOLD
+                        + StatCollector.translateToLocal("translation.infernalmobs:infernalClass");
 
             buffer = prefix + modprefix + buffer;
 
@@ -421,7 +429,7 @@ public abstract class MobModifier {
                 mod = mod.nextMod != null ? mod.nextMod : this;
                 if (mod.getModNameSuffix() != null) {
                     String pickedSuffix = mod.getModNameSuffix()[target.getRNG()
-                            .nextInt(mod.getModNameSuffix().length)];
+                        .nextInt(mod.getModNameSuffix().length)];
                     pickedSuffix = StatCollector.translateToLocal("translation.infernalmobs:suffix." + pickedSuffix);
                     buffer = buffer + pickedSuffix;
                 }

@@ -22,7 +22,8 @@ public class MM_Berserk extends MobModifier {
     @Override
     public float onAttack(EntityLivingBase entity, DamageSource source, float damage) {
         if (entity != null) {
-            source.getEntity().attackEntityFrom(DamageSource.generic, damage);
+            source.getEntity()
+                .attackEntityFrom(DamageSource.generic, damage);
             damage = Math.min(maxBerserkDamage, damage * damageMultiplier);
         }
 
@@ -57,17 +58,15 @@ public class MM_Berserk extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
-            damageMultiplier = (float) config.get(
-                    getModifierClassName(),
-                    "damageMultiplier",
-                    2.0D,
-                    "Damage multiplier, limited by maxOneShotDamage").getDouble(2.0D);
+            damageMultiplier = (float) config
+                .get(getModifierClassName(), "damageMultiplier", 2.0D, "Damage multiplier, limited by maxOneShotDamage")
+                .getDouble(2.0D);
             maxBerserkDamage = (float) config.get(
-                    getModifierClassName(),
-                    "berserkMaxDamage",
-                    0.0D,
-                    "Maximum amount of damage that a mob with Berserk can deal (0, or less than zero for unlimited berserk damage)")
-                    .getDouble(0.0D);
+                getModifierClassName(),
+                "berserkMaxDamage",
+                0.0D,
+                "Maximum amount of damage that a mob with Berserk can deal (0, or less than zero for unlimited berserk damage)")
+                .getDouble(0.0D);
         }
     }
 }

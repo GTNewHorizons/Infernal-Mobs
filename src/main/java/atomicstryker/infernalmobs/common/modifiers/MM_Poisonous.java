@@ -24,10 +24,11 @@ public class MM_Poisonous extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityLivingBase)
-                && InfernalMobsCore.instance().getIsEntityAllowedTarget(source.getEntity())) {
+            && InfernalMobsCore.instance()
+                .getIsEntityAllowedTarget(source.getEntity())) {
             EntityLivingBase ent = (EntityLivingBase) source.getEntity();
             if (!ent.isPotionActive(Potion.poison) && !(source instanceof EntityDamageSourceIndirect)
-                    && !source.isProjectile()) {
+                && !source.isProjectile()) {
                 ent.addPotionEffect(new PotionEffect(Potion.poison.id, potionDuration, 0));
             }
         }
@@ -37,8 +38,8 @@ public class MM_Poisonous extends MobModifier {
 
     @Override
     public float onAttack(EntityLivingBase entity, DamageSource source, float damage) {
-        if (entity != null && InfernalMobsCore.instance().getIsEntityAllowedTarget(entity)
-                && !entity.isPotionActive(Potion.poison)) {
+        if (entity != null && InfernalMobsCore.instance()
+            .getIsEntityAllowedTarget(entity) && !entity.isPotionActive(Potion.poison)) {
             entity.addPotionEffect(new PotionEffect(Potion.poison.id, potionDuration, 0));
         }
 
@@ -69,7 +70,8 @@ public class MM_Poisonous extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             potionDuration = config
-                    .get(getModifierClassName(), "poisonDurationTicks", 120L, "Time attacker is poisoned").getInt(120);
+                .get(getModifierClassName(), "poisonDurationTicks", 120L, "Time attacker is poisoned")
+                .getInt(120);
         }
     }
 }

@@ -26,25 +26,24 @@ public class MM_Sticky extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityPlayer)
-                && !((EntityPlayer) source.getEntity()).capabilities.isCreativeMode
-                && !(source instanceof EntityDamageSourceIndirect)
-                && !source.isProjectile()) {
+            && !((EntityPlayer) source.getEntity()).capabilities.isCreativeMode
+            && !(source instanceof EntityDamageSourceIndirect)
+            && !source.isProjectile()) {
             EntityPlayer p = (EntityPlayer) source.getEntity();
             ItemStack weapon = p.inventory.getStackInSlot(p.inventory.currentItem);
             if (weapon != null) {
                 long time = mob.ticksExisted;
                 if (time > nextAbilityUse && source.getEntity() != null) {
                     nextAbilityUse = time + coolDown;
-                    EntityItem drop = p.dropPlayerItemWithRandomChoice(
-                            p.inventory.decrStackSize(p.inventory.currentItem, 1),
-                            false);
+                    EntityItem drop = p
+                        .dropPlayerItemWithRandomChoice(p.inventory.decrStackSize(p.inventory.currentItem, 1), false);
                     if (drop != null) {
                         drop.delayBeforeCanPickup = 50;
                         p.worldObj.playSoundAtEntity(
-                                mob,
-                                "mob.slime.attack",
-                                1.0F,
-                                (p.worldObj.rand.nextFloat() - p.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
+                            mob,
+                            "mob.slime.attack",
+                            1.0F,
+                            (p.worldObj.rand.nextFloat() - p.worldObj.rand.nextFloat()) * 0.2F + 1.0F);
                     }
                 }
             }
@@ -82,7 +81,7 @@ public class MM_Sticky extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                    .getInt(15000) / 50;
+                .getInt(15000) / 50;
         }
     }
 }

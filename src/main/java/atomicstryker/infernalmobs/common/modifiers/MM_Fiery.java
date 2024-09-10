@@ -20,9 +20,10 @@ public class MM_Fiery extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityLivingBase)
-                && !(source instanceof EntityDamageSourceIndirect)
-                && !source.isProjectile()) {
-            source.getEntity().setFire(fireDuration);
+            && !(source instanceof EntityDamageSourceIndirect)
+            && !source.isProjectile()) {
+            source.getEntity()
+                .setFire(fireDuration);
         }
 
         mob.extinguish();
@@ -62,7 +63,7 @@ public class MM_Fiery extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             fireDuration = config.get(getModifierClassName(), "fieryDurationSecs", 3L, "Time attacker is set on fire")
-                    .getInt(3);
+                .getInt(3);
         }
     }
 }

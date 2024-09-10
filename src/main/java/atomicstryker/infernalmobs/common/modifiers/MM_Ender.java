@@ -29,11 +29,13 @@ public class MM_Ender extends MobModifier {
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         long time = mob.ticksExisted;
         if (time > nextAbilityUse && source.getEntity() != null
-                && source.getEntity() != mob
-                && teleportToEntity(mob, source.getEntity())
-                && !InfernalMobsCore.instance().isInfiniteLoop(mob, source.getEntity())) {
+            && source.getEntity() != mob
+            && teleportToEntity(mob, source.getEntity())
+            && !InfernalMobsCore.instance()
+                .isInfiniteLoop(mob, source.getEntity())) {
             nextAbilityUse = time + coolDown;
-            source.getEntity().attackEntityFrom(
+            source.getEntity()
+                .attackEntityFrom(
                     DamageSource.causeMobDamage(mob),
                     Math.min(maxReflectDamage, damage * reflectMultiplier));
 
@@ -45,11 +47,9 @@ public class MM_Ender extends MobModifier {
 
     private boolean teleportToEntity(EntityLivingBase mob, Entity par1Entity) {
         Vec3 vector = Vec3.createVectorHelper(
-                mob.posX - par1Entity.posX,
-                mob.boundingBox.minY + (double) (mob.height / 2.0F)
-                        - par1Entity.posY
-                        + (double) par1Entity.getEyeHeight(),
-                mob.posZ - par1Entity.posZ);
+            mob.posX - par1Entity.posX,
+            mob.boundingBox.minY + (double) (mob.height / 2.0F) - par1Entity.posY + (double) par1Entity.getEyeHeight(),
+            mob.posZ - par1Entity.posZ);
         vector = vector.normalize();
         double telDist = 16.0D;
         double destX = mob.posX + (mob.worldObj.rand.nextDouble() - 0.5D) * 8.0D - vector.xCoord * telDist;
@@ -75,7 +75,8 @@ public class MM_Ender extends MobModifier {
             boolean hitGround = false;
             while (!hitGround && y < 96 && y > 0) {
                 blockID = mob.worldObj.getBlock(x, y - 1, z);
-                if (blockID.getMaterial().blocksMovement()) {
+                if (blockID.getMaterial()
+                    .blocksMovement()) {
                     hitGround = true;
                 } else {
                     --mob.posY;
@@ -86,9 +87,9 @@ public class MM_Ender extends MobModifier {
             if (hitGround) {
                 mob.setPosition(mob.posX, mob.posY, mob.posZ);
 
-                if (mob.worldObj.getCollidingBoundingBoxes(mob, mob.boundingBox).isEmpty()
-                        && !mob.worldObj.isAnyLiquid(mob.boundingBox)
-                        && !mob.worldObj.checkBlockCollision(mob.boundingBox)) {
+                if (mob.worldObj.getCollidingBoundingBoxes(mob, mob.boundingBox)
+                    .isEmpty() && !mob.worldObj.isAnyLiquid(mob.boundingBox)
+                    && !mob.worldObj.checkBlockCollision(mob.boundingBox)) {
                     success = true;
                 }
             } else {
@@ -107,10 +108,10 @@ public class MM_Ender extends MobModifier {
                 float var22 = (mob.worldObj.rand.nextFloat() - 0.5F) * 0.2F;
                 float var23 = (mob.worldObj.rand.nextFloat() - 0.5F) * 0.2F;
                 double var24 = oldX + (mob.posX - oldX) * var19
-                        + (mob.worldObj.rand.nextDouble() - 0.5D) * (double) mob.width * 2.0D;
+                    + (mob.worldObj.rand.nextDouble() - 0.5D) * (double) mob.width * 2.0D;
                 double var26 = oldY + (mob.posY - oldY) * var19 + mob.worldObj.rand.nextDouble() * (double) mob.height;
                 double var28 = oldZ + (mob.posZ - oldZ) * var19
-                        + (mob.worldObj.rand.nextDouble() - 0.5D) * (double) mob.width * 2.0D;
+                    + (mob.worldObj.rand.nextDouble() - 0.5D) * (double) mob.width * 2.0D;
                 mob.worldObj.spawnParticle("portal", var24, var26, var28, var21, var22, var23);
             }
 
@@ -144,19 +145,19 @@ public class MM_Ender extends MobModifier {
         @Override
         public void loadConfig(Configuration config) {
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                    .getInt(15000) / 50;
+                .getInt(15000) / 50;
             reflectMultiplier = (float) config.get(
-                    getModifierClassName(),
-                    "enderReflectMultiplier",
-                    0.75D,
-                    "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage")
-                    .getDouble(0.75D);
+                getModifierClassName(),
+                "enderReflectMultiplier",
+                0.75D,
+                "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the multiplier for the reflected damage")
+                .getDouble(0.75D);
             maxReflectDamage = (float) config.get(
-                    getModifierClassName(),
-                    "enderReflectMaxDamage",
-                    10.0D,
-                    "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)")
-                    .getDouble(10.0D);
+                getModifierClassName(),
+                "enderReflectMaxDamage",
+                10.0D,
+                "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)")
+                .getDouble(10.0D);
         }
     }
 }
