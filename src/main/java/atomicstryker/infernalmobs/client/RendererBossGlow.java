@@ -9,7 +9,7 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
-import atomicstryker.infernalmobs.common.MobModifier;
+import atomicstryker.infernalmobs.common.modifiers.MobModifier;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class RendererBossGlow {
@@ -18,9 +18,9 @@ public class RendererBossGlow {
 
     @SubscribeEvent
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (System.currentTimeMillis() > lastRender + 10L) {
-            lastRender = System.currentTimeMillis();
-
+        final long time = System.currentTimeMillis();
+        if (time > lastRender + 10L) {
+            lastRender = time;
             renderBossGlow(event.partialTicks);
         }
     }
@@ -43,17 +43,17 @@ public class RendererBossGlow {
         Map<EntityLivingBase, MobModifier> mobsmap = InfernalMobsCore.proxy.getRareMobs();
         for (EntityLivingBase ent : mobsmap.keySet()) {
             if (viewEnt.worldObj.provider.dimensionId == ent.worldObj.provider.dimensionId
-                    && ent.isInRangeToRenderDist(curPos.distanceTo(ent.getPosition(1.0f)))
-                    && (ent.ignoreFrustumCheck || f.isBoundingBoxInFrustum(ent.boundingBox))
-                    && ent.isEntityAlive()) {
+                && ent.isInRangeToRenderDist(curPos.distanceTo(ent.getPosition(1.0f)))
+                && (ent.ignoreFrustumCheck || f.isBoundingBoxInFrustum(ent.boundingBox))
+                && ent.isEntityAlive()) {
                 mc.renderGlobal.spawnParticle(
-                        "mobSpell",
-                        ent.posX + (ent.worldObj.rand.nextDouble() - 0.5D) * (double) ent.width,
-                        ent.posY + ent.worldObj.rand.nextDouble() * (double) ent.height - 0.25D,
-                        ent.posZ + (ent.worldObj.rand.nextDouble() - 0.5D) * (double) ent.width,
-                        (ent.worldObj.rand.nextDouble() - 0.5D) * 2.0D,
-                        -ent.worldObj.rand.nextDouble(),
-                        (ent.worldObj.rand.nextDouble() - 0.5D) * 2.0D);
+                    "mobSpell",
+                    ent.posX + (ent.worldObj.rand.nextDouble() - 0.5D) * (double) ent.width,
+                    ent.posY + ent.worldObj.rand.nextDouble() * (double) ent.height - 0.25D,
+                    ent.posZ + (ent.worldObj.rand.nextDouble() - 0.5D) * (double) ent.width,
+                    (ent.worldObj.rand.nextDouble() - 0.5D) * 2.0D,
+                    -ent.worldObj.rand.nextDouble(),
+                    (ent.worldObj.rand.nextDouble() - 0.5D) * 2.0D);
             }
         }
     }
