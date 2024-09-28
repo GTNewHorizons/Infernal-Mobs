@@ -138,7 +138,7 @@ public class InfernalMobsCore {
     private int maxUltraModifiers;
     private int minInfernoModifiers;
     private int maxInfernoModifiers;
-    public Configuration config; // TODO load the config only once...
+    public Configuration config;
 
     @SidedProxy(
         clientSide = "atomicstryker.infernalmobs.client.InfernalMobsClient",
@@ -166,6 +166,8 @@ public class InfernalMobsCore {
         modifiedPlayerTimes = new HashMap<>();
 
         config = new Configuration(evt.getSuggestedConfigurationFile());
+        config.load();
+        if (config.hasChanged()) config.save();
         loadMods();
 
         proxy.preInit();
@@ -239,9 +241,6 @@ public class InfernalMobsCore {
             new MM_Weakness.Loader(),
             new MM_Webber.Loader(),
             new MM_Wither.Loader());
-
-        config.load();
-
         modifierLoaders.removeIf(
             loader -> !config.get(Configuration.CATEGORY_GENERAL, loader.getModifierClassName() + " enabled", true)
                 .getBoolean(true));
@@ -253,8 +252,6 @@ public class InfernalMobsCore {
      * Forge Config file
      */
     private void loadConfig() {
-        config.load();
-
         eliteRarity = Integer.parseInt(
             config
                 .get(
@@ -458,7 +455,7 @@ public class InfernalMobsCore {
 
     /**
      * Called when an Entity is spawned by natural (Biome Spawning) means, turn them into Elites here
-     * 
+     *
      * @param entity Entity in question
      */
     public void processEntitySpawn(EntityLivingBase entity) {
@@ -524,7 +521,6 @@ public class InfernalMobsCore {
             return classesAllowedMap.get(entName);
         }
 
-        config.load();
         boolean result = config.get("permittedentities", entName, true)
             .getBoolean(true);
         if (config.hasChanged()) config.save();
@@ -540,7 +536,6 @@ public class InfernalMobsCore {
             return classesForcedMap.get(entName);
         }
 
-        config.load();
         boolean result = config.get("entitiesalwaysinfernal", entName, false)
             .getBoolean(false);
         if (config.hasChanged()) config.save();
@@ -556,7 +551,6 @@ public class InfernalMobsCore {
             return classesHealthMap.get(entName);
         }
 
-        config.load();
         float result = (float) config.get("entitybasehealth", entName, entity.getMaxHealth())
             .getDouble(entity.getMaxHealth());
         if (config.hasChanged()) config.save();
@@ -567,7 +561,7 @@ public class InfernalMobsCore {
 
     /**
      * Allows setting Entity Health past the hardcoded getMaxHealth() constraint
-     * 
+     *
      * @param entity Entity instance whose health you want changed
      * @param amount value to set
      */
@@ -578,7 +572,7 @@ public class InfernalMobsCore {
 
     /**
      * Decides on what, if any, of the possible Modifications to apply to the Entity
-     * 
+     *
      * @param entity Target Entity
      * @return null or the first linked MobModifier instance for the Entity
      */
@@ -604,7 +598,7 @@ public class InfernalMobsCore {
 
         MobModifier lastMod = null;
         while (number > 0 && !possibleMods.isEmpty()) // so long we need more
-                                                      // and have some
+        // and have some
         {
             /* random index of mod list */
             int index = entity.worldObj.rand.nextInt(possibleMods.size());
@@ -660,7 +654,7 @@ public class InfernalMobsCore {
 
     /**
      * Converts a String to MobModifier instances and connects them to an Entity
-     * 
+     *
      * @param entity    Target Entity
      * @param savedMods String depicting the MobModifiers, equal to the ingame Display
      */
@@ -720,7 +714,7 @@ public class InfernalMobsCore {
 
     /**
      * Used by the client side to answer to a server packet carrying the Entity ID and mod string
-     * 
+     *
      * @param world World the client is in, and the Entity aswell
      * @param entID unique Entity ID
      * @param mods  MobModifier compliant data String from the server
@@ -774,7 +768,7 @@ public class InfernalMobsCore {
 
     /**
      * Custom Enchanting Helper
-     * 
+     *
      * @param rand               Random gen to use
      * @param itemStack          ItemStack to be enchanted
      * @param itemEnchantability ItemStack max enchantability level
@@ -902,7 +896,7 @@ public class InfernalMobsCore {
     /**
      * By caching the last reflection pairing we make sure it doesn't trigger more than once (reflections battling each
      * other, infinite loop, crash)
-     * 
+     *
      * @return true when inf loop is suspected, false otherwise
      */
     public boolean isInfiniteLoop(EntityLivingBase mob, Entity entity) {

@@ -40,8 +40,6 @@ public class EntityEventHandler {
      */
     public EntityEventHandler() {
         Configuration config = InfernalMobsCore.instance().config;
-
-        config.load();
         antiMobFarm = config
             .get(
                 Configuration.CATEGORY_GENERAL,
