@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -12,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringUtils;
 
 import org.apache.logging.log4j.Level;
 
@@ -383,20 +383,15 @@ public abstract class MobModifier {
      */
     public String getEntityDisplayName(EntityLivingBase target) {
         if (bufferedEntityName == null) {
-            String buffer = EntityList.getEntityString(target);
+            String buffer = target.getCommandSenderName();
             if (buffer == null) {
-                buffer = "Monster";
-            }
-            String[] subStrings = buffer.split("\\."); // in case of Package.Class.EntityName derps
-            if (subStrings.length > 1) {
-                buffer = subStrings[subStrings.length - 1]; // reduce that to EntityName before proceeding
-            }
-            buffer = buffer.replaceFirst("Entity", "");
-
-            String entLoc = "translation.infernalmobs:entity." + buffer;
-            String entTrans = StatCollector.translateToLocal(entLoc);
-            if (!entLoc.equals(entTrans)) {
-                buffer = entTrans;
+                buffer = target.getClass()
+                    .getSimpleName();
+                if (StringUtils.isNullOrEmpty(buffer)) {
+                    buffer = buffer.replaceFirst("Entity", "");
+                } else {
+                    buffer = "Monster";
+                }
             }
 
             int size = getModSize();
