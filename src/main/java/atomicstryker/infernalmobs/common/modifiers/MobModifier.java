@@ -383,14 +383,16 @@ public abstract class MobModifier {
      */
     public String getEntityDisplayName(EntityLivingBase target) {
         if (bufferedEntityName == null) {
-            String buffer = target.getCommandSenderName();
-            if (buffer == null) {
-                buffer = target.getClass()
+            StringBuilder buffer = new StringBuilder();
+
+            String mobName = target.getCommandSenderName();
+            if (mobName == null) {
+                mobName = target.getClass()
                     .getSimpleName();
-                if (StringUtils.isNullOrEmpty(buffer)) {
-                    buffer = buffer.replaceFirst("Entity", "");
+                if (!StringUtils.isNullOrEmpty(mobName)) {
+                    mobName = mobName.replaceFirst("Entity", "");
                 } else {
-                    buffer = "Monster";
+                    mobName = "Monster";
                 }
             }
 
@@ -411,25 +413,29 @@ public abstract class MobModifier {
                 modprefix = StatCollector.translateToLocal("translation.infernalmobs:prefix." + modprefix);
             }
 
-            String prefix = size <= 5
-                ? EnumChatFormatting.YELLOW + StatCollector.translateToLocal("translation.infernalmobs:rareClass")
-                : size <= 10
-                    ? EnumChatFormatting.GOLD + StatCollector.translateToLocal("translation.infernalmobs:ultraClass")
-                    : EnumChatFormatting.RED + StatCollector.translateToLocal("translation.infernalmobs:infernalClass");
-
-            buffer = prefix + modprefix + buffer;
+            if (size <= 5) {
+                buffer.append(EnumChatFormatting.YELLOW)
+                    .append(StatCollector.translateToLocal("translation.infernalmobs:rareClass"));
+            } else if (size <= 10) {
+                buffer.append(EnumChatFormatting.GOLD)
+                    .append(StatCollector.translateToLocal("translation.infernalmobs:ultraClass"));
+            } else {
+                buffer.append(EnumChatFormatting.RED)
+                    .append(StatCollector.translateToLocal("translation.infernalmobs:infernalClass"));
+            }
+            buffer.append(modprefix);
+            buffer.append(mobName);
 
             if (size > 1) {
                 mod = mod.nextMod != null ? mod.nextMod : this;
                 if (mod.getModNameSuffix() != null) {
                     String pickedSuffix = mod.getModNameSuffix()[target.getRNG()
                         .nextInt(mod.getModNameSuffix().length)];
-                    pickedSuffix = StatCollector.translateToLocal("translation.infernalmobs:suffix." + pickedSuffix);
-                    buffer = buffer + pickedSuffix;
+                    buffer.append(StatCollector.translateToLocal("translation.infernalmobs:suffix." + pickedSuffix));
                 }
             }
 
-            bufferedEntityName = buffer;
+            bufferedEntityName = buffer.toString();
         }
 
         return bufferedEntityName;
