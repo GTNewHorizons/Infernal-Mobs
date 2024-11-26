@@ -417,10 +417,10 @@ public abstract class MobModifier {
             }
 
             String prefix = size <= 5
-                ? EnumChatFormatting.AQUA + StatCollector.translateToLocal("translation.infernalmobs:rareClass")
+                ? EnumChatFormatting.YELLOW + StatCollector.translateToLocal("translation.infernalmobs:rareClass")
                 : size <= 10
-                    ? EnumChatFormatting.YELLOW + StatCollector.translateToLocal("translation.infernalmobs:ultraClass")
-                    : EnumChatFormatting.GOLD
+                    ? EnumChatFormatting.GOLD + StatCollector.translateToLocal("translation.infernalmobs:ultraClass")
+                    : EnumChatFormatting.RED
                         + StatCollector.translateToLocal("translation.infernalmobs:infernalClass");
 
             buffer = prefix + modprefix + buffer;
