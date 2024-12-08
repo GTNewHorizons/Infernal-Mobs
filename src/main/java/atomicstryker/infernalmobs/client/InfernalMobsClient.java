@@ -132,15 +132,17 @@ public class InfernalMobsClient implements ISidedProxy {
                     * (float) (lifeBarLength + 1));
                 byte y = 12;
                 gui.drawTexturedModalRect(x, y, 0, 74, lifeBarLength, 5);
-                gui.drawTexturedModalRect(x, y, 0, 74, lifeBarLength, 5);
 
                 if (lifeBarLeft > 0) {
                     gui.drawTexturedModalRect(x, y, 0, 79, lifeBarLeft, 5);
                 }
 
-                int yCoord = 10;
+                int yCoord = 1;
                 fontR
                     .drawStringWithShadow(buffer, screenwidth / 2 - fontR.getStringWidth(buffer) / 2, yCoord, 0x2F96EB);
+
+                // spacing for healthbar
+                yCoord += 8;
 
                 String[] display = mod.getDisplayNames();
                 int i = 0;
