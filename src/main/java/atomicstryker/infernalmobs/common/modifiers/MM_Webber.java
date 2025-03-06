@@ -40,10 +40,11 @@ public class MM_Webber extends MobModifier {
     }
 
     private void tryAbility(EntityLivingBase mob, EntityLivingBase target) {
-        if (target == null || !mob.canEntityBeSeen(target)
-            || (target instanceof EntityPlayer && ((EntityPlayer) target).capabilities.disableDamage)) {
-            return;
-        }
+        if (target == null) return;
+        if (target instanceof EntityPlayer player && player.capabilities.disableDamage) return;
+        if (!target.worldObj.getGameRules()
+            .getGameRuleBooleanValue("mobGriefing")) return;
+        if (!mob.canEntityBeSeen(target)) return;
 
         int x = MathHelper.floor_double(target.posX);
         int y = MathHelper.floor_double(target.posY);
