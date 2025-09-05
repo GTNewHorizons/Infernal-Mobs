@@ -47,7 +47,9 @@ public class MM_Choke extends MobModifier {
                         lastTarget.attackEntityFrom(DamageSource.drown, 2.0F);
                     }
 
-                    updateAir();
+                    if (!mob.isDead) {
+                        updateAir();
+                    }
                 }
             }
         }
@@ -76,6 +78,8 @@ public class MM_Choke extends MobModifier {
     }
 
     private void updateAir() {
+        if (lastTarget == null) return;
+
         lastTarget.setAir(lastAir);
         if (lastTarget instanceof EntityPlayerMP) {
             InfernalMobsCore.instance()
