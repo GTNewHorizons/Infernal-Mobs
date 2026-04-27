@@ -185,11 +185,11 @@ public class InfernalMobsCore {
     }
 
     @EventHandler
-    public void load(FMLInitializationEvent evt) {
+    public void init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
         MinecraftForge.EVENT_BUS.register(new SaveEventHandler());
 
-        proxy.load();
+        proxy.init();
 
         FMLLog.log(
             "InfernalMobs",
