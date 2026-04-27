@@ -10,7 +10,7 @@ public interface ISidedProxy {
 
     void preInit();
 
-    void load();
+    void init();
 
     ConcurrentHashMap<EntityLivingBase, MobModifier> getRareMobs();
 

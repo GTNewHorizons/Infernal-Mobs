@@ -22,9 +22,7 @@ public class SaveEventHandler {
                     /*
                      * an EntityLiving was just dumped to a save file and removed from the world
                      */
-                    if (InfernalMobsCore.getIsRareEntity((EntityLivingBase) newEnt)) {
-                        InfernalMobsCore.removeEntFromElites((EntityLivingBase) newEnt);
-                    }
+                    InfernalMobsCore.removeEntFromElites((EntityLivingBase) newEnt);
                 }
             }
         }

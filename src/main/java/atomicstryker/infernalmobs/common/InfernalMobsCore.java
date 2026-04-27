@@ -185,11 +185,11 @@ public class InfernalMobsCore {
     }
 
     @EventHandler
-    public void load(FMLInitializationEvent evt) {
+    public void init(FMLInitializationEvent evt) {
         MinecraftForge.EVENT_BUS.register(new EntityEventHandler());
         MinecraftForge.EVENT_BUS.register(new SaveEventHandler());
 
-        proxy.load();
+        proxy.init();
 
         FMLLog.log(
             "InfernalMobs",
@@ -252,99 +252,20 @@ public class InfernalMobsCore {
      * Forge Config file
      */
     private void loadConfig() {
-        eliteRarity = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "eliteRarity",
-                    15,
-                    "One in THIS many Mobs will become atleast rare")
-                .getString());
-        ultraRarity = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "ultraRarity",
-                    7,
-                    "One in THIS many already rare Mobs will become atleast ultra")
-                .getString());
-        infernoRarity = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "infernoRarity",
-                    7,
-                    "One in THIS many already ultra Mobs will become infernal")
-                .getString());
-        minEliteModifiers = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "minEliteModifiers",
-                    2,
-                    "Minimum number of Modifiers an Elite mob will receive")
-                .getString());
-        maxEliteModifiers = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "maxEliteModifiers",
-                    5,
-                    "Maximum number of Modifiers an Elite mob will receive")
-                .getString());
-        minUltraModifiers = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "minUltraModifiers",
-                    5,
-                    "Minimum number of Modifiers an Ultra mob will receive")
-                .getString());
-        maxUltraModifiers = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "maxUltraModifiers",
-                    10,
-                    "Maximum number of Modifiers an Ultra mob will receive")
-                .getString());
-        minInfernoModifiers = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "minInfernoModifiers",
-                    8,
-                    "Minimum number of Modifiers an Inferno mob will receive")
-                .getString());
-        maxInfernoModifiers = Integer.parseInt(
-            config
-                .get(
-                    Configuration.CATEGORY_GENERAL,
-                    "maxInfernoModifiers",
-                    15,
-                    "Maximum number of Modifiers an Inferno mob will receive")
-                .getString());
-        useSimpleEntityClassNames = config
-            .get(
-                Configuration.CATEGORY_GENERAL,
-                "useSimpleEntityClassnames",
-                true,
-                "Use Entity class names instead of ingame Entity names for the config")
-            .getBoolean(true);
-        disableHealthBar = config
-            .get(
-                Configuration.CATEGORY_GENERAL,
-                "disableGUIoverlay",
-                false,
-                "Disables the ingame Health and Name overlay")
-            .getBoolean(false);
-        modHealthFactor = config
-            .get(
-                Configuration.CATEGORY_GENERAL,
-                "mobHealthFactor",
-                "1.0",
-                "Multiplier applied ontop of all of the modified Mobs health")
-            .getDouble(1.0D);
+        // spotless:off
+        eliteRarity = config.get(Configuration.CATEGORY_GENERAL, "eliteRarity", 15, "One in THIS many Mobs will become atleast rare").getInt();
+        ultraRarity = config.get(Configuration.CATEGORY_GENERAL, "ultraRarity", 7, "One in THIS many already rare Mobs will become atleast ultra").getInt();
+        infernoRarity = config.get(Configuration.CATEGORY_GENERAL, "infernoRarity", 7, "One in THIS many already ultra Mobs will become infernal").getInt();
+        minEliteModifiers = config.get(Configuration.CATEGORY_GENERAL, "minEliteModifiers", 2, "Minimum number of Modifiers an Elite mob will receive").getInt();
+        maxEliteModifiers = config.get(Configuration.CATEGORY_GENERAL, "maxEliteModifiers", 5, "Maximum number of Modifiers an Elite mob will receive").getInt();
+        minUltraModifiers = config.get(Configuration.CATEGORY_GENERAL, "minUltraModifiers", 5, "Minimum number of Modifiers an Ultra mob will receive").getInt();
+        maxUltraModifiers = config.get(Configuration.CATEGORY_GENERAL, "maxUltraModifiers", 10, "Maximum number of Modifiers an Ultra mob will receive").getInt();
+        minInfernoModifiers = config.get(Configuration.CATEGORY_GENERAL, "minInfernoModifiers", 8, "Minimum number of Modifiers an Inferno mob will receive").getInt();
+        maxInfernoModifiers = config.get(Configuration.CATEGORY_GENERAL, "maxInfernoModifiers", 15, "Maximum number of Modifiers an Inferno mob will receive").getInt();
+        useSimpleEntityClassNames = config.get(Configuration.CATEGORY_GENERAL, "useSimpleEntityClassnames", true, "Use Entity class names instead of ingame Entity names for the config").getBoolean(true);
+        disableHealthBar = config.get(Configuration.CATEGORY_GENERAL, "disableGUIoverlay", false, "Disables the ingame Health and Name overlay").getBoolean(false);
+        modHealthFactor = config.get(Configuration.CATEGORY_GENERAL, "mobHealthFactor", "1.0", "Multiplier applied ontop of all of the modified Mobs health").getDouble(1.0D);
+        // spotless:on
 
         parseItemsForList(
             config.get(

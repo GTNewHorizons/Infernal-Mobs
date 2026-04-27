@@ -20,7 +20,7 @@ public class InfernalMobsServer implements ISidedProxy {
     }
 
     @Override
-    public void load() {
+    public void init() {
         // NOOP
     }
 
