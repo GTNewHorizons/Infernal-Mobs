@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Bulwark extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofTurtling", "theDefender", "ofeffingArmor" };
     private static final String[] prefix = { "turtling", "defensive", "armoured" };
     private static float damageMultiplier;
@@ -19,6 +20,11 @@ public class MM_Bulwark extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         return super.onHurt(mob, source, Math.max(damage * damageMultiplier, 1));
+    }
+
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
     }
 
     @Override
@@ -34,7 +40,7 @@ public class MM_Bulwark extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Bulwark> {
 
         public Loader() {
-            super(MM_Bulwark.class);
+            super(MM_Bulwark.class, emptyString);
         }
 
         @Override
@@ -44,6 +50,7 @@ public class MM_Bulwark extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             damageMultiplier = (float) config
                 .get(
                     getModifierClassName(),
@@ -51,6 +58,7 @@ public class MM_Bulwark extends MobModifier {
                     0.5D,
                     "Damage (taken) multiplier, only makes sense for values < 1.0")
                 .getDouble(0.5D);
+            disallowed = getBannedClassesToArray();
         }
     }
 }

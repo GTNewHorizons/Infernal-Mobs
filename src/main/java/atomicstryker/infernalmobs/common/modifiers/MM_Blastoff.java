@@ -12,6 +12,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Blastoff extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
+
     private static final Class<?>[] modBans = { MM_Webber.class };
     private static final String[] suffix = { "ofMissionControl", "theNASA", "ofWEE" };
     private static final String[] prefix = { "thumping", "trolling", "byebye" };
@@ -49,7 +51,8 @@ public class MM_Blastoff extends MobModifier {
             return;
         }
 
-        long time = mob.ticksExisted;
+        long time = InfernalMobsCore.instance()
+            .getCooldownTime(mob);
         if (time > nextAbilityUse) {
             nextAbilityUse = time + coolDown;
             mob.worldObj.playSoundAtEntity(
@@ -73,6 +76,11 @@ public class MM_Blastoff extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
@@ -85,7 +93,7 @@ public class MM_Blastoff extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Blastoff> {
 
         public Loader() {
-            super(MM_Blastoff.class);
+            super(MM_Blastoff.class, emptyString);
         }
 
         @Override
@@ -95,8 +103,13 @@ public class MM_Blastoff extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                .getInt(15000) / 50;
+                .getInt(15000)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

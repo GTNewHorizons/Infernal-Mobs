@@ -8,8 +8,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+
 public class MM_Alchemist extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final float MIN_DISTANCE = 2F;
     private static final String[] suffix = { "theWitchkin", "theBrewmaster", "theSinged" };
     private static final String[] prefix = { "witchkin", "brewing", "singed" };
@@ -22,7 +25,8 @@ public class MM_Alchemist extends MobModifier {
 
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
-        long time = mob.ticksExisted;
+        long time = InfernalMobsCore.instance()
+            .getCooldownTime(mob);
         if (time > nextAbilityUse) {
             nextAbilityUse = time + coolDown;
             tryAbility(mob, getMobTarget());
@@ -59,6 +63,11 @@ public class MM_Alchemist extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
@@ -71,7 +80,7 @@ public class MM_Alchemist extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Alchemist> {
 
         public Loader() {
-            super(MM_Alchemist.class);
+            super(MM_Alchemist.class, emptyString);
         }
 
         @Override
@@ -81,8 +90,12 @@ public class MM_Alchemist extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 6000L, "Time between ability uses")
-                .getInt(6000) / 50;
+                .getInt(6000)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
+            disallowed = getBannedClassesToArray();
         }
     }
 }

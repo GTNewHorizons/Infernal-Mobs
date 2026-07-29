@@ -6,7 +6,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.common.config.Configuration;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
@@ -16,6 +15,7 @@ public class MM_Poisonous extends MobModifier {
     private static final String[] suffix = { "ofVenom", "thedeadlyChalice" };
     private static final String[] prefix = { "poisonous", "stinging", "despoiling" };
     private static int potionDuration;
+    private static Class<?>[] disallowed = {};
 
     public MM_Poisonous(@Nullable MobModifier next) {
         super("Poisonous", next);
@@ -27,8 +27,8 @@ public class MM_Poisonous extends MobModifier {
             && InfernalMobsCore.instance()
                 .getIsEntityAllowedTarget(source.getEntity())) {
             EntityLivingBase ent = (EntityLivingBase) source.getEntity();
-            if (!ent.isPotionActive(Potion.poison) && !(source instanceof EntityDamageSourceIndirect)
-                && !source.isProjectile()) {
+            if (!ent.isPotionActive(Potion.poison) && !InfernalMobsCore.instance()
+                .isRangedProjectile(source)) {
                 ent.addPotionEffect(new PotionEffect(Potion.poison.id, potionDuration, 0));
             }
         }
@@ -47,6 +47,11 @@ public class MM_Poisonous extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
@@ -59,7 +64,7 @@ public class MM_Poisonous extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Poisonous> {
 
         public Loader() {
-            super(MM_Poisonous.class);
+            super(MM_Poisonous.class, emptyString);
         }
 
         @Override
@@ -69,9 +74,12 @@ public class MM_Poisonous extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             potionDuration = config
                 .get(getModifierClassName(), "poisonDurationTicks", 120L, "Time attacker is poisoned")
                 .getInt(120);
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

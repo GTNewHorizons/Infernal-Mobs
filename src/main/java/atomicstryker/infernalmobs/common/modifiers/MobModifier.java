@@ -152,7 +152,6 @@ public abstract class MobModifier {
      * @return true if death should be aborted
      */
     public boolean onDeath() {
-        // TODO does it properly fires for every mod in the chain including the first that it was called on ?
         attackTarget = null;
         if (nextMod != null) {
             return nextMod.onDeath();
@@ -193,7 +192,6 @@ public abstract class MobModifier {
      * @return damage to be applied after we processed the value
      */
     public float onAttack(EntityLivingBase entity, DamageSource source, float amount) {
-        // TODO does it properly fires for every mod in the chain including the first that it was called on ?
         if (nextMod != null) {
             return nextMod.onAttack(entity, source, amount);
         }
@@ -208,7 +206,6 @@ public abstract class MobModifier {
      * @return damage to be applied after we processed the value
      */
     public float onHurt(EntityLivingBase mob, DamageSource source, float amount) {
-        // TODO does it properly fires for every mod in the chain including the first that it was called on ?
         if (nextMod != null) {
             amount = nextMod.onHurt(mob, source, amount);
         } else if (source.getEntity() != null) {
@@ -225,7 +222,6 @@ public abstract class MobModifier {
      * passes the fall event to the modifier list
      */
     public boolean onFall(float distance) {
-        // TODO does it properly fires for every mod in the chain including the first that it was called on ?
         if (nextMod != null) {
             return nextMod.onFall(distance);
         }
@@ -236,7 +232,6 @@ public abstract class MobModifier {
      * passes the jump event to the modifier list
      */
     public void onJump(EntityLivingBase entityLiving) {
-        // TODO does it properly fires for every mod in the chain including the first that it was called on ?
         if (nextMod != null) {
             nextMod.onJump(entityLiving);
         }
@@ -246,7 +241,6 @@ public abstract class MobModifier {
      * passes the update event to the modifier list the return value is currently unused
      */
     public boolean onUpdate(EntityLivingBase mob) {
-        // TODO does it properly fires for every mod in the chain including the first that it was called on ?
         if (nextMod != null) {
             return nextMod.onUpdate(mob);
         } else {

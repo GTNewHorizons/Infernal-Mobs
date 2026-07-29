@@ -12,6 +12,7 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Sapper extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofHunger", "thePaleRider" };
     private static final String[] prefix = { "hungering", "starving" };
     private static int potionDuration;
@@ -45,6 +46,11 @@ public class MM_Sapper extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
@@ -57,7 +63,7 @@ public class MM_Sapper extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Sapper> {
 
         public Loader() {
-            super(MM_Sapper.class);
+            super(MM_Sapper.class, emptyString);
         }
 
         @Override
@@ -67,9 +73,11 @@ public class MM_Sapper extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             potionDuration = config
                 .get(getModifierClassName(), "hungerDurationTicks", 120L, "Time attacker is hungering")
                 .getInt(120);
+            disallowed = getBannedClassesToArray();
         }
     }
 }

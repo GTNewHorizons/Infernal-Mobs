@@ -1,5 +1,6 @@
 // Add your dependencies here
 
 dependencies {
+//    runtimeOnlyNonPublishable(rfg.deobf("curse.maven:damage-indicators-mod-59489:2692129")) // This is useful for debugging purposes, trust me.
 
 }

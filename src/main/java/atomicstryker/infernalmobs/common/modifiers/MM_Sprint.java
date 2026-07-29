@@ -5,7 +5,11 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.config.Configuration;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+
 public class MM_Sprint extends MobModifier {
+
+    private static Class<?>[] disallowed = {};
 
     private static final String[] suffix = { "ofBolting", "theSwiftOne", "ofbeinginyourFace" };
     private static final String[] prefix = { "sprinting", "swift", "charging" };
@@ -22,7 +26,8 @@ public class MM_Sprint extends MobModifier {
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
         if (getMobTarget() != null) {
-            long time = mob.ticksExisted;
+            long time = InfernalMobsCore.instance()
+                .getCooldownTime(mob);
             if (time > nextAbilityUse) {
                 nextAbilityUse = time + coolDown;
                 sprinting = !sprinting;
@@ -87,6 +92,11 @@ public class MM_Sprint extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNamePrefix() {
         return prefix;
     }
@@ -94,7 +104,7 @@ public class MM_Sprint extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Sprint> {
 
         public Loader() {
-            super(MM_Sprint.class);
+            super(MM_Sprint.class, emptyString);
         }
 
         @Override
@@ -104,8 +114,13 @@ public class MM_Sprint extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses")
-                .getInt(5000) / 50;
+                .getInt(5000)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

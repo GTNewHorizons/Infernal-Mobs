@@ -6,12 +6,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.common.config.Configuration;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Wither extends MobModifier {
+
+    private static Class<?>[] disallowed = {};
 
     private static final String[] suffix = { "ofDarkSkulls", "Doomskull" };
     private static final String[] prefix = { "withering" };
@@ -26,8 +27,8 @@ public class MM_Wither extends MobModifier {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityLivingBase)
             && InfernalMobsCore.instance()
                 .getIsEntityAllowedTarget(source.getEntity())
-            && !(source instanceof EntityDamageSourceIndirect)
-            && !source.isProjectile()) {
+            && !InfernalMobsCore.instance()
+                .isRangedProjectile(source)) {
             ((EntityLivingBase) source.getEntity())
                 .addPotionEffect(new PotionEffect(Potion.wither.id, potionDuration, 0));
         }
@@ -55,10 +56,15 @@ public class MM_Wither extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Wither> {
 
         public Loader() {
-            super(MM_Wither.class);
+            super(MM_Wither.class, emptyString);
         }
 
         @Override
@@ -68,9 +74,11 @@ public class MM_Wither extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             potionDuration = config
                 .get(getModifierClassName(), "witherDurationTicks", 120L, "Time attacker is withered")
                 .getInt(120);
+            disallowed = getBannedClassesToArray();
         }
     }
 }

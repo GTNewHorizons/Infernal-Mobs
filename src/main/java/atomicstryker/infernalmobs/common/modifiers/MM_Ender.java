@@ -8,11 +8,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Ender extends MobModifier {
+
+    private static Class<?>[] disallowed = {};
 
     private static final String[] suffix = { "theEnderborn", "theTrickster" };
     private static final String[] prefix = { "enderborn", "tricky" };
@@ -27,7 +31,8 @@ public class MM_Ender extends MobModifier {
 
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
-        long time = mob.ticksExisted;
+        long time = InfernalMobsCore.instance()
+            .getCooldownTime(mob);
         if (time > nextAbilityUse && source.getEntity() != null
             && source.getEntity() != mob
             && teleportToEntity(mob, source.getEntity())
@@ -55,6 +60,10 @@ public class MM_Ender extends MobModifier {
         double destX = mob.posX + (mob.worldObj.rand.nextDouble() - 0.5D) * 8.0D - vector.xCoord * telDist;
         double destY = mob.posY + (double) (mob.worldObj.rand.nextInt(16) - 8) - vector.yCoord * telDist;
         double destZ = mob.posZ + (mob.worldObj.rand.nextDouble() - 0.5D) * 8.0D - vector.zCoord * telDist;
+        EnderTeleportEvent event = new EnderTeleportEvent(mob, destX, destY, destZ, 0);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            return false;
+        }
         return teleportTo(mob, destX, destY, destZ);
     }
 
@@ -122,6 +131,11 @@ public class MM_Ender extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
@@ -134,7 +148,7 @@ public class MM_Ender extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Ender> {
 
         public Loader() {
-            super(MM_Ender.class);
+            super(MM_Ender.class, emptyString);
         }
 
         @Override
@@ -144,8 +158,11 @@ public class MM_Ender extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                .getInt(15000) / 50;
+                .getInt(15000)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
             reflectMultiplier = (float) config.get(
                 getModifierClassName(),
                 "enderReflectMultiplier",
@@ -158,6 +175,9 @@ public class MM_Ender extends MobModifier {
                 10.0D,
                 "When a mob with Ender modifier gets hurt it teleports and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)")
                 .getDouble(10.0D);
+
+            disallowed = getBannedClassesToArray();
+
         }
     }
 }

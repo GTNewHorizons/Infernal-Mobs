@@ -10,6 +10,7 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Vengeance extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofRetribution", "theThorned", "ofStrikingBack" };
     private static final String[] prefix = { "thorned", "thorny", "spiky" };
     private static float reflectMultiplier;
@@ -45,10 +46,15 @@ public class MM_Vengeance extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Vengeance> {
 
         public Loader() {
-            super(MM_Vengeance.class);
+            super(MM_Vengeance.class, emptyString);
         }
 
         @Override
@@ -58,6 +64,7 @@ public class MM_Vengeance extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             reflectMultiplier = (float) config
                 .get(
                     getModifierClassName(),
@@ -72,6 +79,7 @@ public class MM_Vengeance extends MobModifier {
                     0.0D,
                     "Maximum amount of damage that is reflected (0, or less than zero for unlimited vengeance damage)")
                 .getDouble(0.0D);
+            disallowed = getBannedClassesToArray();
         }
     }
 }

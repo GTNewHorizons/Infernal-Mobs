@@ -9,6 +9,7 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Regen extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofWTFIMBA", "theCancerous", "ofFirstAid" };
     private static final String[] prefix = { "regenerating", "healing", "nighunkillable" };
     private static long coolDown;
@@ -21,7 +22,8 @@ public class MM_Regen extends MobModifier {
     @Override
     public boolean onUpdate(EntityLivingBase mob) {
         if (mob.getHealth() < getActualMaxHealth(mob)) {
-            long time = mob.ticksExisted;
+            long time = InfernalMobsCore.instance()
+                .getCooldownTime(mob);
             if (time > nextAbilityUse) {
                 nextAbilityUse = time + coolDown;
                 InfernalMobsCore.instance()
@@ -41,10 +43,15 @@ public class MM_Regen extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Regen> {
 
         public Loader() {
-            super(MM_Regen.class);
+            super(MM_Regen.class, emptyString);
         }
 
         @Override
@@ -54,8 +61,13 @@ public class MM_Regen extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 500L, "Time between ability uses")
-                .getInt(500) / 50;
+                .getInt(500)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

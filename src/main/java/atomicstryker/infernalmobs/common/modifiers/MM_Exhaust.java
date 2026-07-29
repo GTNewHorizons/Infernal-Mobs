@@ -5,8 +5,11 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.config.Configuration;
 
 public class MM_Exhaust extends MobModifier {
+
+    private static Class<?>[] disallowed = {};
 
     private static final String[] suffix = { "ofFatigue", "theDrainer" };
     private static final String[] prefix = { "exhausting", "draining" };
@@ -34,6 +37,11 @@ public class MM_Exhaust extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     protected String[] getModNameSuffix() {
         return suffix;
     }
@@ -46,12 +54,19 @@ public class MM_Exhaust extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Exhaust> {
 
         public Loader() {
-            super(MM_Exhaust.class);
+            super(MM_Exhaust.class, emptyString);
         }
 
         @Override
         public MM_Exhaust make(@Nullable MobModifier next) {
             return new MM_Exhaust(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            super.loadConfig(config);
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

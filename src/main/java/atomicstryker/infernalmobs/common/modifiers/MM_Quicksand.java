@@ -5,11 +5,13 @@ import javax.annotation.Nullable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.common.config.Configuration;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Quicksand extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofYouCantRun", "theSlowingB" };
     private static final String[] prefix = { "slowing", "Quicksand" };
     int ticker = 0;
@@ -39,10 +41,21 @@ public class MM_Quicksand extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Quicksand> {
 
         public Loader() {
-            super(MM_Quicksand.class);
+            super(MM_Quicksand.class, emptyString);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            super.loadConfig(config);
+            disallowed = getBannedClassesToArray();
         }
 
         @Override

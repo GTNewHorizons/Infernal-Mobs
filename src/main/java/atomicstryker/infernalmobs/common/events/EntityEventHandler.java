@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.chunk.Chunk;
@@ -12,7 +13,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -68,7 +68,8 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinedWorld(EntityJoinWorldEvent event) {
-        if (event.entity instanceof EntityLivingBase) {
+        // https://github.com/AtomicStryker/atomicstrykers-minecraft-mods/blob/c662924d8b304cee561b32a1fbaf5f08120fd6f2/InfernalMobs/src/main/java/atomicstryker/infernalmobs/common/EntityEventHandler.java#L41
+        if (event.entity instanceof EntityLivingBase && event.entity instanceof IMob) {
             String savedMods = event.entity.getEntityData()
                 .getString(InfernalMobsCore.getNBTTag());
             if (!savedMods.isEmpty()) {
@@ -103,17 +104,12 @@ public class EntityEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public void onEntityLivingAttacked(LivingAttackEvent event) {
-        /* fires both client and server before hurt, but we dont need this */
-    }
-
     /**
      * Hook into EntityLivingHurt. Is always serverside, assured by mc itself
      */
     @SubscribeEvent
     public void onEntityLivingHurt(LivingHurtEvent event) {
-        // dont allow masochism
+        // don't allow masochism
         if (event.source.getEntity() != event.entityLiving) {
             MobModifier mod = InfernalMobsCore.getMobModifiers(event.entityLiving);
             if (mod != null) {
@@ -124,7 +120,8 @@ public class EntityEventHandler {
              * We use the Hook two-sided, both with the Mob as possible target and attacker
              */
             Entity attacker = event.source.getEntity();
-            if (attacker instanceof EntityLivingBase && !event.source.damageType.equals("thorns")) {
+            if (attacker instanceof EntityLivingBase && !InfernalMobsCore.instance()
+                .thornsActivatesVengeance(event.source.damageType)) {
                 mod = InfernalMobsCore.getMobModifiers((EntityLivingBase) attacker);
                 if (mod != null) {
                     event.ammount = mod.onAttack(event.entityLiving, event.source, event.ammount);

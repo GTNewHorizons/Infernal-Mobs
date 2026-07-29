@@ -10,6 +10,8 @@ import net.minecraftforge.common.config.Configuration;
 
 public class MM_Rust extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
+
     private static final String[] suffix = { "ofDecay", "theEquipmentHaunter" };
     private static final String[] prefix = { "rusting", "decaying" };
     private static int itemDamage;
@@ -51,10 +53,15 @@ public class MM_Rust extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Rust> {
 
         public Loader() {
-            super(MM_Rust.class);
+            super(MM_Rust.class, emptyString);
         }
 
         @Override
@@ -64,9 +71,12 @@ public class MM_Rust extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             itemDamage = config
                 .get(getModifierClassName(), "itemDamage", 4, "Damage dealt to Item in hand of attacking entity")
                 .getInt(4);
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

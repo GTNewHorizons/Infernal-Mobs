@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.IMob;
@@ -25,6 +26,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -62,6 +65,7 @@ import atomicstryker.infernalmobs.common.modifiers.MM_Sapper;
 import atomicstryker.infernalmobs.common.modifiers.MM_Sprint;
 import atomicstryker.infernalmobs.common.modifiers.MM_Sticky;
 import atomicstryker.infernalmobs.common.modifiers.MM_Storm;
+import atomicstryker.infernalmobs.common.modifiers.MM_Unyielding;
 import atomicstryker.infernalmobs.common.modifiers.MM_Vengeance;
 import atomicstryker.infernalmobs.common.modifiers.MM_Weakness;
 import atomicstryker.infernalmobs.common.modifiers.MM_Webber;
@@ -111,6 +115,9 @@ public class InfernalMobsCore {
     private boolean useSimpleEntityClassNames;
     private boolean disableHealthBar;
     private double modHealthFactor;
+    private int oldIFFactor;
+    private boolean useSystemTime;
+    private boolean projectilesActivateAllEffects;
 
     private Entity infCheckA;
     private Entity infCheckB;
@@ -127,6 +134,9 @@ public class InfernalMobsCore {
     }
 
     private ArrayList<ModifierLoader<?>> modifierLoaders;
+
+    private boolean healthCanGoPastOriginalMob;
+    private boolean reflectionFiresFromThorns;
 
     private int eliteRarity;
     private int ultraRarity;
@@ -166,7 +176,6 @@ public class InfernalMobsCore {
         modifiedPlayerTimes = new HashMap<>();
 
         config = new Configuration(evt.getSuggestedConfigurationFile());
-        config.load();
         if (config.hasChanged()) config.save();
         loadMods();
 
@@ -199,7 +208,7 @@ public class InfernalMobsCore {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent evt) {
-        // lets use postInit so mod Blocks and Items are present
+        // let's use postInit so mod Blocks and Items are present
         loadConfig();
     }
 
@@ -240,7 +249,10 @@ public class InfernalMobsCore {
             new MM_Vengeance.Loader(),
             new MM_Weakness.Loader(),
             new MM_Webber.Loader(),
-            new MM_Wither.Loader());
+            new MM_Wither.Loader(),
+            new MM_Unyielding.Loader());
+
+        config.load();
         modifierLoaders.removeIf(
             loader -> !config.get(Configuration.CATEGORY_GENERAL, loader.getModifierClassName() + " enabled", true)
                 .getBoolean(true));
@@ -253,8 +265,8 @@ public class InfernalMobsCore {
      */
     private void loadConfig() {
         // spotless:off
-        eliteRarity = config.get(Configuration.CATEGORY_GENERAL, "eliteRarity", 15, "One in THIS many Mobs will become atleast rare").getInt();
-        ultraRarity = config.get(Configuration.CATEGORY_GENERAL, "ultraRarity", 7, "One in THIS many already rare Mobs will become atleast ultra").getInt();
+        eliteRarity = config.get(Configuration.CATEGORY_GENERAL, "eliteRarity", 15, "One in THIS many Mobs will become at least rare").getInt();
+        ultraRarity = config.get(Configuration.CATEGORY_GENERAL, "ultraRarity", 7, "One in THIS many already rare Mobs will become at least ultra").getInt();
         infernoRarity = config.get(Configuration.CATEGORY_GENERAL, "infernoRarity", 7, "One in THIS many already ultra Mobs will become infernal").getInt();
         minEliteModifiers = config.get(Configuration.CATEGORY_GENERAL, "minEliteModifiers", 2, "Minimum number of Modifiers an Elite mob will receive").getInt();
         maxEliteModifiers = config.get(Configuration.CATEGORY_GENERAL, "maxEliteModifiers", 5, "Maximum number of Modifiers an Elite mob will receive").getInt();
@@ -262,9 +274,15 @@ public class InfernalMobsCore {
         maxUltraModifiers = config.get(Configuration.CATEGORY_GENERAL, "maxUltraModifiers", 10, "Maximum number of Modifiers an Ultra mob will receive").getInt();
         minInfernoModifiers = config.get(Configuration.CATEGORY_GENERAL, "minInfernoModifiers", 8, "Minimum number of Modifiers an Inferno mob will receive").getInt();
         maxInfernoModifiers = config.get(Configuration.CATEGORY_GENERAL, "maxInfernoModifiers", 15, "Maximum number of Modifiers an Inferno mob will receive").getInt();
-        useSimpleEntityClassNames = config.get(Configuration.CATEGORY_GENERAL, "useSimpleEntityClassnames", true, "Use Entity class names instead of ingame Entity names for the config").getBoolean(true);
-        disableHealthBar = config.get(Configuration.CATEGORY_GENERAL, "disableGUIoverlay", false, "Disables the ingame Health and Name overlay").getBoolean(false);
-        modHealthFactor = config.get(Configuration.CATEGORY_GENERAL, "mobHealthFactor", "1.0", "Multiplier applied ontop of all of the modified Mobs health").getDouble(1.0D);
+        useSimpleEntityClassNames = config.get(Configuration.CATEGORY_GENERAL, "useSimpleEntityClassnames", true, "Use Entity class names instead of in-game Entity names for the config").getBoolean(true);
+        disableHealthBar = config.get(Configuration.CATEGORY_GENERAL, "disableGUIoverlay", false, "Disables the in-game Health and Name overlay").getBoolean(false);
+        modHealthFactor = config.get(Configuration.CATEGORY_GENERAL, "mobHealthFactor", "1.0", "Multiplier applied on top of all of the modified Mobs health").getDouble(1.0D);
+        healthCanGoPastOriginalMob = config.get(Configuration.CATEGORY_GENERAL, "healthCanGoPastOriginalMob", false, "If a Mob's health is able to go beyond its original max health. False is original behaviour, true is new GTNH behaviour").getBoolean(false);
+        reflectionFiresFromThorns = config.get(Configuration.CATEGORY_GENERAL, "Vengeance activates if thorns", false, "Should thorns cause vengeance to activate?").getBoolean(false);
+        oldIFFactor = config.get(Configuration.CATEGORY_GENERAL, "Infernal Mobs timer factor", 50, "The amount in which the cooldowns are divided by. 50 is GTNH. 1 is Original").getInt(50);
+        projectilesActivateAllEffects = config.get(Configuration.CATEGORY_GENERAL, "All Infernal Mobs active when shot by projectile", false, "If a mob is shot by a projecttile, should Darkness, Fiery,Sticky, and Wither activate? False is GTNH behaviour, true is original behaviour").getBoolean(false);
+
+        useSystemTime = config.get(Configuration.CATEGORY_GENERAL, "Use System time for cooldowns", false, "Should System.currentTimeMillis() be used instead of mob.ticksExisted. False is GTNH. True is Original").getBoolean(false);
         // spotless:on
 
         parseItemsForList(
@@ -306,6 +324,7 @@ public class InfernalMobsCore {
 
         for (ModifierLoader<?> loader : modifierLoaders) {
             loader.loadConfig(config);
+            loader.bannedClasses.clear(); // clear arrayList, since we convert it to an array in each modifier.
         }
 
         if (config.hasChanged()) config.save();
@@ -487,6 +506,10 @@ public class InfernalMobsCore {
      * @param amount value to set
      */
     public void setEntityHealthPastMax(EntityLivingBase entity, float amount) {
+        if (healthCanGoPastOriginalMob) {
+            entity.getEntityAttribute(SharedMonsterAttributes.maxHealth)
+                .setBaseValue(amount);
+        }
         entity.setHealth(amount);
         this.sendHealthPacket(entity, amount);
     }
@@ -917,4 +940,31 @@ public class InfernalMobsCore {
     public int getMaxInfernoModifiers() {
         return maxInfernoModifiers;
     }
+
+    public boolean thornsActivatesVengeance(String damageSource) {
+        if (reflectionFiresFromThorns) {
+            return false;
+        }
+        return damageSource.equals("thorns");
+    }
+
+    public boolean isRangedProjectile(DamageSource source) {
+        if (projectilesActivateAllEffects) {
+            return false;
+        }
+
+        return source instanceof EntityDamageSourceIndirect && source.isProjectile();
+    }
+
+    public int getOldIFFactor() {
+        return oldIFFactor;
+    }
+
+    public long getCooldownTime(Entity entity) {
+        if (useSystemTime) {
+            return System.currentTimeMillis();
+        }
+        return entity.ticksExisted;
+    }
+
 }

@@ -8,11 +8,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.config.Configuration;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Choke extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofBreathlessness", "theAnaerobic", "ofDeprivation" };
     private static final String[] prefix = { "Sith Lord", "Dark Lord", "Darth" };
     private EntityLivingBase lastTarget;
@@ -64,7 +66,8 @@ public class MM_Choke extends MobModifier {
             updateAir();
         }
 
-        return damage;
+        return super.onHurt(mob, source, damage);
+        // return damage;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class MM_Choke extends MobModifier {
             updateAir();
             lastTarget = null;
         }
-        return false;
+        return super.onDeath();
     }
 
     private void updateAir() {
@@ -95,6 +98,11 @@ public class MM_Choke extends MobModifier {
     }
 
     @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
+    @Override
     public void resetModifiedVictim(EntityPlayer victim) {
         victim.setAir(-999);
     }
@@ -112,12 +120,18 @@ public class MM_Choke extends MobModifier {
     public static class Loader extends ModifierLoader<MM_Choke> {
 
         public Loader() {
-            super(MM_Choke.class);
+            super(MM_Choke.class, emptyString);
         }
 
         @Override
         public MM_Choke make(@Nullable MobModifier next) {
             return new MM_Choke(next);
+        }
+
+        @Override
+        public void loadConfig(Configuration config) {
+            super.loadConfig(config);
+            disallowed = getBannedClassesToArray();
         }
     }
 }

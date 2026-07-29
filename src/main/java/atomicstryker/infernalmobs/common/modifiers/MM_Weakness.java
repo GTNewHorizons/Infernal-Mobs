@@ -12,6 +12,7 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Weakness extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "ofApathy", "theDeceiver" };
     private static final String[] prefix = { "apathetic", "deceiving" };
     private static int potionDuration;
@@ -52,10 +53,15 @@ public class MM_Weakness extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Weakness> {
 
         public Loader() {
-            super(MM_Weakness.class);
+            super(MM_Weakness.class, emptyString);
         }
 
         @Override
@@ -65,9 +71,12 @@ public class MM_Weakness extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             potionDuration = config
                 .get(getModifierClassName(), "weaknessDurationTicks", 120L, "Time attacker is weakened")
                 .getInt(120);
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

@@ -4,10 +4,13 @@ import javax.annotation.Nullable;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraftforge.common.config.Configuration;
 
+import atomicstryker.infernalmobs.common.InfernalMobsCore;
+
 public class MM_Fiery extends MobModifier {
+
+    private static Class<?>[] disallowed = {};
 
     private static final String[] suffix = { "ofConflagration", "thePhoenix", "ofCrispyness" };
     private static final String[] prefix = { "burning", "toasting" };
@@ -20,8 +23,8 @@ public class MM_Fiery extends MobModifier {
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
         if (source.getEntity() != null && (source.getEntity() instanceof EntityLivingBase)
-            && !(source instanceof EntityDamageSourceIndirect)
-            && !source.isProjectile()) {
+            && !InfernalMobsCore.instance()
+                .isRangedProjectile(source)) {
             source.getEntity()
                 .setFire(fireDuration);
         }
@@ -49,10 +52,15 @@ public class MM_Fiery extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Fiery> {
 
         public Loader() {
-            super(MM_Fiery.class);
+            super(MM_Fiery.class, emptyString);
         }
 
         @Override
@@ -62,8 +70,10 @@ public class MM_Fiery extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             fireDuration = config.get(getModifierClassName(), "fieryDurationSecs", 3L, "Time attacker is set on fire")
                 .getInt(3);
+            disallowed = getBannedClassesToArray();
         }
     }
 }

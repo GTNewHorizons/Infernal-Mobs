@@ -8,12 +8,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Ninja extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
     private static final String[] suffix = { "theZenMaster", "ofEquilibrium", "ofInnerPeace" };
     private static final String[] prefix = { "totallyzen", "innerlypeaceful", "Ronin" };
     private static long coolDown;
@@ -27,7 +30,8 @@ public class MM_Ninja extends MobModifier {
 
     @Override
     public float onHurt(EntityLivingBase mob, DamageSource source, float damage) {
-        long time = mob.ticksExisted;
+        long time = InfernalMobsCore.instance()
+            .getCooldownTime(mob);
         if (time > nextAbilityUse && source.getEntity() != null
             && source.getEntity() != mob
             && !InfernalMobsCore.instance()
@@ -54,6 +58,10 @@ public class MM_Ninja extends MobModifier {
         double destX = mob.posX + (mob.worldObj.rand.nextDouble() - 0.5D) * 4.0D - vector.xCoord * telDist;
         double destY = mob.posY + (double) (mob.worldObj.rand.nextInt(16) - 4) - vector.yCoord * telDist;
         double destZ = mob.posZ + (mob.worldObj.rand.nextDouble() - 0.5D) * 4.0D - vector.zCoord * telDist;
+        EnderTeleportEvent event = new EnderTeleportEvent(mob, destX, destY, destZ, 0);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            return false;
+        }
         return teleportTo(mob, destX, destY, destZ);
     }
 
@@ -122,10 +130,15 @@ public class MM_Ninja extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Ninja> {
 
         public Loader() {
-            super(MM_Ninja.class);
+            super(MM_Ninja.class, emptyString);
         }
 
         @Override
@@ -135,8 +148,11 @@ public class MM_Ninja extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 15000L, "Time between ability uses")
-                .getInt(15000) / 50;
+                .getInt(15000)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
             reflectMultiplier = (float) config.get(
                 getModifierClassName(),
                 "ninjaReflectMultiplier",
@@ -149,6 +165,8 @@ public class MM_Ninja extends MobModifier {
                 10.0D,
                 "When a mob with Ninja modifier gets hurt it teleports to the attacker and reflects some of the damage originally dealt. This sets the maximum amount that can be inflicted (0, or less than zero for unlimited reflect damage)")
                 .getDouble(10.0D);
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

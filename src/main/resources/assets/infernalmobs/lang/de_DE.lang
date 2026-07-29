@@ -71,7 +71,9 @@ translation.infernalmobs:prefix.webbing= vernetzend
 translation.infernalmobs:prefix.withering= verdorrt 
 translation.infernalmobs:prefix.Sith Lord= Sith-Lord 
 translation.infernalmobs:prefix.Dark Lord= Dark Lord 
-translation.infernalmobs:prefix.Darth= Darth 
+translation.infernalmobs:prefix.Darth= Darth
+translation.infernalmobs:prefix.unstoppable= unstoppable
+translation.infernalmobs:prefix.relentless= unnachgiebiger
 
 
 
@@ -148,6 +150,8 @@ translation.infernalmobs:suffix.Doomskull= mit dem Schicksalsschädel
 translation.infernalmobs:suffix.ofBreathlessness= von der Atemlosigkeit
 translation.infernalmobs:suffix.theAnaerobic= der Anaerobe
 translation.infernalmobs:suffix.ofDeprivation= von der Beraubung
+translation.infernalmobs:suffix.theUnYielding= der Unbeugsamkeit
+translation.infernalmobs:suffix.theUnstoppable= der Unaufhaltbarkeit
 
 
 translation.infernalmobs:mod.1UP=1UP
@@ -177,3 +181,4 @@ translation.infernalmobs:mod.Vengeance=Rache
 translation.infernalmobs:mod.Weakness=Schwäche
 translation.infernalmobs:mod.Webber=Webender
 translation.infernalmobs:mod.Wither=Verdörrter
+translation.infernalmobs:mod.Unyielding=Unbeugsamer

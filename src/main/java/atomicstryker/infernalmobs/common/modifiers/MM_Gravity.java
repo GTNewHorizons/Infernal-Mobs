@@ -13,6 +13,8 @@ import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_Gravity extends MobModifier {
 
+    private static Class<?>[] disallowed = {};
+
     private static final Class<?>[] modBans = { MM_Webber.class };
     private static final String[] suffix = { "ofRepulsion", "theFlipper" };
     private static final String[] prefix = { "repulsing", "sproing" };
@@ -51,7 +53,8 @@ public class MM_Gravity extends MobModifier {
             return;
         }
 
-        long time = mob.ticksExisted;
+        long time = InfernalMobsCore.instance()
+            .getCooldownTime(mob);
         if (time > nextAbilityUse) {
             nextAbilityUse = time + coolDown;
 
@@ -108,10 +111,15 @@ public class MM_Gravity extends MobModifier {
         return prefix;
     }
 
+    @Override
+    public Class<?>[] getBlackListMobClasses() {
+        return disallowed;
+    }
+
     public static class Loader extends ModifierLoader<MM_Gravity> {
 
         public Loader() {
-            super(MM_Gravity.class);
+            super(MM_Gravity.class, emptyString);
         }
 
         @Override
@@ -121,11 +129,16 @@ public class MM_Gravity extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
+            super.loadConfig(config);
             coolDown = config.get(getModifierClassName(), "coolDownMillis", 5000L, "Time between ability uses")
-                .getInt(5000) / 50;
+                .getInt(5000)
+                / InfernalMobsCore.instance()
+                    .getOldIFFactor();
             double maxDistance = config.get(getModifierClassName(), "maxDistance", 40, "Range of ability.")
                 .getDouble(40);
             maxDistanceSquared = maxDistance * maxDistance;
+
+            disallowed = getBannedClassesToArray();
         }
     }
 }

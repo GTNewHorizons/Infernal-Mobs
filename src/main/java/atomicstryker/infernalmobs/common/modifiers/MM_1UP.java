@@ -3,14 +3,14 @@ package atomicstryker.infernalmobs.common.modifiers;
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraftforge.common.config.Configuration;
 
 import atomicstryker.infernalmobs.common.InfernalMobsCore;
 
 public class MM_1UP extends MobModifier {
 
-    private static final Class<?>[] disallowed = { EntityCreeper.class };
+    private static Class<?>[] disallowed = {};
+
     private static final String[] suffix = { "ofRecurrence", "theUndying", "oftwinLives" };
     private static final String[] prefix = { "recurring", "undying", "twinlived" };
     private static double healAmount;
@@ -49,7 +49,7 @@ public class MM_1UP extends MobModifier {
     public static class Loader extends ModifierLoader<MM_1UP> {
 
         public Loader() {
-            super(MM_1UP.class);
+            super(MM_1UP.class, creeperString);
         }
 
         @Override
@@ -59,13 +59,14 @@ public class MM_1UP extends MobModifier {
 
         @Override
         public void loadConfig(Configuration config) {
-            healAmount = config
-                .get(
-                    getModifierClassName(),
-                    "healAmountMultiplier",
-                    1.0D,
-                    "Multiplies the mob maximum health when healing back up, cannot get past maximum mob health")
+            super.loadConfig(config);
+            healAmount = config.get(
+                getModifierClassName(),
+                "healAmountMultiplier",
+                1.0D,
+                "Multiplies the mob maximum health when healing back up, cannot get past maximum mob health(if healthCanGoPastOriginalMob is false)")
                 .getDouble(1.0D);
+            disallowed = getBannedClassesToArray();
         }
     }
 }
