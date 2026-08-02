@@ -50,7 +50,6 @@ public class InfernalMobsClient implements ISidedProxy {
 
     private final Vec3 scratchCameraPos = Vec3.createVectorHelper(0, 0, 0);
     private final Vec3 scratchCameraLook = Vec3.createVectorHelper(0, 0, 0);
-    private final Vec3 scratchReachVector = Vec3.createVectorHelper(0, 0, 0);
     private final AxisAlignedBB scratchQueryAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
     private final AxisAlignedBB scratchHitAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
@@ -109,7 +108,8 @@ public class InfernalMobsClient implements ISidedProxy {
     public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (InfernalMobsCore.instance()
             .getIsHealthBarDisabled() || event.type != RenderGameOverlayEvent.ElementType.BOSSHEALTH
-            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0) || rareMobsClient.isEmpty()) {
+            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0)
+            || rareMobsClient.isEmpty()) {
             return;
         }
 
@@ -206,9 +206,6 @@ public class InfernalMobsClient implements ISidedProxy {
             double reachX = scratchCameraLook.xCoord * reachDistance;
             double reachY = scratchCameraLook.yCoord * reachDistance;
             double reachZ = scratchCameraLook.zCoord * reachDistance;
-            scratchReachVector.xCoord = reachX;
-            scratchReachVector.yCoord = reachY;
-            scratchReachVector.zCoord = reachZ;
 
             float expandBBvalue = 1.0F;
             double lowestDistance = reachDist2;
@@ -255,18 +252,16 @@ public class InfernalMobsClient implements ISidedProxy {
                     scratchHitAABB.maxX = entHitBox.maxX + entBorderSize;
                     scratchHitAABB.maxY = entHitBox.maxY + entBorderSize;
                     scratchHitAABB.maxZ = entHitBox.maxZ + entBorderSize;
-                    MovingObjectPosition interceptObjectPosition = scratchHitAABB
-                        .calculateIntercept(scratchCameraPos, scratchReachVector);
 
                     if (scratchHitAABB.isVecInside(scratchCameraPos)) {
                         if (0.0D < lowestDistance || lowestDistance == 0.0D) {
                             pointedEntity = iterEnt;
                             lowestDistance = 0.0D;
                         }
-                    } else if (interceptObjectPosition != null) {
-                        double distanceToEnt = scratchCameraPos.distanceTo(interceptObjectPosition.hitVec);
+                    } else {
+                        double distanceToEnt = rayAABBDistance(scratchCameraPos, scratchCameraLook, scratchHitAABB);
 
-                        if (distanceToEnt < lowestDistance || lowestDistance == 0.0D) {
+                        if (distanceToEnt >= 0.0D && (distanceToEnt < lowestDistance || lowestDistance == 0.0D)) {
                             pointedEntity = iterEnt;
                             lowestDistance = distanceToEnt;
                         }
@@ -303,11 +298,9 @@ public class InfernalMobsClient implements ISidedProxy {
         outPos.yCoord = camY;
         outPos.zCoord = camZ;
 
-        float pitch = renderTick == 1.0F
-            ? viewEnt.rotationPitch
+        float pitch = renderTick == 1.0F ? viewEnt.rotationPitch
             : viewEnt.prevRotationPitch + (viewEnt.rotationPitch - viewEnt.prevRotationPitch) * renderTick;
-        float yaw = renderTick == 1.0F
-            ? viewEnt.rotationYaw
+        float yaw = renderTick == 1.0F ? viewEnt.rotationYaw
             : viewEnt.prevRotationYaw + (viewEnt.rotationYaw - viewEnt.prevRotationYaw) * renderTick;
 
         float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
@@ -317,6 +310,46 @@ public class InfernalMobsClient implements ISidedProxy {
         outLook.xCoord = f1 * f2;
         outLook.yCoord = f3;
         outLook.zCoord = f * f2;
+    }
+
+    /**
+     * Distance, in world units, from the start point along the (unit) look direction to the nearest intersection of the
+     * given AABB, or -1 when the ray does not hit the box. Slab method equivalent to
+     * AxisAlignedBB#calculateIntercept followed by a Euclidean distance, without allocating anything.
+     */
+    private static double rayAABBDistance(Vec3 start, Vec3 dir, AxisAlignedBB box) {
+        double entry = Double.NEGATIVE_INFINITY;
+        double exit = Double.POSITIVE_INFINITY;
+
+        if (Math.abs(dir.xCoord) > 1.0E-9D) {
+            double t1 = (box.minX - start.xCoord) / dir.xCoord;
+            double t2 = (box.maxX - start.xCoord) / dir.xCoord;
+            entry = Math.max(entry, Math.min(t1, t2));
+            exit = Math.min(exit, Math.max(t1, t2));
+        } else if (start.xCoord < box.minX || start.xCoord > box.maxX) {
+            return -1.0D;
+        }
+        if (Math.abs(dir.yCoord) > 1.0E-9D) {
+            double t1 = (box.minY - start.yCoord) / dir.yCoord;
+            double t2 = (box.maxY - start.yCoord) / dir.yCoord;
+            entry = Math.max(entry, Math.min(t1, t2));
+            exit = Math.min(exit, Math.max(t1, t2));
+        } else if (start.yCoord < box.minY || start.yCoord > box.maxY) {
+            return -1.0D;
+        }
+        if (Math.abs(dir.zCoord) > 1.0E-9D) {
+            double t1 = (box.minZ - start.zCoord) / dir.zCoord;
+            double t2 = (box.maxZ - start.zCoord) / dir.zCoord;
+            entry = Math.max(entry, Math.min(t1, t2));
+            exit = Math.min(exit, Math.max(t1, t2));
+        } else if (start.zCoord < box.minZ || start.zCoord > box.maxZ) {
+            return -1.0D;
+        }
+
+        if (entry > exit || exit < 0.0D || entry < 0.0D) {
+            return -1.0D;
+        }
+        return entry;
     }
 
     @Override
