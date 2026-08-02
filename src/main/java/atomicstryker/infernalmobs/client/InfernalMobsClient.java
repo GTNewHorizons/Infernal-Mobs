@@ -100,12 +100,15 @@ public class InfernalMobsClient implements ISidedProxy {
             return;
         }
 
-        Entity ent = getEntityCrosshairOver(event.partialTicks, mc);
+        long now = System.currentTimeMillis();
+        Entity ent;
         boolean retained = false;
 
-        if (ent == null && System.currentTimeMillis() < healthBarRetainTime) {
+        if (now < healthBarRetainTime && retainedTarget != null) {
             ent = retainedTarget;
             retained = true;
+        } else {
+            ent = getEntityCrosshairOver(event.partialTicks, mc);
         }
 
         if (ent instanceof EntityLivingBase) {
@@ -162,7 +165,7 @@ public class InfernalMobsClient implements ISidedProxy {
 
                 if (!retained) {
                     retainedTarget = target;
-                    healthBarRetainTime = System.currentTimeMillis() + 3000L;
+                    healthBarRetainTime = now + 3000L;
                 }
 
             }
