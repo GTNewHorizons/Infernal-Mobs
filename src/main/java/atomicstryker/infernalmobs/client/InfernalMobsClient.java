@@ -103,7 +103,7 @@ public class InfernalMobsClient implements ISidedProxy {
     public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (InfernalMobsCore.instance()
             .getIsHealthBarDisabled() || event.type != RenderGameOverlayEvent.ElementType.BOSSHEALTH
-            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0)) {
+            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0) || rareMobsClient.isEmpty()) {
             return;
         }
 
