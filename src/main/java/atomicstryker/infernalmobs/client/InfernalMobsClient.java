@@ -48,6 +48,10 @@ public class InfernalMobsClient implements ISidedProxy {
     private long nextCrosshairScanTime;
     private Entity cachedCrosshairTarget;
 
+    private final Vec3 scratchCameraPos = Vec3.createVectorHelper(0, 0, 0);
+    private final Vec3 scratchCameraLook = Vec3.createVectorHelper(0, 0, 0);
+    private final Vec3 scratchReachVector = Vec3.createVectorHelper(0, 0, 0);
+
     @Override
     public void preInit() {
         FMLCommonHandler.instance()
@@ -186,65 +190,100 @@ public class InfernalMobsClient implements ISidedProxy {
     private Entity getEntityCrosshairOver(float renderTick, Minecraft mc) {
         Entity returnedEntity = null;
 
-        if (mc.renderViewEntity != null) {
-            if (mc.theWorld != null) {
-                double reachDistance = NAME_VISION_DISTANCE;
-                final MovingObjectPosition mopos = mc.renderViewEntity.rayTrace(reachDistance, renderTick);
-                double reachDist2 = reachDistance;
-                final Vec3 viewEntPositionVec = mc.renderViewEntity.getPosition(renderTick);
+        if (mc.renderViewEntity != null && mc.theWorld != null) {
+            computeCameraVectors(mc.renderViewEntity, renderTick, scratchCameraPos, scratchCameraLook);
 
-                if (mopos != null) {
-                    reachDist2 = mopos.hitVec.distanceTo(viewEntPositionVec);
-                }
+            double reachDistance = NAME_VISION_DISTANCE;
+            final MovingObjectPosition mopos = mc.renderViewEntity.rayTrace(reachDistance, renderTick);
+            double reachDist2 = reachDistance;
 
-                final Vec3 viewEntityLookVec = mc.renderViewEntity.getLook(renderTick);
-                final Vec3 actualReachVector = viewEntPositionVec.addVector(
-                    viewEntityLookVec.xCoord * reachDistance,
-                    viewEntityLookVec.yCoord * reachDistance,
-                    viewEntityLookVec.zCoord * reachDistance);
-                float expandBBvalue = 1.0F;
-                double lowestDistance = reachDist2;
-                Entity iterEnt;
-                Entity pointedEntity = null;
-                for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(
-                    mc.renderViewEntity,
-                    mc.renderViewEntity.boundingBox
-                        .addCoord(
-                            viewEntityLookVec.xCoord * reachDistance,
-                            viewEntityLookVec.yCoord * reachDistance,
-                            viewEntityLookVec.zCoord * reachDistance)
-                        .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
-                    iterEnt = (Entity) obj;
-                    if (iterEnt.canBeCollidedWith()) {
-                        float entBorderSize = iterEnt.getCollisionBorderSize();
-                        AxisAlignedBB entHitBox = iterEnt.boundingBox
-                            .expand(entBorderSize, entBorderSize, entBorderSize);
-                        MovingObjectPosition interceptObjectPosition = entHitBox
-                            .calculateIntercept(viewEntPositionVec, actualReachVector);
+            if (mopos != null) {
+                reachDist2 = mopos.hitVec.distanceTo(scratchCameraPos);
+            }
 
-                        if (entHitBox.isVecInside(viewEntPositionVec)) {
-                            if (0.0D < lowestDistance || lowestDistance == 0.0D) {
-                                pointedEntity = iterEnt;
-                                lowestDistance = 0.0D;
-                            }
-                        } else if (interceptObjectPosition != null) {
-                            double distanceToEnt = viewEntPositionVec.distanceTo(interceptObjectPosition.hitVec);
+            double reachX = scratchCameraLook.xCoord * reachDistance;
+            double reachY = scratchCameraLook.yCoord * reachDistance;
+            double reachZ = scratchCameraLook.zCoord * reachDistance;
+            scratchReachVector.xCoord = reachX;
+            scratchReachVector.yCoord = reachY;
+            scratchReachVector.zCoord = reachZ;
 
-                            if (distanceToEnt < lowestDistance || lowestDistance == 0.0D) {
-                                pointedEntity = iterEnt;
-                                lowestDistance = distanceToEnt;
-                            }
+            float expandBBvalue = 1.0F;
+            double lowestDistance = reachDist2;
+            Entity iterEnt;
+            Entity pointedEntity = null;
+            for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(
+                mc.renderViewEntity,
+                mc.renderViewEntity.boundingBox
+                    .addCoord(reachX, reachY, reachZ)
+                    .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
+                iterEnt = (Entity) obj;
+                if (iterEnt.canBeCollidedWith()) {
+                    float entBorderSize = iterEnt.getCollisionBorderSize();
+                    AxisAlignedBB entHitBox = iterEnt.boundingBox
+                        .expand(entBorderSize, entBorderSize, entBorderSize);
+                    MovingObjectPosition interceptObjectPosition = entHitBox
+                        .calculateIntercept(scratchCameraPos, scratchReachVector);
+
+                    if (entHitBox.isVecInside(scratchCameraPos)) {
+                        if (0.0D < lowestDistance || lowestDistance == 0.0D) {
+                            pointedEntity = iterEnt;
+                            lowestDistance = 0.0D;
+                        }
+                    } else if (interceptObjectPosition != null) {
+                        double distanceToEnt = scratchCameraPos.distanceTo(interceptObjectPosition.hitVec);
+
+                        if (distanceToEnt < lowestDistance || lowestDistance == 0.0D) {
+                            pointedEntity = iterEnt;
+                            lowestDistance = distanceToEnt;
                         }
                     }
                 }
+            }
 
-                if (pointedEntity != null && (lowestDistance < reachDist2 || mopos == null)) {
-                    returnedEntity = pointedEntity;
-                }
+            if (pointedEntity != null && (lowestDistance < reachDist2 || mopos == null)) {
+                returnedEntity = pointedEntity;
             }
         }
 
         return returnedEntity;
+    }
+
+    /**
+     * Writes the interpolated camera position (eye height) and look vector of the given view entity into the two
+     * reusable scratch vectors, replicating Entity#getPosition/getLook without allocating new Vec3 instances.
+     */
+    private static void computeCameraVectors(Entity viewEnt, float renderTick, Vec3 outPos, Vec3 outLook) {
+        double camX;
+        double camY;
+        double camZ;
+        if (renderTick == 1.0F) {
+            camX = viewEnt.posX;
+            camY = viewEnt.posY + viewEnt.getEyeHeight();
+            camZ = viewEnt.posZ;
+        } else {
+            camX = viewEnt.prevPosX + (viewEnt.posX - viewEnt.prevPosX) * renderTick;
+            camY = (viewEnt.prevPosY + (viewEnt.posY - viewEnt.prevPosY) * renderTick) + viewEnt.getEyeHeight();
+            camZ = viewEnt.prevPosZ + (viewEnt.posZ - viewEnt.prevPosZ) * renderTick;
+        }
+        outPos.xCoord = camX;
+        outPos.yCoord = camY;
+        outPos.zCoord = camZ;
+
+        float pitch = renderTick == 1.0F
+            ? viewEnt.rotationPitch
+            : viewEnt.prevRotationPitch + (viewEnt.rotationPitch - viewEnt.prevRotationPitch) * renderTick;
+        float yaw = renderTick == 1.0F
+            ? viewEnt.rotationYaw
+            : viewEnt.prevRotationYaw + (viewEnt.rotationYaw - viewEnt.prevRotationYaw) * renderTick;
+
+        float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f2 = -MathHelper.cos(-pitch * 0.017453292F);
+        float f3 = MathHelper.sin(-pitch * 0.017453292F);
+        outLook.xCoord = f1 * f2;
+        outLook.yCoord = f3;
+        outLook.zCoord = f * f2;
     }
 
     @Override
