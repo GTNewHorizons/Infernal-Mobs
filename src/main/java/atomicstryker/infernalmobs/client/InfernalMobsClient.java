@@ -51,6 +51,8 @@ public class InfernalMobsClient implements ISidedProxy {
     private final Vec3 scratchCameraPos = Vec3.createVectorHelper(0, 0, 0);
     private final Vec3 scratchCameraLook = Vec3.createVectorHelper(0, 0, 0);
     private final Vec3 scratchReachVector = Vec3.createVectorHelper(0, 0, 0);
+    private final AxisAlignedBB scratchQueryAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+    private final AxisAlignedBB scratchHitAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
 
     @Override
     public void preInit() {
@@ -212,20 +214,51 @@ public class InfernalMobsClient implements ISidedProxy {
             double lowestDistance = reachDist2;
             Entity iterEnt;
             Entity pointedEntity = null;
-            for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(
-                mc.renderViewEntity,
-                mc.renderViewEntity.boundingBox
-                    .addCoord(reachX, reachY, reachZ)
-                    .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
+
+            AxisAlignedBB baseBox = mc.renderViewEntity.boundingBox;
+            double qMinX = baseBox.minX;
+            double qMinY = baseBox.minY;
+            double qMinZ = baseBox.minZ;
+            double qMaxX = baseBox.maxX;
+            double qMaxY = baseBox.maxY;
+            double qMaxZ = baseBox.maxZ;
+            if (reachX < 0.0D) {
+                qMinX += reachX;
+            } else if (reachX > 0.0D) {
+                qMaxX += reachX;
+            }
+            if (reachY < 0.0D) {
+                qMinY += reachY;
+            } else if (reachY > 0.0D) {
+                qMaxY += reachY;
+            }
+            if (reachZ < 0.0D) {
+                qMinZ += reachZ;
+            } else if (reachZ > 0.0D) {
+                qMaxZ += reachZ;
+            }
+            scratchQueryAABB.minX = qMinX - expandBBvalue;
+            scratchQueryAABB.minY = qMinY - expandBBvalue;
+            scratchQueryAABB.minZ = qMinZ - expandBBvalue;
+            scratchQueryAABB.maxX = qMaxX + expandBBvalue;
+            scratchQueryAABB.maxY = qMaxY + expandBBvalue;
+            scratchQueryAABB.maxZ = qMaxZ + expandBBvalue;
+
+            for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.renderViewEntity, scratchQueryAABB)) {
                 iterEnt = (Entity) obj;
                 if (iterEnt.canBeCollidedWith()) {
                     float entBorderSize = iterEnt.getCollisionBorderSize();
-                    AxisAlignedBB entHitBox = iterEnt.boundingBox
-                        .expand(entBorderSize, entBorderSize, entBorderSize);
-                    MovingObjectPosition interceptObjectPosition = entHitBox
+                    AxisAlignedBB entHitBox = iterEnt.boundingBox;
+                    scratchHitAABB.minX = entHitBox.minX - entBorderSize;
+                    scratchHitAABB.minY = entHitBox.minY - entBorderSize;
+                    scratchHitAABB.minZ = entHitBox.minZ - entBorderSize;
+                    scratchHitAABB.maxX = entHitBox.maxX + entBorderSize;
+                    scratchHitAABB.maxY = entHitBox.maxY + entBorderSize;
+                    scratchHitAABB.maxZ = entHitBox.maxZ + entBorderSize;
+                    MovingObjectPosition interceptObjectPosition = scratchHitAABB
                         .calculateIntercept(scratchCameraPos, scratchReachVector);
 
-                    if (entHitBox.isVecInside(scratchCameraPos)) {
+                    if (scratchHitAABB.isVecInside(scratchCameraPos)) {
                         if (0.0D < lowestDistance || lowestDistance == 0.0D) {
                             pointedEntity = iterEnt;
                             lowestDistance = 0.0D;
