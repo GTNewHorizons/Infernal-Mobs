@@ -45,9 +45,6 @@ public class InfernalMobsClient implements ISidedProxy {
     private long healthBarRetainTime;
     private EntityLivingBase retainedTarget;
 
-    private long nextCrosshairScanTime;
-    private Entity cachedCrosshairTarget;
-
     private final Vec3 scratchCameraPos = Vec3.createVectorHelper(0, 0, 0);
     private final Vec3 scratchCameraLook = Vec3.createVectorHelper(0, 0, 0);
     private final AxisAlignedBB scratchQueryAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
@@ -70,11 +67,7 @@ public class InfernalMobsClient implements ISidedProxy {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        if (event.world.isRemote) {
-            retainedTarget = null;
-            cachedCrosshairTarget = null;
-            nextCrosshairScanTime = 0L;
-        }
+        if (event.world.isRemote) retainedTarget = null;
     }
 
     @SubscribeEvent
@@ -113,19 +106,12 @@ public class InfernalMobsClient implements ISidedProxy {
             return;
         }
 
-        long now = System.currentTimeMillis();
-        Entity ent;
+        Entity ent = getEntityCrosshairOver(event.partialTicks, mc);
         boolean retained = false;
 
-        if (now < healthBarRetainTime && retainedTarget != null) {
+        if (ent == null && System.currentTimeMillis() < healthBarRetainTime) {
             ent = retainedTarget;
             retained = true;
-        } else if (now < nextCrosshairScanTime) {
-            ent = cachedCrosshairTarget;
-        } else {
-            ent = getEntityCrosshairOver(event.partialTicks, mc);
-            cachedCrosshairTarget = ent;
-            nextCrosshairScanTime = now + 100L;
         }
 
         if (ent instanceof EntityLivingBase) {
@@ -182,7 +168,7 @@ public class InfernalMobsClient implements ISidedProxy {
 
                 if (!retained) {
                     retainedTarget = target;
-                    healthBarRetainTime = now + 3000L;
+                    healthBarRetainTime = System.currentTimeMillis() + 3000L;
                 }
 
             }
