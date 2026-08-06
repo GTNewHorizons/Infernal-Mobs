@@ -45,6 +45,11 @@ public class InfernalMobsClient implements ISidedProxy {
     private long healthBarRetainTime;
     private EntityLivingBase retainedTarget;
 
+    private final Vec3 scratchCameraPos = Vec3.createVectorHelper(0, 0, 0);
+    private final Vec3 scratchCameraLook = Vec3.createVectorHelper(0, 0, 0);
+    private final AxisAlignedBB scratchQueryAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+    private final AxisAlignedBB scratchHitAABB = AxisAlignedBB.getBoundingBox(0, 0, 0, 0, 0, 0);
+
     @Override
     public void preInit() {
         FMLCommonHandler.instance()
@@ -96,7 +101,8 @@ public class InfernalMobsClient implements ISidedProxy {
     public void onPreRenderGameOverlay(RenderGameOverlayEvent.Pre event) {
         if (InfernalMobsCore.instance()
             .getIsHealthBarDisabled() || event.type != RenderGameOverlayEvent.ElementType.BOSSHEALTH
-            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0)) {
+            || (BossStatus.bossName != null && BossStatus.statusBarTime > 0)
+            || rareMobsClient.isEmpty()) {
             return;
         }
 
@@ -172,65 +178,164 @@ public class InfernalMobsClient implements ISidedProxy {
     private Entity getEntityCrosshairOver(float renderTick, Minecraft mc) {
         Entity returnedEntity = null;
 
-        if (mc.renderViewEntity != null) {
-            if (mc.theWorld != null) {
-                double reachDistance = NAME_VISION_DISTANCE;
-                final MovingObjectPosition mopos = mc.renderViewEntity.rayTrace(reachDistance, renderTick);
-                double reachDist2 = reachDistance;
-                final Vec3 viewEntPositionVec = mc.renderViewEntity.getPosition(renderTick);
+        if (mc.renderViewEntity != null && mc.theWorld != null) {
+            computeCameraVectors(mc.renderViewEntity, renderTick, scratchCameraPos, scratchCameraLook);
 
-                if (mopos != null) {
-                    reachDist2 = mopos.hitVec.distanceTo(viewEntPositionVec);
-                }
+            double reachDistance = NAME_VISION_DISTANCE;
+            final MovingObjectPosition mopos = mc.renderViewEntity.rayTrace(reachDistance, renderTick);
+            double reachDist2 = reachDistance;
 
-                final Vec3 viewEntityLookVec = mc.renderViewEntity.getLook(renderTick);
-                final Vec3 actualReachVector = viewEntPositionVec.addVector(
-                    viewEntityLookVec.xCoord * reachDistance,
-                    viewEntityLookVec.yCoord * reachDistance,
-                    viewEntityLookVec.zCoord * reachDistance);
-                float expandBBvalue = 1.0F;
-                double lowestDistance = reachDist2;
-                Entity iterEnt;
-                Entity pointedEntity = null;
-                for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(
-                    mc.renderViewEntity,
-                    mc.renderViewEntity.boundingBox
-                        .addCoord(
-                            viewEntityLookVec.xCoord * reachDistance,
-                            viewEntityLookVec.yCoord * reachDistance,
-                            viewEntityLookVec.zCoord * reachDistance)
-                        .expand(expandBBvalue, expandBBvalue, expandBBvalue))) {
-                    iterEnt = (Entity) obj;
-                    if (iterEnt.canBeCollidedWith()) {
-                        float entBorderSize = iterEnt.getCollisionBorderSize();
-                        AxisAlignedBB entHitBox = iterEnt.boundingBox
-                            .expand(entBorderSize, entBorderSize, entBorderSize);
-                        MovingObjectPosition interceptObjectPosition = entHitBox
-                            .calculateIntercept(viewEntPositionVec, actualReachVector);
+            if (mopos != null) {
+                reachDist2 = mopos.hitVec.distanceTo(scratchCameraPos);
+            }
 
-                        if (entHitBox.isVecInside(viewEntPositionVec)) {
-                            if (0.0D < lowestDistance || lowestDistance == 0.0D) {
-                                pointedEntity = iterEnt;
-                                lowestDistance = 0.0D;
-                            }
-                        } else if (interceptObjectPosition != null) {
-                            double distanceToEnt = viewEntPositionVec.distanceTo(interceptObjectPosition.hitVec);
+            double reachX = scratchCameraLook.xCoord * reachDistance;
+            double reachY = scratchCameraLook.yCoord * reachDistance;
+            double reachZ = scratchCameraLook.zCoord * reachDistance;
 
-                            if (distanceToEnt < lowestDistance || lowestDistance == 0.0D) {
-                                pointedEntity = iterEnt;
-                                lowestDistance = distanceToEnt;
-                            }
+            float expandBBvalue = 1.0F;
+            double lowestDistance = reachDist2;
+            Entity iterEnt;
+            Entity pointedEntity = null;
+
+            AxisAlignedBB baseBox = mc.renderViewEntity.boundingBox;
+            double qMinX = baseBox.minX;
+            double qMinY = baseBox.minY;
+            double qMinZ = baseBox.minZ;
+            double qMaxX = baseBox.maxX;
+            double qMaxY = baseBox.maxY;
+            double qMaxZ = baseBox.maxZ;
+            if (reachX < 0.0D) {
+                qMinX += reachX;
+            } else if (reachX > 0.0D) {
+                qMaxX += reachX;
+            }
+            if (reachY < 0.0D) {
+                qMinY += reachY;
+            } else if (reachY > 0.0D) {
+                qMaxY += reachY;
+            }
+            if (reachZ < 0.0D) {
+                qMinZ += reachZ;
+            } else if (reachZ > 0.0D) {
+                qMaxZ += reachZ;
+            }
+            scratchQueryAABB.minX = qMinX - expandBBvalue;
+            scratchQueryAABB.minY = qMinY - expandBBvalue;
+            scratchQueryAABB.minZ = qMinZ - expandBBvalue;
+            scratchQueryAABB.maxX = qMaxX + expandBBvalue;
+            scratchQueryAABB.maxY = qMaxY + expandBBvalue;
+            scratchQueryAABB.maxZ = qMaxZ + expandBBvalue;
+
+            for (Object obj : mc.theWorld.getEntitiesWithinAABBExcludingEntity(mc.renderViewEntity, scratchQueryAABB)) {
+                iterEnt = (Entity) obj;
+                if (iterEnt.canBeCollidedWith()) {
+                    float entBorderSize = iterEnt.getCollisionBorderSize();
+                    AxisAlignedBB entHitBox = iterEnt.boundingBox;
+                    scratchHitAABB.minX = entHitBox.minX - entBorderSize;
+                    scratchHitAABB.minY = entHitBox.minY - entBorderSize;
+                    scratchHitAABB.minZ = entHitBox.minZ - entBorderSize;
+                    scratchHitAABB.maxX = entHitBox.maxX + entBorderSize;
+                    scratchHitAABB.maxY = entHitBox.maxY + entBorderSize;
+                    scratchHitAABB.maxZ = entHitBox.maxZ + entBorderSize;
+
+                    if (scratchHitAABB.isVecInside(scratchCameraPos)) {
+                        if (0.0D < lowestDistance || lowestDistance == 0.0D) {
+                            pointedEntity = iterEnt;
+                            lowestDistance = 0.0D;
+                        }
+                    } else {
+                        double distanceToEnt = rayAABBDistance(scratchCameraPos, scratchCameraLook, scratchHitAABB);
+
+                        if (distanceToEnt >= 0.0D && (distanceToEnt < lowestDistance || lowestDistance == 0.0D)) {
+                            pointedEntity = iterEnt;
+                            lowestDistance = distanceToEnt;
                         }
                     }
                 }
+            }
 
-                if (pointedEntity != null && (lowestDistance < reachDist2 || mopos == null)) {
-                    returnedEntity = pointedEntity;
-                }
+            if (pointedEntity != null && (lowestDistance < reachDist2 || mopos == null)) {
+                returnedEntity = pointedEntity;
             }
         }
 
         return returnedEntity;
+    }
+
+    /**
+     * Writes the interpolated camera position (eye height) and look vector of the given view entity into the two
+     * reusable scratch vectors, replicating Entity#getPosition/getLook without allocating new Vec3 instances.
+     */
+    private static void computeCameraVectors(Entity viewEnt, float renderTick, Vec3 outPos, Vec3 outLook) {
+        double camX;
+        double camY;
+        double camZ;
+        if (renderTick == 1.0F) {
+            camX = viewEnt.posX;
+            camY = viewEnt.posY + viewEnt.getEyeHeight();
+            camZ = viewEnt.posZ;
+        } else {
+            camX = viewEnt.prevPosX + (viewEnt.posX - viewEnt.prevPosX) * renderTick;
+            camY = (viewEnt.prevPosY + (viewEnt.posY - viewEnt.prevPosY) * renderTick) + viewEnt.getEyeHeight();
+            camZ = viewEnt.prevPosZ + (viewEnt.posZ - viewEnt.prevPosZ) * renderTick;
+        }
+        outPos.xCoord = camX;
+        outPos.yCoord = camY;
+        outPos.zCoord = camZ;
+
+        float pitch = renderTick == 1.0F ? viewEnt.rotationPitch
+            : viewEnt.prevRotationPitch + (viewEnt.rotationPitch - viewEnt.prevRotationPitch) * renderTick;
+        float yaw = renderTick == 1.0F ? viewEnt.rotationYaw
+            : viewEnt.prevRotationYaw + (viewEnt.rotationYaw - viewEnt.prevRotationYaw) * renderTick;
+
+        float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f2 = -MathHelper.cos(-pitch * 0.017453292F);
+        float f3 = MathHelper.sin(-pitch * 0.017453292F);
+        outLook.xCoord = f1 * f2;
+        outLook.yCoord = f3;
+        outLook.zCoord = f * f2;
+    }
+
+    /**
+     * Distance, in world units, from the start point along the (unit) look direction to the nearest intersection of the
+     * given AABB, or -1 when the ray does not hit the box. Slab method equivalent to
+     * AxisAlignedBB#calculateIntercept followed by a Euclidean distance, without allocating anything.
+     */
+    private static double rayAABBDistance(Vec3 start, Vec3 dir, AxisAlignedBB box) {
+        double entry = Double.NEGATIVE_INFINITY;
+        double exit = Double.POSITIVE_INFINITY;
+
+        if (Math.abs(dir.xCoord) > 1.0E-9D) {
+            double t1 = (box.minX - start.xCoord) / dir.xCoord;
+            double t2 = (box.maxX - start.xCoord) / dir.xCoord;
+            entry = Math.max(entry, Math.min(t1, t2));
+            exit = Math.min(exit, Math.max(t1, t2));
+        } else if (start.xCoord < box.minX || start.xCoord > box.maxX) {
+            return -1.0D;
+        }
+        if (Math.abs(dir.yCoord) > 1.0E-9D) {
+            double t1 = (box.minY - start.yCoord) / dir.yCoord;
+            double t2 = (box.maxY - start.yCoord) / dir.yCoord;
+            entry = Math.max(entry, Math.min(t1, t2));
+            exit = Math.min(exit, Math.max(t1, t2));
+        } else if (start.yCoord < box.minY || start.yCoord > box.maxY) {
+            return -1.0D;
+        }
+        if (Math.abs(dir.zCoord) > 1.0E-9D) {
+            double t1 = (box.minZ - start.zCoord) / dir.zCoord;
+            double t2 = (box.maxZ - start.zCoord) / dir.zCoord;
+            entry = Math.max(entry, Math.min(t1, t2));
+            exit = Math.min(exit, Math.max(t1, t2));
+        } else if (start.zCoord < box.minZ || start.zCoord > box.maxZ) {
+            return -1.0D;
+        }
+
+        if (entry > exit || exit < 0.0D || entry < 0.0D) {
+            return -1.0D;
+        }
+        return entry;
     }
 
     @Override
