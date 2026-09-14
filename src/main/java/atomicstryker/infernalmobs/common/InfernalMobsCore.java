@@ -100,17 +100,17 @@ public class InfernalMobsCore {
     /**
      * Array of ItemStacks
      */
-    private ArrayList<Integer> dimensionBlackList;
-    private ArrayList<ItemStack> dropIdListElite;
-    private ArrayList<ItemStack> dropIdListUltra;
-    private ArrayList<ItemStack> dropIdListInfernal;
+    public ArrayList<Integer> dimensionBlackList;
+    public ArrayList<ItemStack> dropIdListElite;
+    public ArrayList<ItemStack> dropIdListUltra;
+    public ArrayList<ItemStack> dropIdListInfernal;
 
-    private HashMap<String, Boolean> classesAllowedMap;
-    private HashMap<String, Boolean> classesForcedMap;
-    private HashMap<String, Float> classesHealthMap;
-    private boolean useSimpleEntityClassNames;
-    private boolean disableHealthBar;
-    private double modHealthFactor;
+    public HashMap<String, Boolean> classesAllowedMap;
+    public HashMap<String, Boolean> classesForcedMap;
+    public HashMap<String, Float> classesHealthMap;
+    public boolean useSimpleEntityClassNames;
+    public boolean disableHealthBar;
+    public double modHealthFactor;
 
     private Entity infCheckA;
     private Entity infCheckB;
@@ -126,18 +126,18 @@ public class InfernalMobsCore {
         return "InfernalMobsMod";
     }
 
-    private ArrayList<ModifierLoader<?>> modifierLoaders;
+    public ArrayList<ModifierLoader<?>> modifierLoaders;
 
-    private int eliteRarity;
-    private int ultraRarity;
-    private int infernoRarity;
+    public int eliteRarity;
+    public int ultraRarity;
+    public int infernoRarity;
 
-    private int minEliteModifiers;
-    private int maxEliteModifiers;
-    private int minUltraModifiers;
-    private int maxUltraModifiers;
-    private int minInfernoModifiers;
-    private int maxInfernoModifiers;
+    public int minEliteModifiers;
+    public int maxEliteModifiers;
+    public int minUltraModifiers;
+    public int maxUltraModifiers;
+    public int minInfernoModifiers;
+    public int maxInfernoModifiers;
     public Configuration config;
 
     @SidedProxy(
@@ -212,7 +212,7 @@ public class InfernalMobsCore {
     /**
      * Registers the MobModifier factories for consideration
      */
-    private void loadMods() {
+    public void loadMods() {
         modifierLoaders = Lists.newArrayList(
             new MM_1UP.Loader(),
             new MM_Alchemist.Loader(),
@@ -251,7 +251,7 @@ public class InfernalMobsCore {
     /**
      * Forge Config file
      */
-    private void loadConfig() {
+    public void loadConfig() {
         // spotless:off
         eliteRarity = config.get(Configuration.CATEGORY_GENERAL, "eliteRarity", 15, "One in THIS many Mobs will become atleast rare").getInt();
         ultraRarity = config.get(Configuration.CATEGORY_GENERAL, "ultraRarity", 7, "One in THIS many already rare Mobs will become atleast ultra").getInt();
