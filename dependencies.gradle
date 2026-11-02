@@ -1,5 +1,5 @@
 // Add your dependencies here
 
 dependencies {
-
+    compileOnly("com.github.GTNewHorizons:Dashboard:1.0.2:api")
 }
