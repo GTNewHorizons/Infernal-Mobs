@@ -3,6 +3,7 @@ package atomicstryker.infernalmobs.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
 
@@ -43,6 +44,15 @@ public final class DashboardHud {
             (screenWidth, screenHeight) -> HudRegistry
                 .render(HEALTH_BAR, () -> drawPreview(screenWidth, screenHeight)));
         HudRegistry.register(HEALTH_BAR);
+    }
+
+    /** False means the player hid the bar, so skip drawing it and do not call {@link #endRender()}. */
+    public static boolean beginRender(ScaledResolution resolution) {
+        return HudRegistry.beginRender(HEALTH_BAR, resolution);
+    }
+
+    public static void endRender() {
+        HudRegistry.endRender();
     }
 
     /** Vanilla's boss bar two thirds full, with a rare mob's name and modifiers, like in game. */
