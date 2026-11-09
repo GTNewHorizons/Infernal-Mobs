@@ -31,6 +31,7 @@ import atomicstryker.infernalmobs.common.network.packets.HealthPacket;
 import atomicstryker.infernalmobs.common.network.packets.MobModsPacket;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class InfernalMobsClient implements ISidedProxy {
@@ -44,6 +45,8 @@ public class InfernalMobsClient implements ISidedProxy {
 
     private long healthBarRetainTime;
     private EntityLivingBase retainedTarget;
+
+    private boolean dashboardLoaded;
 
     private final Vec3 scratchCameraPos = Vec3.createVectorHelper(0, 0, 0);
     private final Vec3 scratchCameraLook = Vec3.createVectorHelper(0, 0, 0);
@@ -63,6 +66,9 @@ public class InfernalMobsClient implements ISidedProxy {
     public void init() {
         MinecraftForge.EVENT_BUS.register(new RendererBossGlow());
         MinecraftForge.EVENT_BUS.register(this);
+
+        dashboardLoaded = Loader.isModLoaded("dashboard");
+        if (dashboardLoaded) DashboardHud.register();
     }
 
     @SubscribeEvent
@@ -119,12 +125,21 @@ public class InfernalMobsClient implements ISidedProxy {
             if (mod != null) {
                 askServerHealth(ent);
 
+                EntityLivingBase target = (EntityLivingBase) ent;
+                if (!retained) {
+                    retainedTarget = target;
+                    healthBarRetainTime = System.currentTimeMillis() + 3000L;
+                }
+
+                if (dashboardLoaded && !DashboardHud.beginRender(event.resolution)) {
+                    return;
+                }
+
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 this.mc.getTextureManager()
                     .bindTexture(Gui.icons);
                 GL11.glDisable(GL11.GL_BLEND);
 
-                EntityLivingBase target = (EntityLivingBase) ent;
                 String buffer = mod.getEntityDisplayName(target);
 
                 int screenwidth = event.resolution.getScaledWidth();
@@ -166,11 +181,7 @@ public class InfernalMobsClient implements ISidedProxy {
                 this.mc.getTextureManager()
                     .bindTexture(Gui.icons);
 
-                if (!retained) {
-                    retainedTarget = target;
-                    healthBarRetainTime = System.currentTimeMillis() + 3000L;
-                }
-
+                if (dashboardLoaded) DashboardHud.endRender();
             }
         }
     }
